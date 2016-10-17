@@ -1,0 +1,27 @@
+{
+    "name": "softpampa/moip-sdk-php",
+    "description": "Cliente em PHP para integração server-side com APIs Moip",
+    "keywords": ["libraries", "moip"],
+    "support": {
+        "issues": "https://github.com/moip/moip-sdk-php/issues",
+        "source": "https://github.com/moip/moip-sdk-php"
+    },
+    "homepage": "http://dev.moip.com.br",
+    "license": "MIT",
+    "type": "libraries",
+    "authors": [
+        {
+            "name": "Nícolas Luís Huber",
+            "email": "nicolasluishuber@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Softpampa\\Moip\\": "src"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "5.3.1",
+        "illuminate/support": "4.*|5.*"
+    }
+}
