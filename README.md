@@ -24,4 +24,4 @@ A biblioteca foi criada para poder inetgrar a API do Moip em aplicações PHP co
 
 ## Licença
 
-[MIT License](https://github.com/Softpampa/php-sdk/blob/master/LICENSE)
+[MIT License](https://github.com/Softpampa/moip-sdk-php/blob/master/LICENSE)
