@@ -133,9 +133,23 @@ class Orders extends MoipResource {
      * @param  Customers  $customer
      * @return $this
      */
-    public function setCustomer(Customers $customer)
+    public function setNewCustomer(Customers $customer)
     {
         $this->data->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * Set a new Customer
+     *
+     * @param  Customers  $customer
+     * @return $this
+     */
+    public function setCustomer($customer_id)
+    {
+        $this->data->customer = new stdClass;
+        $this->data->customer->id = $customer_id;
 
         return $this;
     }

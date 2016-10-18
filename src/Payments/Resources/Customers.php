@@ -83,6 +83,19 @@ class Customers extends MoipResource {
     }
 
     /**
+     * Set your own id
+     *
+     * @param  int  $ownId
+     * @return $this
+     */
+    public function setOwnId($ownId)
+    {
+        $this->data->ownId = $ownId;
+
+        return $this;
+    }
+
+    /**
      * Set customer fullname
      *
      * @param  string  $fullname
@@ -116,11 +129,11 @@ class Customers extends MoipResource {
      */
     public function setBirthdate($date)
     {
-        if ($birthDate instanceof DateTime) {
-            $birthDate = $birthDate->format('Y-m-d');
+        if ($date instanceof DateTime) {
+            $date = $date->format('Y-m-d');
         }
 
-        $this->data->date = $date;
+        $this->data->birthDate = $date;
 
         return $this;
     }
@@ -133,7 +146,7 @@ class Customers extends MoipResource {
      * @param  int  $number
      * @return $this
      */
-    public function setPhone($ddi, $ddd, $number)
+    public function setPhone($ddd, $number, $ddi = 55)
     {
         $this->data->phone = new stdClass();
         $this->data->phone->countryCode = $ddi;
@@ -169,11 +182,11 @@ class Customers extends MoipResource {
      * @param  string  $district
      * @param  string  $city
      * @param  string  $state
-     * @param  string  $country
      * @param  string  $zipCode
+     * @param  string  $country
      * @return $this
      */
-    public function addAddress($type = self::ADDRESS_BILLING, $street, $number, $complement, $district, $city, $state, $country, $zipCode)
+    public function addAddress($type = self::ADDRESS_BILLING, $street, $number, $complement, $district, $city, $state, $zipCode, $country = self::ADDRESS_COUNTRY)
     {
         $address = new stdClass();
         $address->street = $street;
@@ -183,7 +196,7 @@ class Customers extends MoipResource {
         $address->city = $city;
         $address->state = $state;
         $address->country = $country;
-        $address->zipCode = $zip;
+        $address->zipCode = $zipCode;
 
         switch ($type) {
             case self::ADDRESS_BILLING:
