@@ -3,8 +3,13 @@
 namespace Softpampa\Moip;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Message\Request;
+use GuzzleHttp\Exception\RequestException;
 use Softpampa\Moip\Traits\Utils;
 use Softpampa\Moip\MoipHttpResponse;
+use Softpampa\Moip\Contracts\MoipAuthentication;
+use Softpampa\Moip\Exceptions\UnexpectedException;
+use Softpampa\Moip\Exceptions\UnautorizedException;
 
 class MoipHttpClient {
 
@@ -36,19 +41,26 @@ class MoipHttpClient {
     protected $version;
 
     /**
-     * @var  GuzzleHttp\Client  $httpClient  HTTP Client
+     * @var  Client  $httpClient  HTTP Client
      */
     protected $httpClient;
 
     /**
-     * @var  GuzzleHttp\Message\Request  $httpClient  HTTP Client Request
+     * @var  Request  $request  HTTP Client Request
      */
     protected $request;
 
     /**
-     * @var  GuzzleHttp\Message\Response  $httpClient  HTTP Client Response
+     * @var  MoipHttpResponse  $response  HTTP Client Response
      */
     protected $response;
+
+    /**
+     * @var  string  $options Moip API Options
+     */
+    protected $options = [
+        'exceptions' => false
+    ];
 
     /**
      * Constructor.
@@ -57,11 +69,12 @@ class MoipHttpClient {
      * @param  string  $key  Moip Key
      * @param  string  $environment  Moip Environment
      */
-    public function __construct($auth, $environment)
+    public function __construct(MoipAuthentication $auth, $environment, $options = [])
     {
         $this->auth = $auth;
-        $this->environment = $environment;
         $this->httpClient = new Client;
+        $this->environment = $environment;
+        $this->options = array_merge($this->options, $options);
 
         $this->setupHttpClient();
     }
@@ -73,12 +86,12 @@ class MoipHttpClient {
      */
     protected function setupHttpClient()
     {
-        $this->httpClient->setDefaultOption('exceptions', false);
+        $this->httpClient->setDefaultOption('exceptions', $this->options['exceptions']);
         $this->httpClient->setDefaultOption('timeout', 10);
         $this->httpClient->setDefaultOption('connect_timeout', 10);
 
         $this->httpClient->setDefaultOption('headers', [
-            'Authorization' => $this->auth->generateAuthorizationKey()
+            'Authorization' => $this->auth->generateAuthorization()
         ]);
     }
 
@@ -145,9 +158,7 @@ class MoipHttpClient {
         $this->setRequestQueryString();
         $this->setRequestUrlPaths($params);
 
-        var_dump($payload);
-
-        return $this->sendHttpRequest();
+        return $this->send();
     }
 
     /**
@@ -155,16 +166,58 @@ class MoipHttpClient {
      *
      * @return MoipHttpResponse
      */
-    protected function sendHttpRequest()
+    protected function send()
     {
-        $this->response = $this->httpClient->send($this->request);
+        try {
+            $response = $this->httpClient->send($this->request);
+        } catch (RequestException $e) {
 
-        return new MoipHttpResponse($this->response, $this->path);
+            if (!$e->hasResponse()) {
+                throw new UnexpectedException($e);
+            }
+
+            $statusCode = $e->getResponse()->getStatusCode();
+
+            if ($statusCode == 401) {
+                throw new UnautorizedException;
+            } elseif ($statusCode > 400 && $statusCode < 500) {
+                
+            }
+
+            throw new UnexpectedException($e);
+        }
+
+        return $this->response = new MoipHttpResponse($response, $this->path);
     }
 
-    public function getHttpRequest()
+    /**
+     * Get Client Request
+     *
+     * @return Request
+     */
+    public function getRequest()
     {
         return $this->request;
+    }
+
+    /**
+     * Get Client
+     *
+     * @return Client
+     */
+    public function getClient()
+    {
+        return $this->httpClient;
+    }
+
+    /**
+     * Get Client Response
+     *
+     * @return MoipHttpResponse
+     */
+    public function getResponse()
+    {
+        return $this->response;
     }
 
     /**
@@ -206,7 +259,7 @@ class MoipHttpClient {
     }
 
     /**
-     * Set Request URI.
+     * Set Request URI
      *
      * @param  string  $uri
      * @return $this
@@ -219,7 +272,7 @@ class MoipHttpClient {
     }
 
     /**
-     * Set Request Path.
+     * Set Request Path
      *
      * @param  string  $path
      * @return $this
@@ -232,7 +285,7 @@ class MoipHttpClient {
     }
 
     /**
-     * Set Request Version.
+     * Set Request Version
      *
      * @param  string  $version
      * @return $this

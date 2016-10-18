@@ -3,8 +3,8 @@
 /**
  * Moip Subscription Plans API
  *
- * @since 1.0.0
- * @see http://dev.moip.com.br/assinaturas-api/#planos Official Documentation Plans
+ * @since 0.0.1
+ * @see http://dev.moip.com.br/assinaturas-api/#assinaturas Official Documentation
  * @author Nícolas Luís Huber <nicolasluishuber@gmail.com>
  */
 
@@ -15,9 +15,26 @@ use Softpampa\Moip\MoipResource;
 class Subscriptions extends MoipResource {
 
     /**
+     * @const  string  METHOD_CREDIT_CARD  Payment method
+     */
+    const METHOD_CREDIT_CARD = 'CREDIT_CARD';
+
+    /**
      * @var  string  $path
      */
     protected $path = 'subscriptions';
+
+    /**
+     * Initialize Orders Data Object
+     *
+     * @return void
+     */
+    protected function initialize()
+    {
+        parent::initialize();
+
+        $this->data->payment_method = self::METHOD_CREDIT_CARD;
+    }
 
     /**
      * Get all subscriptions
@@ -26,7 +43,7 @@ class Subscriptions extends MoipResource {
      */
     public function all()
     {
-        return $this->httpClient->get()->getResults();
+        return $this->client->get()->getResults();
     }
 
     /**
@@ -37,7 +54,7 @@ class Subscriptions extends MoipResource {
      */
     public function find($code)
     {
-        return $this->populate($this->httpClient->get('/{code}', ['code' => $code]));
+        return $this->populate($this->client->get('/{code}', ['code' => $code]));
     }
 
     /**
@@ -48,7 +65,7 @@ class Subscriptions extends MoipResource {
      */
     public function save()
     {
-        $this->httpResponse = $this->httpClient->put('/{id}', ['id' => $this->data->code], $this->data);
+        $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
 
         return $this;
     }
@@ -58,9 +75,13 @@ class Subscriptions extends MoipResource {
      *
      * @return $this
      */
-    public function suspend()
+    public function suspend($code = null)
     {
-        $this->httpResponse = $this->httpClient->put('/{id}/suspend', ['id' => $this->data->code], $this->data);
+        if (!$code) {
+            $code = $this->data->code;
+        }
+
+        $this->client->put('/{id}/suspend', ['id' => $this->data->code], $this->data);
 
         return $this;
     }
@@ -70,9 +91,13 @@ class Subscriptions extends MoipResource {
      *
      * @return $this
      */
-    public function activate()
+    public function activate($code)
     {
-        $this->httpResponse = $this->httpClient->put('/{id}/activate', ['id' => $this->data->code], $this->data);
+        if (!$code) {
+            $code = $this->data->code;
+        }
+
+        $this->client->put('/{id}/activate', ['id' => $this->data->code], $this->data);
 
         return $this;
     }
@@ -82,9 +107,13 @@ class Subscriptions extends MoipResource {
      *
      * @return $this
      */
-    public function cancel()
+    public function cancel($code)
     {
-        $this->httpResponse = $this->httpClient->put('/{id}/cancel', ['id' => $this->data->code], $this->data);
+        if (!$code) {
+            $code = $this->data->code;
+        }
+
+        $this->client->put('/{id}/cancel', ['id' => $this->data->code], $this->data);
 
         return $this;
     }
@@ -96,9 +125,7 @@ class Subscriptions extends MoipResource {
      */
     public function invoices()
     {
-        $this->httpResponse = $this->httpClient->get('/{id}/invoices', ['id' => $this->data->code], $this->data)->setResource('invoices');
-
-        return $this->httpResponse->getResults();
+        return $this->client->get('/{id}/invoices', ['id' => $this->data->code], $this->data)->setResource('invoices')->getResults();
     }
 
     /**
@@ -110,7 +137,7 @@ class Subscriptions extends MoipResource {
      */
     public function edit($code, $data)
     {
-        $this->httpResponse = $this->httpClient->put('/{code}', ['code' => $code], $data);
+        $this->client->put('/{code}', ['code' => $code], $data);
 
         return $this;
     }
@@ -129,11 +156,17 @@ class Subscriptions extends MoipResource {
             $this->populate($data);
         }
 
-        $this->httpResponse = $this->httpClient->post('', [], $data);
+        $this->client->post('', [], $data);
 
         return $this;
     }
 
+    /**
+     * Set Code
+     *
+     * @param  string  $code
+     * @return $this
+     */
     public function setCode($code)
     {
         $this->data->code = $code;
@@ -141,6 +174,12 @@ class Subscriptions extends MoipResource {
         return $this;
     }
 
+    /**
+     * Set Amount
+     *
+     * @param  int  $amount
+     * @return $this
+     */
     public function setAmount($amount)
     {
         $this->data->amount = $amount;
@@ -148,16 +187,29 @@ class Subscriptions extends MoipResource {
         return $this;
     }
 
+    /**
+     * Set Plan
+     *
+     * @param  Plans  $plan
+     * @return $this
+     */
     public function setPlan(Plans $plan)
     {
-        $this->data->plan = $plan->jsonSerialize();
+        $this->data->plan = new \stdClass;
+        $this->data->plan->code = $plan->code;
 
         return $this;
     }
 
+    /**
+     * Set New Customer
+     *
+     * @param  Customers  $customer
+     * @return $this
+     */
     public function setNewCustomer(Customers $customer)
     {
-        $this->httpClient->addQueryString([
+        $this->client->addQueryString([
             'new_customer' => 'true'
         ]);
 
@@ -166,13 +218,20 @@ class Subscriptions extends MoipResource {
         return $this;
     }
 
+    /**
+     * Set Customer
+     *
+     * @param  Customers  $customer
+     * @return $this
+     */
     public function setCustomer(Customers $customer)
     {
-        $this->httpClient->addQueryString([
+        $this->client->addQueryString([
             'new_customer' => 'false'
         ]);
 
-        $this->data->customer = $customer->jsonSerialize();
+        $this->data->customer = new \stdClass;
+        $this->data->customer->code = $customer->code;
 
         return $this;
     }

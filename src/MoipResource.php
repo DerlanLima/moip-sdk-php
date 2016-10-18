@@ -10,12 +10,7 @@ abstract class MoipResource implements JsonSerializable {
     /**
      * @var  MoipHttpClient  $httpClient  Moip HTTP Client
      */
-    protected $httpClient;
-
-    /**
-     * @var  MoipHttpResponse  $httpResponse  Moip HTTP Response
-     */
-    protected $httpResponse;
+    protected $client;
 
     /**
      * @var  stdClass  $data  Resource
@@ -25,13 +20,44 @@ abstract class MoipResource implements JsonSerializable {
     /**
      * Constructor.
      *
-     * @param  MoipHttpClient  $httpClient  HTTP Client
+     * @param  MoipHttpClient  $client  HTTP Client
      */
-    public function __construct(MoipHttpClient $httpClient)
+    public function __construct(MoipHttpClient $client)
     {
-        $this->httpClient = $httpClient;
-        $this->httpClient->setPath($this->path);
         $this->data = new stdClass;
+        $this->client = $client;
+
+        $this->initialize();
+    }
+
+    /**
+     * Initialize a resource
+     *
+     * @return void
+     */
+    protected function initialize()
+    {
+        $this->prepareResourcePath();
+    }
+
+    /**
+     * Prepare client for request
+     *
+     * @return void
+     */
+    protected function prepareResourcePath()
+    {
+        $this->client->setPath($this->path);
+    }
+
+    /**
+     * Get Resource Path
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
@@ -39,9 +65,9 @@ abstract class MoipResource implements JsonSerializable {
      *
      * @return MoipHttpResponse
      */
-    public function getHttpResponse()
+    public function getResponse()
     {
-        return $this->httpResponse;
+        return $this->client->getResponse();
     }
 
     /**
@@ -49,9 +75,9 @@ abstract class MoipResource implements JsonSerializable {
      *
      * @return MoipHttpClient
      */
-    public function getHttpClient()
+    public function getClient()
     {
-        return $this->httpClient;
+        return $this->client;
     }
 
     /**
@@ -61,7 +87,7 @@ abstract class MoipResource implements JsonSerializable {
      */
     public function getResults()
     {
-        return $this->httpResponse->getResults();
+        return $this->getResponse()->getResults();
     }
 
     /**
@@ -73,10 +99,10 @@ abstract class MoipResource implements JsonSerializable {
     {
         if (is_array($response)) {
             $this->data = (object) $response;
+
             return $this;
         }
 
-        $this->httpResponse = $response;
         $this->data = $response->getResults();
 
         return $this;
@@ -91,9 +117,105 @@ abstract class MoipResource implements JsonSerializable {
     }
 
     /**
+     * Define limit
+     *
+     * @param  int  $limit
+     * @return $this
+     */
+    public function limit($limit)
+    {
+        $this->client->addQueryString([
+            'limit' => (int) $limit
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Define offset
+     *
+     * @param  int  $offset
+     * @return $this
+     */
+    public function offset($offset)
+    {
+        $this->client->addQueryString([
+            'offset' => (int) $offset
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Define filter
+     *
+     * @param  int  $offset
+     * @return $this
+     */
+    public function addFilter($type, $key, $value)
+    {
+        $this->client->addQueryString([
+            'filters' => "{$key}::{$type}({$value})|"
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Define filter `in`
+     *
+     * @param  string  $key
+     * @param  array  $values
+     * @return $this
+     */
+    public function in($key, $values)
+    {
+        $values = implode(',', $values);
+
+        $this->client->addQueryString([
+            'filters' => "{$key}::in({$value})|"
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Define filter `between`
+     *
+     * @param  string  $key
+     * @param  string  $a
+     * @param  string  $b
+     * @return $this
+     */
+    public function between($key, $a, $b)
+    {
+
+        $this->client->addQueryString([
+            'filters' => "{$key}::bt({$a},{$b})|"
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Get resource property
+     *
+     * @param  string  $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        if (property_exists($this->data, $name)) {
+            return $this->data->$name;
+        }
+
+        return null;
+    }
+
+    /**
      * Specify data which should be serialized to JSON.
      *
-     * @return \stdClass
+     * @return stdClass
      */
     public function jsonSerialize()
     {

@@ -3,7 +3,7 @@
 /**
  * Moip Subscription Plans API
  *
- * @since 1.0.0
+ * @since 0.0.1
  * @see http://dev.moip.com.br/assinaturas-api/#planos Official Documentation Plans
  * @author Nícolas Luís Huber <nicolasluishuber@gmail.com>
  */
@@ -68,7 +68,7 @@ class Plans extends MoipResource {
      */
     public function all()
     {
-        return $this->httpClient->get()->getResults();
+        return $this->client->get()->getResults();
     }
 
     /**
@@ -79,7 +79,7 @@ class Plans extends MoipResource {
      */
     public function find($code)
     {
-        return $this->populate($this->httpClient->get('/{code}', ['code' => $code]));
+        return $this->populate($this->client->get('/{code}', ['code' => $code]));
     }
 
     /**
@@ -90,7 +90,7 @@ class Plans extends MoipResource {
      */
     public function save()
     {
-        $this->httpResponse = $this->httpClient->put('/{id}', ['id' => $this->data->code], $this->data);
+        $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
 
         return $this;
     }
@@ -104,7 +104,7 @@ class Plans extends MoipResource {
      */
     public function edit($code, $data)
     {
-        $this->httpResponse = $this->httpClient->put('/{code}', ['code' => $code], $data);
+        $this->client->put('/{code}', ['code' => $code], $data);
 
         return $this;
     }
@@ -123,7 +123,7 @@ class Plans extends MoipResource {
             $this->populate($data);
         }
 
-        $this->httpResponse = $this->httpClient->post('', [], $data);
+        $this->client->post('', [], $data);
 
         return $this;
     }
@@ -140,7 +140,7 @@ class Plans extends MoipResource {
             $code = $this->data->code;
         }
 
-        $this->httpResponse = $this->httpClient->put('/{code}/activate', ['code' => $code]);
+        $this->client->put('/{code}/activate', ['code' => $code]);
 
         return $this;
     }
@@ -157,7 +157,7 @@ class Plans extends MoipResource {
             $code = $this->data->code;
         }
 
-        $this->httpResponse = $this->httpClient->put('/{code}/inactivate', ['code' => $code]);
+        $this->client->put('/{code}/inactivate', ['code' => $code]);
 
         return $this;
     }

@@ -2,13 +2,13 @@
 
 Biblioteca para integrar sua aplicação PHP com a API do Moip.
 
-###Dependências
+## Dependências
 
-* PHP >= 5.4.0
+* php >= 5.4.0
 * guzzlehttp/guzzle ~5.3
-* illuminate/support 4.* ou 5.*
+* illuminate/support ~4.*|~5.*
 
-###Sobre
+## Sobre
 
 A biblioteca foi criada para poder inetgrar a API do Moip em aplicações PHP com suporte para o Moip Assinaturas. Foi inspirada nas seguintes bibliotecas:
 
@@ -16,23 +16,12 @@ A biblioteca foi criada para poder inetgrar a API do Moip em aplicações PHP co
 * [SOSTheBlack/moip](https://github.com/SOSTheBlack/moip)
 * [andersao/moip-assinaturas-php](https://github.com/andersao/moip-assinaturas-php)
 
-###Documentação
+## Documentação
 
+* [Wiki](https://github.com/Softpampa/moip-sdk-php/wiki)
 * [Documentação Oficial Moip](http://dev.moip.com.br)
 * [Documentação Oficial Moip Assinaturas](http://dev.moip.com.br/assinaturas-api/)
 
-##Instalação
+## Licença
 
-Instalar a última versão disponível:
-
-```composer require softpampa/moip-sdk-php```
-
-###Configuração
-
-```
-<?php
-
-use Softpampa\Moip;
-
-$moip = new Moip(new MoipBasicAuth($token, $key), Moip::ENDPOINT_SANDBOX);
-```
+[MIT License](https://github.com/Softpampa/php-sdk/blob/master/LICENSE)

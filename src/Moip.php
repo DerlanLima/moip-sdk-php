@@ -1,18 +1,10 @@
 <?php
 
-/**
- * Moip PHP SDK
- *
- * @version 1.0.0
- * @see http://dev.moip.com.br/assinaturas-api/ Official Documentation
- * @author Nícolas Luís Huber <nicolasluishuber@gmail.com>
- */
-
 namespace Softpampa\Moip;
 
-use Softpampa\Moip\MoipAuth;
 use Softpampa\Moip\MoipHttpClient;
 use Softpampa\Moip\Payments\PaymentApi;
+use Softpampa\Moip\Contracts\MoipAuthentication;
 use Softpampa\Moip\Subscriptions\SubscriptionApi;
 
 class Moip {
@@ -28,7 +20,7 @@ class Moip {
     const SANDBOX = 'https://sandbox.moip.com.br';
 
     /**
-     * @var  ḾoipHttpClient  $httpClient  Moip HTTP Client
+     * @var  MoipHttpClient  $httpClient  Moip HTTP Client
      */
     protected $httpClient;
 
@@ -38,15 +30,15 @@ class Moip {
      * @param  MoipAuth  $auth  Moip Authentication
      * @param  string  $environment  Moip Environment
      */
-    public function __construct(MoipAuth $auth, $environment = self::SANDBOX)
+    public function __construct(MoipAuthentication $auth, $environment = self::SANDBOX, $options = [])
     {
-        $this->httpClient = new MoipHttpClient($auth, $environment);
+        $this->httpClient = new MoipHttpClient($auth, $environment, $options);
     }
 
     /**
      * Get Http Client.
      *
-     * @return ḾoipHttpClient
+     * @return MoipHttpClient
      */
     public function getHttpClient()
     {
@@ -64,7 +56,7 @@ class Moip {
     }
 
     /**
-     * Moip Subscription
+     * Moip Payments
      *
      * @return Softpampa\Subscriptions\PaymentApi
      */

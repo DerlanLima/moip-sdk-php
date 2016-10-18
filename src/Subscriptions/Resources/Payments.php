@@ -3,8 +3,8 @@
 /**
  * Moip Subscription Payments API
  *
- * @since 1.0.0
- * @see http://dev.moip.com.br/assinaturas-api/#assinantes Official Documentation Customers
+ * @since 0.0.1
+ * @see http://dev.moip.com.br/assinaturas-api/#pagamentos Official Documentation
  * @author Nícolas Luís Huber <nicolasluishuber@gmail.com>
  */
 
@@ -27,7 +27,7 @@ class Payments extends MoipResource {
      */
     public function find($id)
     {
-        $this->httpResponse = $this->populate($this->httpClient->get('/{id}', ['id' => $id]));
+        $this->populate($this->client->get('/{id}', ['id' => $id]));
 
         return $this;
     }

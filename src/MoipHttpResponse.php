@@ -49,7 +49,7 @@ class MoipHttpResponse {
      *
      * @return GuzzleHttp\Message\Response
      */
-    public function getResponse()
+    public function getHttpResponse()
     {
         return $this->response;
     }

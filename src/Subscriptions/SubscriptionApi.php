@@ -3,53 +3,31 @@
 /**
  * Moip Subscription API
  *
- * @since 1.0.0
- * @see http://dev.moip.com.br/assinaturas-api/#assinantes Official Documentation Customers
+ * @since 0.0.1
+ * @see http://dev.moip.com.br/assinaturas-api Official Documentation
  * @author Nícolas Luís Huber <nicolasluishuber@gmail.com>
  */
 
 namespace Softpampa\Moip\Subscriptions;
 
-use Softpampa\Moip\Moip;
-use Softpampa\Moip\Subscriptions\Resources\Customers;
+use Softpampa\Moip\Api;
+use Softpampa\Moip\Subscriptions\Resources\Plans;
 use Softpampa\Moip\Subscriptions\Resources\Invoices;
 use Softpampa\Moip\Subscriptions\Resources\Payments;
-use Softpampa\Moip\Subscriptions\Resources\Plans;
+use Softpampa\Moip\Subscriptions\Resources\Customers;
 use Softpampa\Moip\Subscriptions\Resources\Subscriptions;
 
-class SubscriptionApi {
+class SubscriptionApi extends Api {
 
     /**
-     * @const  string  Moip API Version
+     * @var  string  Moip API Version
      */
-    const VERSION = 'v1';
+    protected $version = 'v1';
 
     /**
-     * @const  string  Moip base URI
+     * @var  string  Moip base URI
      */
-    const URI = 'assinaturas';
-
-    /**
-     * @var  Softpampa\Moip\ḾoipHttpClient  $httpClient  HTTP Client
-     */
-    protected $httpClient;
-
-    /**
-     * @var  Moip  $moip  Moip API
-     */
-    protected $moip;
-
-    /**
-     * Constructor.
-     *
-     * @param  Moip  $moip  Moip API
-     */
-    public function __construct($moip)
-    {
-        $this->moip = $moip;
-        $this->httpClient = $this->moip->getHttpClient();
-        $this->httpClient->setUri(self::URI)->setVersion(self::VERSION);
-    }
+    protected $uri = 'assinaturas';
 
     /**
      * Plans API
@@ -58,7 +36,7 @@ class SubscriptionApi {
      */
     public function plans()
     {
-        return new Plans($this->httpClient);
+        return new Plans($this->client);
     }
 
     /**
@@ -68,7 +46,7 @@ class SubscriptionApi {
      */
     public function customers()
     {
-        return new Customers($this->httpClient);
+        return new Customers($this->client);
     }
 
     /**
@@ -78,7 +56,7 @@ class SubscriptionApi {
      */
     public function subscriptions()
     {
-        return new Subscriptions($this->httpClient);
+        return new Subscriptions($this->client);
     }
 
     /**
@@ -88,7 +66,7 @@ class SubscriptionApi {
      */
     public function invoices()
     {
-        return new Invoices($this->httpClient);
+        return new Invoices($this->client);
     }
 
     /**
@@ -98,7 +76,7 @@ class SubscriptionApi {
      */
     public function payments()
     {
-        return new Payments($this->httpClient);
+        return new Payments($this->client);
     }
 
 }

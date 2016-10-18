@@ -2,7 +2,9 @@
 
 namespace Softpampa\Moip;
 
-class MoipAuth {
+use Softpampa\Moip\Contracts\MoipAuthentication;
+
+class MoipBasicAuth implements MoipAuthentication {
 
     /**
      * @var  string  $token  Moip Token
@@ -31,7 +33,7 @@ class MoipAuth {
      *
      * @return string
      */
-    public function generateAuthorizationKey()
+    public function generateAuthorization()
     {
         return 'Basic ' . base64_encode($this->token . ':' . $this->key);
     }

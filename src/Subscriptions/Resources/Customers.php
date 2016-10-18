@@ -3,18 +3,23 @@
 /**
  * Moip Subscription Customers API
  *
- * @since 1.0.0
- * @see http://dev.moip.com.br/assinaturas-api/#assinantes Official Documentation Customers
+ * @since 0.0.1
+ * @see http://dev.moip.com.br/assinaturas-api/#assinantes Official Documentation
  * @author Nícolas Luís Huber <nicolasluishuber@gmail.com>
  */
 
 namespace Softpampa\Moip\Subscriptions\Resources;
 
+use DateTime;
 use stdClass;
-use Illuminate\Support\Collection;
 use Softpampa\Moip\MoipResource;
 
 class Customers extends MoipResource {
+
+    /**
+     * @const  string  Default country
+     */
+    const ADDRESS_COUNTRY = 'BRA';
 
     /**
      * @var  string  $path
@@ -28,7 +33,7 @@ class Customers extends MoipResource {
      */
     public function all()
     {
-        return $this->httpClient->get()->getResults();
+        return $this->client->get()->getResults();
     }
 
     /**
@@ -39,7 +44,7 @@ class Customers extends MoipResource {
      */
     public function find($code)
     {
-        return $this->populate($this->httpClient->get('/{code}', ['code' => $code]));
+        return $this->populate($this->client->get('/{code}', ['code' => $code]));
     }
 
     /**
@@ -50,7 +55,7 @@ class Customers extends MoipResource {
      */
     public function save()
     {
-        $this->httpResponse = $this->httpClient->put('/{code}', ['code' => $this->data->code], $this->data);
+        $this->client->put('/{code}', ['code' => $this->data->code], $this->data);
 
         return $this;
     }
@@ -69,7 +74,7 @@ class Customers extends MoipResource {
             $this->populate($data);
         }
 
-        $this->httpResponse = $this->httpClient->post('', [], $data);
+        $this->client->post('', [], $data);
 
         return $this;
     }
@@ -83,7 +88,7 @@ class Customers extends MoipResource {
      */
     public function edit($code, $data)
     {
-        $this->httpResponse = $this->httpClient->put('/{code}', ['code' => $code], $data);
+        $this->client->put('/{code}', ['code' => $code], $data);
 
         return $this;
     }
@@ -95,7 +100,7 @@ class Customers extends MoipResource {
      */
     public function updateBillingInfo()
     {
-        $this->httpResponse = $this->httpClient->put('/{code}/billing_infos', ['code' => $this->data->code], $this->data->billing_info);
+        $this->client->put('/{code}/billing_infos', ['code' => $this->data->code], $this->data->billing_info);
 
         return $this;
     }
@@ -170,16 +175,16 @@ class Customers extends MoipResource {
     /**
      * Set customer birthday
      *
-     * @param  int  $day
-     * @param  int  $month
-     * @param  int  $year
+     * @param  string  $birthdate
      * @return $this
      */
-    public function setBirthday($day, $month, $year)
+    public function setBirthdate($birthdate)
     {
-        $this->data->birthdate_day = $day;
-        $this->data->birthdate_month = $month;
-        $this->data->birthdate_year = $year;
+        $date = DateTime::createFromFormat('Y-m-d', $birthdate);
+
+        $this->data->birthdate_day = $date->format('d');
+        $this->data->birthdate_month = $date->format('m');
+        $this->data->birthdate_year = $date->format('Y');
 
         return $this;
     }
@@ -197,7 +202,7 @@ class Customers extends MoipResource {
      * @param  string  $zipcode
      * @return $this
      */
-    public function setAddress($street, $number, $complement, $district, $city, $state, $country, $zipcode)
+    public function setAddress($street, $number, $complement, $district, $city, $state, $zipcode, $country = self::ADDRESS_COUNTRY)
     {
         $this->data->address = new stdClass;
         $this->data->address->street = $street;
