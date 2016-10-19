@@ -11,7 +11,7 @@ use Softpampa\Moip\Contracts\MoipAuthentication;
 use Softpampa\Moip\Exceptions\UnexpectedException;
 use Softpampa\Moip\Exceptions\UnautorizedException;
 
-class MoipHttpClient {
+class MoipClient implements Contracts\MoipClient {
 
     use Utils;
 
@@ -43,7 +43,7 @@ class MoipHttpClient {
     /**
      * @var  Client  $httpClient  HTTP Client
      */
-    protected $httpClient;
+    protected $client;
 
     /**
      * @var  Request  $request  HTTP Client Request
@@ -51,7 +51,7 @@ class MoipHttpClient {
     protected $request;
 
     /**
-     * @var  MoipHttpResponse  $response  HTTP Client Response
+     * @var  MoipResponse  $response  Moip Response
      */
     protected $response;
 
@@ -72,7 +72,7 @@ class MoipHttpClient {
     public function __construct(MoipAuthentication $auth, $environment, $options = [])
     {
         $this->auth = $auth;
-        $this->httpClient = new Client;
+        $this->client = new Client;
         $this->environment = $environment;
         $this->options = array_merge($this->options, $options);
 
@@ -86,11 +86,11 @@ class MoipHttpClient {
      */
     protected function setupHttpClient()
     {
-        $this->httpClient->setDefaultOption('exceptions', $this->options['exceptions']);
-        $this->httpClient->setDefaultOption('timeout', 10);
-        $this->httpClient->setDefaultOption('connect_timeout', 10);
+        $this->client->setDefaultOption('exceptions', $this->options['exceptions']);
+        $this->client->setDefaultOption('timeout', 10);
+        $this->client->setDefaultOption('connect_timeout', 10);
 
-        $this->httpClient->setDefaultOption('headers', [
+        $this->client->setDefaultOption('headers', [
             'Authorization' => $this->auth->generateAuthorization()
         ]);
     }
@@ -136,7 +136,7 @@ class MoipHttpClient {
      * @param  array  $query
      * @return $this
      */
-    public function addQueryString(array $query)
+    public function addQueryString($query)
     {
         $this->queryString = array_merge($this->queryString, $query);
 
@@ -153,7 +153,7 @@ class MoipHttpClient {
      */
     protected function makeHttpRequest($method, $params = null, $payload = [])
     {
-        $this->request = $this->httpClient->createRequest($method, $this->environment, ['json' => $payload]);
+        $this->request = $this->client->createRequest($method, $this->environment, ['json' => $payload]);
 
         $this->setRequestQueryString();
         $this->setRequestUrlPaths($params);
@@ -169,7 +169,7 @@ class MoipHttpClient {
     protected function send()
     {
         try {
-            $response = $this->httpClient->send($this->request);
+            $response = $this->client->send($this->request);
         } catch (RequestException $e) {
 
             if (!$e->hasResponse()) {
@@ -187,7 +187,7 @@ class MoipHttpClient {
             throw new UnexpectedException($e);
         }
 
-        return $this->response = new MoipHttpResponse($response, $this->path);
+        return $this->response = new MoipResponse($response, $this->path);
     }
 
     /**
@@ -195,25 +195,25 @@ class MoipHttpClient {
      *
      * @return Request
      */
-    public function getRequest()
-    {
-        return $this->request;
-    }
+//    public function getRequest()
+//    {
+//        return $this->request;
+//    }
 
     /**
      * Get Client
      *
      * @return Client
      */
-    public function getClient()
-    {
-        return $this->httpClient;
-    }
+//    public function getClient()
+//    {
+//        return $this->httpClient;
+//    }
 
     /**
-     * Get Client Response
+     * Get Moip Response
      *
-     * @return MoipHttpResponse
+     * @return MoipResponse
      */
     public function getResponse()
     {
@@ -225,7 +225,7 @@ class MoipHttpClient {
      *
      * @param  string  $route
      * @param  array  $binds
-     * @return MoipHttpResponse
+     * @return MoipResponse
      */
     public function get($route = '', $binds = [])
     {
@@ -238,7 +238,7 @@ class MoipHttpClient {
      * @param  string  $route
      * @param  array  $binds
      * @param  array  $payload
-     * @return MoipHttpResponse
+     * @return MoipResponse
      */
     public function put($route, $binds = [], $payload = [])
     {
@@ -251,7 +251,7 @@ class MoipHttpClient {
      * @param  string  $route
      * @param  array  $binds
      * @param  array  $payload
-     * @return MoipHttpResponse
+     * @return MoipResponse
      */
     public function post($route, $binds = [], $payload = [])
     {
@@ -295,6 +295,21 @@ class MoipHttpClient {
         $this->version = $version;
 
         return $this;
+    }
+
+    public function getBodyContent()
+    {
+        return (string) $this->request->getBody();
+    }
+
+    public function getHttpMethod()
+    {
+        //
+    }
+
+    public function getUrl()
+    {
+        //
     }
 
 }

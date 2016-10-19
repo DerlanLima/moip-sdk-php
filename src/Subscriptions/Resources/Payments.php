@@ -17,7 +17,7 @@ class Payments extends MoipResource {
     /**
      * @var  string  $path
      */
-    protected $path = 'payments';
+    protected $resource = 'payments';
 
     /**
      * Find a invoice

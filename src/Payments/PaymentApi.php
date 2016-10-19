@@ -34,7 +34,7 @@ class PaymentApi extends Api {
      */
     public function customers()
     {
-        return new Customers($this->client);
+        return new Customers($this);
     }
 
     /**
@@ -44,7 +44,7 @@ class PaymentApi extends Api {
      */
     public function orders()
     {
-        return new Orders($this->client);
+        return new Orders($this);
     }
 
     /**
@@ -54,7 +54,7 @@ class PaymentApi extends Api {
      */
     public function payments()
     {
-        return new Payments($this->client);
+        return new Payments($this);
     }
 
 }

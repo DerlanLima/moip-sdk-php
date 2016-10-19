@@ -5,12 +5,17 @@ namespace Softpampa\Moip;
 use stdClass;
 use JsonSerializable;
 
-abstract class MoipResource implements JsonSerializable {
+abstract class MoipResource implements JsonSerializable, Contracts\MoipResource {
 
     /**
-     * @var  MoipHttpClient  $httpClient  Moip HTTP Client
+     * @var  MoipClient  $client  Moip HTTP Client
      */
     protected $client;
+
+    /**
+     * @var  Api  $api  Moip API
+     */
+    protected $api;
 
     /**
      * @var  stdClass  $data  Resource
@@ -22,10 +27,11 @@ abstract class MoipResource implements JsonSerializable {
      *
      * @param  MoipHttpClient  $client  HTTP Client
      */
-    public function __construct(MoipHttpClient $client)
+    public function __construct(Api $api)
     {
         $this->data = new stdClass;
-        $this->client = $client;
+        $this->api = $api;
+        $this->client = $api->getMoip()->getClient();
 
         $this->initialize();
     }
@@ -47,7 +53,7 @@ abstract class MoipResource implements JsonSerializable {
      */
     protected function prepareResourcePath()
     {
-        $this->client->setPath($this->path);
+        $this->client->setPath($this->resource);
     }
 
     /**
@@ -55,39 +61,21 @@ abstract class MoipResource implements JsonSerializable {
      *
      * @return string
      */
-    public function getPath()
+    public function getResource()
     {
-        return $this->path;
+        return $this->resource;
     }
 
     /**
-     * Get MoipHttpResponse
+     * Set Resource Path
      *
-     * @return MoipHttpResponse
+     * @return string
      */
-    public function getResponse()
+    public function setResource($path)
     {
-        return $this->client->getResponse();
-    }
+        $this->resource = $path;
 
-    /**
-     * Get MoipHttpClient
-     *
-     * @return MoipHttpClient
-     */
-    public function getClient()
-    {
-        return $this->client;
-    }
-
-    /**
-     * Get results
-     *
-     * @return Illuminate\Support\Collection
-     */
-    public function getResults()
-    {
-        return $this->getResponse()->getResults();
+        return $this;
     }
 
     /**
@@ -95,7 +83,7 @@ abstract class MoipResource implements JsonSerializable {
      *
      * @return $this
      */
-    public function populate(MoipHttpResponse $response)
+    public function populate(MoipResponse $response)
     {
         if (is_array($response)) {
             $this->data = (object) $response;
@@ -109,90 +97,15 @@ abstract class MoipResource implements JsonSerializable {
     }
 
     /**
-     * Generate Moip Code
-     */
-    public function generateCode()
-    {
-        return uniqid();
-    }
-
-    /**
-     * Define limit
-     *
-     * @param  int  $limit
-     * @return $this
-     */
-    public function limit($limit)
-    {
-        $this->client->addQueryString([
-            'limit' => (int) $limit
-        ]);
-
-        return $this;
-    }
-
-    /**
-     * Define offset
-     *
-     * @param  int  $offset
-     * @return $this
-     */
-    public function offset($offset)
-    {
-        $this->client->addQueryString([
-            'offset' => (int) $offset
-        ]);
-
-        return $this;
-    }
-
-    /**
      * Define filter
      *
-     * @param  int  $offset
+     * @param  int  $pattern
+     * @param  int  $binds
      * @return $this
      */
-    public function addFilter($type, $key, $value)
+    public function addFilter($pattern, $binds)
     {
-        $this->client->addQueryString([
-            'filters' => "{$key}::{$type}({$value})|"
-        ]);
-
-        return $this;
-    }
-
-    /**
-     * Define filter `in`
-     *
-     * @param  string  $key
-     * @param  array  $values
-     * @return $this
-     */
-    public function in($key, $values)
-    {
-        $values = implode(',', $values);
-
-        $this->client->addQueryString([
-            'filters' => "{$key}::in({$value})|"
-        ]);
-
-        return $this;
-    }
-
-    /**
-     * Define filter `between`
-     *
-     * @param  string  $key
-     * @param  string  $a
-     * @param  string  $b
-     * @return $this
-     */
-    public function between($key, $a, $b)
-    {
-
-        $this->client->addQueryString([
-            'filters' => "{$key}::bt({$a},{$b})|"
-        ]);
+        //
 
         return $this;
     }

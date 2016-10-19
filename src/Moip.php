@@ -2,7 +2,7 @@
 
 namespace Softpampa\Moip;
 
-use Softpampa\Moip\MoipHttpClient;
+use Softpampa\Moip\MoipClient;
 use Softpampa\Moip\Payments\PaymentApi;
 use Softpampa\Moip\Contracts\MoipAuthentication;
 use Softpampa\Moip\Subscriptions\SubscriptionApi;
@@ -20,9 +20,9 @@ class Moip {
     const SANDBOX = 'https://sandbox.moip.com.br';
 
     /**
-     * @var  MoipHttpClient  $httpClient  Moip HTTP Client
+     * @var  MoipClient  $client  Moip HTTP Client
      */
-    protected $httpClient;
+    protected $client;
 
     /**
      * Constructor.
@@ -32,17 +32,17 @@ class Moip {
      */
     public function __construct(MoipAuthentication $auth, $environment = self::SANDBOX, $options = [])
     {
-        $this->httpClient = new MoipHttpClient($auth, $environment, $options);
+        $this->client = new MoipClient($auth, $environment, $options);
     }
 
     /**
      * Get Http Client.
      *
-     * @return MoipHttpClient
+     * @return MoipClient
      */
-    public function getHttpClient()
+    public function getClient()
     {
-        return $this->httpClient;
+        return $this->client;
     }
 
     /**

@@ -36,7 +36,7 @@ class SubscriptionApi extends Api {
      */
     public function plans()
     {
-        return new Plans($this->client);
+        return new Plans($this);
     }
 
     /**
@@ -46,7 +46,7 @@ class SubscriptionApi extends Api {
      */
     public function customers()
     {
-        return new Customers($this->client);
+        return new Customers($this);
     }
 
     /**
@@ -56,7 +56,7 @@ class SubscriptionApi extends Api {
      */
     public function subscriptions()
     {
-        return new Subscriptions($this->client);
+        return new Subscriptions($this);
     }
 
     /**
@@ -66,7 +66,7 @@ class SubscriptionApi extends Api {
      */
     public function invoices()
     {
-        return new Invoices($this->client);
+        return new Invoices($this);
     }
 
     /**
@@ -76,7 +76,7 @@ class SubscriptionApi extends Api {
      */
     public function payments()
     {
-        return new Payments($this->client);
+        return new Payments($this);
     }
 
 }

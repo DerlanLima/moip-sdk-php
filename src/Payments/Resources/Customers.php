@@ -40,7 +40,7 @@ class Customers extends MoipResource {
     /**
      * @var  string  $path
      */
-    protected $path = 'customers';
+    protected $resource = 'customers';
 
     /**
      * Get all customers

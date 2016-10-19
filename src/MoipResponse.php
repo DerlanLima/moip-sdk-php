@@ -2,20 +2,21 @@
 
 namespace Softpampa\Moip;
 
+use stdClass;
 use GuzzleHttp\Message\Response;
 use Illuminate\Support\Collection;
 
-class MoipHttpResponse {
+class MoipResponse implements Contracts\MoipResponse {
 
     /**
-     * @var  GuzzleHttp\Message\Response  $response
+     * @var  Response  $response
      */
     protected $response;
 
     /**
-     * @var  stdClass  $responseContent
+     * @var  stdClass  $content
      */
-    protected $responseContent;
+    protected $content;
 
     /**
      * @var  string  $resource
@@ -30,14 +31,14 @@ class MoipHttpResponse {
     /**
      * Constructor.
      *
-     * @param  GuzzleHttp\Message\Response $response
+     * @param  Response $response
      * @param  string  $resource
      */
     public function __construct(Response $response, $resource)
     {
         $this->response = $response;
         $this->resource = $resource;
-        $this->responseContent = json_decode($response->getBody()->getContents());
+        $this->content = json_decode($this->getBodyContent());
 
         if ($this->hasErrors()) {
             $this->setResponseErrors();
@@ -45,43 +46,53 @@ class MoipHttpResponse {
     }
 
     /**
-     * Get Client Http Response
+     * Get response HTTP Code Status
      *
-     * @return GuzzleHttp\Message\Response
+     * @return int
      */
-    public function getHttpResponse()
+    public function getStatusCode()
     {
-        return $this->response;
+        return $this->response->getStatusCode();
     }
 
     /**
-     * Check if has Http Error
+     * Get response HTTP Body Content
+     *
+     * @return string
+     */
+    public function getBodyContent()
+    {
+        return (string) $this->response->getBody();
+    }
+
+    /**
+     * Check if has HTTP errors
      *
      * @return boolean
      */
     public function hasErrors()
     {
-        return $this->response->getStatusCode() >= 400;
+        return $this->getStatusCode() >= 400;
     }
 
     /**
-     * Check if has Http Client Error
+     * Check if has HTTP Client Error
      *
      * @return boolean
      */
     public function hasClientErrors()
     {
-        return $this->response->getStatusCode() >= 400 && $this->response->getStatusCode() < 500;
+        return $this->getStatusCode() >= 400 && $this->getStatusCode() < 500;
     }
 
     /**
-     * Check if has Http Server Error
+     * Check if has HTTP Server Error
      *
      * @return boolean
      */
     public function hasServerErrors()
     {
-        return $this->response->getStatusCode() >= 500;
+        return $this->getStatusCode() >= 500;
     }
 
     /**
@@ -104,8 +115,9 @@ class MoipHttpResponse {
      */
     protected function setResponseErrors()
     {
-        if (isset($this->responseContent) && property_exists($this->responseContent, 'errors')) {
-            foreach ($this->responseContent->errors as $error) {
+        if (isset($this->content) && property_exists($this->content, 'errors')) {
+
+            foreach ($this->content->errors as $error) {
                 $this->setError($error->code, $error->description);
             }
         }
@@ -118,12 +130,13 @@ class MoipHttpResponse {
      * @param  string  $description
      * @return void
      */
-    protected function setError($code, $description)
+    public function setError($code, $description)
     {
-        $this->errors[] = (object) [
-                    'code' => $code,
-                    'description' => $description
-        ];
+        $error = new stdClass;
+        $error->code = $code;
+        $error->description = $description;
+
+        $this->errors[] = $error;
     }
 
     /**
@@ -133,21 +146,21 @@ class MoipHttpResponse {
      */
     public function getErrors()
     {
-        return $this->errors;
+        return new Collection($this->errors);
     }
 
     /**
      * Return response content
      *
-     * @return Illuminate\Support\Collection
+     * @return Collection
      */
     public function getResults()
     {
-        if (isset($this->responseContent) && property_exists($this->responseContent, $this->resource)) {
-            return new Collection($this->responseContent->{$this->resource});
+        if (isset($this->content) && property_exists($this->content, $this->resource)) {
+            return new Collection($this->content->{$this->resource});
         }
 
-        return $this->responseContent;
+        return $this->content;
     }
 
 }

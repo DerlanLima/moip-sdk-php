@@ -22,9 +22,19 @@ abstract class Api {
     public function __construct(Moip $moip)
     {
         $this->moip = $moip;
-        $this->client = $this->moip->getHttpClient();
+        $this->client = $this->moip->getClient();
 
         $this->prepareClient();
+    }
+
+    /**
+     * Get Moip
+     *
+     * @return Moip
+     */
+    public function getMoip()
+    {
+        return $this->moip;
     }
 
     /**

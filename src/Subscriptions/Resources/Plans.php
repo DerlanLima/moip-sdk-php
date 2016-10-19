@@ -59,7 +59,7 @@ class Plans extends MoipResource {
     /**
      * @var  string  $path
      */
-    protected $path = 'plans';
+    protected $resource = 'plans';
 
     /**
      * Get all plans

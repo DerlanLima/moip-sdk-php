@@ -18,7 +18,7 @@ class Orders extends MoipResource {
     /**
      * @var  string  $path
      */
-    protected $path = 'orders';
+    protected $resource = 'orders';
 
     /**
      * @const  string  AMOUNT_CURRENCY

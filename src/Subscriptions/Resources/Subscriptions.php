@@ -22,7 +22,7 @@ class Subscriptions extends MoipResource {
     /**
      * @var  string  $path
      */
-    protected $path = 'subscriptions';
+    protected $resource = 'subscriptions';
 
     /**
      * Initialize Orders Data Object

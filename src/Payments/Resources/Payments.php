@@ -30,12 +30,12 @@ class Payments extends MoipResource {
     /**
      * @var  string  $path
      */
-    protected $path = 'payments';
+    protected $resource = 'payments';
 
     /**
      * @var  Orders  $order
      */
-    protected $order;
+    private $order;
 
     /**
      * Initialize a resource
@@ -123,6 +123,7 @@ class Payments extends MoipResource {
      * Set credit card holder.
      *
      * @param  Customer  $holder
+     * @return void
      */
     private function setCreditCardHolder(Customers $holder)
     {
@@ -137,8 +138,6 @@ class Payments extends MoipResource {
         $this->data->fundingInstrument->creditCard->holder->birthdate = $birthdate;
         $this->data->fundingInstrument->creditCard->holder->taxDocument = $holder->taxDocument;
         $this->data->fundingInstrument->creditCard->holder->phone = $holder->phone;
-
-        var_dump($this->data->fundingInstrument->creditCard->holder->birthdate);
     }
 
     /**
@@ -146,6 +145,7 @@ class Payments extends MoipResource {
      *
      * @param  string  $hash
      * @param  Customer  $holder
+     * @return $this
      */
     public function setCreditCardHash($hash, Customer $holder)
     {
