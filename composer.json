@@ -20,8 +20,16 @@
             "Softpampa\\Moip\\": "src"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Softpampa\\Moip\\Tests\\": "tests/"
+        }
+    },
     "require": {
         "guzzlehttp/guzzle": "5.3.1",
         "illuminate/support": "4.*|5.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.6"
     }
 }

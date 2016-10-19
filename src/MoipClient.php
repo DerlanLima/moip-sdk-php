@@ -297,6 +297,11 @@ class MoipClient implements Contracts\MoipClient {
         return $this;
     }
 
+    public function getHttpClient()
+    {
+        return $this->client;
+    }
+
     public function getBodyContent()
     {
         return (string) $this->request->getBody();
@@ -304,12 +309,12 @@ class MoipClient implements Contracts\MoipClient {
 
     public function getHttpMethod()
     {
-        //
+        return $this->request->getMethod();
     }
 
     public function getUrl()
     {
-        //
+        return $this->request->getUrl();
     }
 
 }
