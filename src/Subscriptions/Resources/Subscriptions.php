@@ -10,7 +10,10 @@
 
 namespace Softpampa\Moip\Subscriptions\Resources;
 
+use stdClass;
+use Illuminate\Support\Collection;
 use Softpampa\Moip\MoipResource;
+use Softpampa\Moip\Subscriptions\Events\SubscriptionsEvent;
 
 class Subscriptions extends MoipResource {
 
@@ -39,7 +42,7 @@ class Subscriptions extends MoipResource {
     /**
      * Get all subscriptions
      *
-     * @return Illuminate\Support\Collection
+     * @return Collection
      */
     public function all()
     {
@@ -65,7 +68,11 @@ class Subscriptions extends MoipResource {
      */
     public function save()
     {
-        $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('SUBSCRIPTION.UPDATE', new SubscriptionsEvent($this->data));
+        }
 
         return $this;
     }
@@ -81,7 +88,11 @@ class Subscriptions extends MoipResource {
             $code = $this->data->code;
         }
 
-        $this->client->put('/{id}/suspend', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}/suspend', ['id' => $this->data->code], $this->data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('SUBSCRIPTION.SUSPENDED', new SubscriptionsEvent($this->data));
+        }
 
         return $this;
     }
@@ -97,7 +108,11 @@ class Subscriptions extends MoipResource {
             $code = $this->data->code;
         }
 
-        $this->client->put('/{id}/activate', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}/activate', ['id' => $this->data->code], $this->data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('SUBSCRIPTION.ACTIVATED', new SubscriptionsEvent($this->data));
+        }
 
         return $this;
     }
@@ -113,7 +128,11 @@ class Subscriptions extends MoipResource {
             $code = $this->data->code;
         }
 
-        $this->client->put('/{id}/cancel', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}/cancel', ['id' => $this->data->code], $this->data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('SUBSCRIPTION.CANCELED', new SubscriptionsEvent($this->data));
+        }
 
         return $this;
     }
@@ -156,7 +175,11 @@ class Subscriptions extends MoipResource {
             $this->populate($data);
         }
 
-        $this->client->post('', [], $data);
+        $response = $this->client->post('', [], $data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('SUBSCRIPTION.UPDATE', new SubscriptionsEvent($this->data));
+        }
 
         return $this;
     }
@@ -195,7 +218,7 @@ class Subscriptions extends MoipResource {
      */
     public function setPlan(Plans $plan)
     {
-        $this->data->plan = new \stdClass;
+        $this->data->plan = new stdClass;
         $this->data->plan->code = $plan->code;
 
         return $this;
@@ -230,7 +253,7 @@ class Subscriptions extends MoipResource {
             'new_customer' => 'false'
         ]);
 
-        $this->data->customer = new \stdClass;
+        $this->data->customer = new stdClass;
         $this->data->customer->code = $customer->code;
 
         return $this;

@@ -11,9 +11,11 @@
 namespace Softpampa\Moip\Payments\Resources;
 
 use DateTime;
+use Illuminate\Support\Collection;
+use Softpampa\Moip\MoipResource;
+use Softpampa\Moip\Payments\Events\CustomersEvent;
 use stdClass;
 use UnexpectedValueException;
-use Softpampa\Moip\MoipResource;
 
 class Customers extends MoipResource {
 
@@ -45,7 +47,7 @@ class Customers extends MoipResource {
     /**
      * Get all customers
      *
-     * @return Illuminate\Support\Collection
+     * @return Collection
      */
     public function all()
     {
@@ -77,7 +79,11 @@ class Customers extends MoipResource {
             $this->populate($data);
         }
 
-        $this->populate($this->client->post('', [], $data));
+        $response = $this->populate($this->client->post('', [], $data));
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('CLIENT.CREATE', new CustomersEvent($this->data));
+        }
 
         return $this;
     }

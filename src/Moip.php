@@ -25,14 +25,31 @@ class Moip {
     protected $client;
 
     /**
+     * @var  MoipEvent  $event  Moip Event Dispatcher
+     */
+    protected $event;
+
+    /**
      * Constructor.
      *
-     * @param  MoipAuth  $auth  Moip Authentication
-     * @param  string  $environment  Moip Environment
+     * @param  MoipAuth  $auth  Moip authentication
+     * @param  string  $environment  Moip environment
+     * @param  array  $options  Moip defaults pptions
      */
     public function __construct(MoipAuthentication $auth, $environment = self::SANDBOX, $options = [])
     {
+        $this->event = new MoipEvent;
         $this->client = new MoipClient($auth, $environment, $options);
+    }
+
+    /**
+     * Get Moip Events
+     *
+     * @return MoipEvents
+     */
+    public function getEvent()
+    {
+        return $this->event;
     }
 
     /**

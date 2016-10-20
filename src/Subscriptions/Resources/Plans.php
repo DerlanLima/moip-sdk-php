@@ -11,8 +11,9 @@
 namespace Softpampa\Moip\Subscriptions\Resources;
 
 use stdClass;
-use Softpampa\Moip\MoipResource;
 use Illuminate\Support\Collection;
+use Softpampa\Moip\MoipResource;
+use Softpampa\Moip\Subscriptions\Events\PlansEvent;
 
 class Plans extends MoipResource {
 
@@ -57,7 +58,7 @@ class Plans extends MoipResource {
     const STATUS_ACTIVE = 'ACTIVE';
 
     /**
-     * @var  string  $path
+     * @var  string  $resource
      */
     protected $resource = 'plans';
 
@@ -90,7 +91,11 @@ class Plans extends MoipResource {
      */
     public function save()
     {
-        $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('PLAN.UPDATE', new PlansEvent($this->data));
+        }
 
         return $this;
     }
@@ -123,7 +128,11 @@ class Plans extends MoipResource {
             $this->populate($data);
         }
 
-        $this->client->post('', [], $data);
+        $response = $this->client->post('', [], $data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('PLAN.CREATE', new PlansEvent($this->data));
+        }
 
         return $this;
     }
@@ -140,7 +149,11 @@ class Plans extends MoipResource {
             $code = $this->data->code;
         }
 
-        $this->client->put('/{code}/activate', ['code' => $code]);
+        $response = $this->client->put('/{code}/activate', ['code' => $code]);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('PLAN.ACTIVATED', new PlansEvent($this->data));
+        }
 
         return $this;
     }
@@ -157,7 +170,11 @@ class Plans extends MoipResource {
             $code = $this->data->code;
         }
 
-        $this->client->put('/{code}/inactivate', ['code' => $code]);
+        $response = $this->client->put('/{code}/inactivate', ['code' => $code]);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('PLAN.INACTIVATED', new PlansEvent($this->data));
+        }
 
         return $this;
     }
@@ -279,7 +296,7 @@ class Plans extends MoipResource {
      * @param  string  $status
      * @return $this
      */
-    public function setStatus($status = 'ACTIVE')
+    public function setStatus($status = self::STATUS_ACTIVE)
     {
         $this->data->status = $status;
 

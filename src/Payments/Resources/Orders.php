@@ -10,8 +10,10 @@
 
 namespace Softpampa\Moip\Payments\Resources;
 
-use stdClass;
+use Illuminate\Support\Collection;
 use Softpampa\Moip\MoipResource;
+use Softpampa\Moip\Payments\Events\OrdersEvent;
+use stdClass;
 
 class Orders extends MoipResource {
 
@@ -79,7 +81,11 @@ class Orders extends MoipResource {
             $this->populate($data);
         }
 
-        $this->populate($this->client->post('', [], $data));
+        $response = $this->populate($this->client->post('', [], $data));
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('ORDER.CREATED', new OrdersEvent($this->data));
+        }
 
         return $this;
     }

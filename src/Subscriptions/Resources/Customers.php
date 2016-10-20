@@ -10,9 +10,11 @@
 
 namespace Softpampa\Moip\Subscriptions\Resources;
 
-use DateTime;
 use stdClass;
+use DateTime;
+use Illuminate\Support\Collection;
 use Softpampa\Moip\MoipResource;
+use Softpampa\Moip\Subscriptions\Events\CustomersEvent;
 
 class Customers extends MoipResource {
 
@@ -55,7 +57,11 @@ class Customers extends MoipResource {
      */
     public function save()
     {
-        $this->client->put('/{code}', ['code' => $this->data->code], $this->data);
+        $response = $this->client->put('/{code}', ['code' => $this->data->code], $this->data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('CUSTOMER.UPDATE', new CustomersEvent($this->data));
+        }
 
         return $this;
     }
@@ -74,7 +80,12 @@ class Customers extends MoipResource {
             $this->populate($data);
         }
 
-        $this->client->post('', [], $data);
+        $response = $this->client->post('', [], $data);
+
+        if (!$response->hasErrors()) {
+            $this->event->dispatch('CUSTOMER.CREATED', new CustomersEvent($this->data));
+        }
+
 
         return $this;
     }
@@ -198,8 +209,8 @@ class Customers extends MoipResource {
      * @param  string  $district
      * @param  string  $city
      * @param  string  $state
-     * @param  string  $country
      * @param  string  $zipcode
+     * @param  string  $country
      * @return $this
      */
     public function setAddress($street, $number, $complement, $district, $city, $state, $zipcode, $country = self::ADDRESS_COUNTRY)
