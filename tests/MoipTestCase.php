@@ -25,6 +25,11 @@ abstract class MoipTestCase extends TestCase {
     protected $httpClient;
 
     /**
+     * @var  Symfony\Component\EventDispatcher\EventDispatcher  $eventDispatcher
+     */
+    protected $eventDispatcher;
+
+    /**
      * Set up all tests
      */
     public function setUp()
@@ -33,6 +38,7 @@ abstract class MoipTestCase extends TestCase {
 
         $this->client = $this->moip->getClient();
         $this->httpClient = $this->client->getHttpClient();
+        $this->eventDispatcher = $this->moip->getEvent()->getDispatcher();
     }
 
     /**

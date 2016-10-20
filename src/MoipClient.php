@@ -3,20 +3,20 @@
 namespace Softpampa\Moip;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Message\Request;
+use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Exception\RequestException;
 use Softpampa\Moip\Traits\Utils;
 use Softpampa\Moip\MoipHttpResponse;
 use Softpampa\Moip\Contracts\MoipAuthentication;
-use Softpampa\Moip\Exceptions\UnexpectedException;
 use Softpampa\Moip\Exceptions\UnautorizedException;
+use Softpampa\Moip\Exceptions\UnexpectedException;
 
 class MoipClient implements Contracts\MoipClient {
 
     use Utils;
 
     /**
-     * @var  string  $auth  Moip Authentication
+     * @var  MoipAuthentication  $auth  Moip Authentication
      */
     protected $auth;
 
@@ -41,12 +41,12 @@ class MoipClient implements Contracts\MoipClient {
     protected $version;
 
     /**
-     * @var  Client  $httpClient  HTTP Client
+     * @var  GuzzleHttp\Client  $httpClient  HTTP Client
      */
     protected $client;
 
     /**
-     * @var  Request  $request  HTTP Client Request
+     * @var  GuzzleHttp\Message\Request  $request  HTTP Client Request
      */
     protected $request;
 
@@ -56,7 +56,12 @@ class MoipClient implements Contracts\MoipClient {
     protected $response;
 
     /**
-     * @var  string  $options Moip API Options
+     * @var  array  $mocks  Response Mocks
+     */
+    protected $mocks;
+
+    /**
+     * @var  array  $options Moip API Options
      */
     protected $options = [
         'exceptions' => false
@@ -65,9 +70,9 @@ class MoipClient implements Contracts\MoipClient {
     /**
      * Constructor.
      *
-     * @param  string  $token  Moip Token
-     * @param  string  $key  Moip Key
-     * @param  string  $environment  Moip Environment
+     * @param  MoipAuthentication  $auth  Moip Authentication method
+     * @param  string  $environment  Moip environment
+     * @param  array  $options  Moip options
      */
     public function __construct(MoipAuthentication $auth, $environment, $options = [])
     {
@@ -153,6 +158,8 @@ class MoipClient implements Contracts\MoipClient {
      */
     protected function makeHttpRequest($method, $params = null, $payload = [])
     {
+        $this->setMockResponses();
+
         $this->request = $this->client->createRequest($method, $this->environment, ['json' => $payload]);
 
         $this->setRequestQueryString();
@@ -191,24 +198,16 @@ class MoipClient implements Contracts\MoipClient {
     }
 
     /**
-     * Get Client Request
+     * Set Mocks Responses
      *
-     * @return Request
+     * @return void
      */
-//    public function getRequest()
-//    {
-//        return $this->request;
-//    }
-
-    /**
-     * Get Client
-     *
-     * @return Client
-     */
-//    public function getClient()
-//    {
-//        return $this->httpClient;
-//    }
+    protected function setMockResponses()
+    {
+        if (!empty($this->mocks)) {
+            $this->client->getEmitter()->attach(new Mock($this->mocks));
+        }
+    }
 
     /**
      * Get Moip Response
@@ -297,21 +296,57 @@ class MoipClient implements Contracts\MoipClient {
         return $this;
     }
 
+    /**
+     * Add a mock response
+     *
+     * @param  int  $codeStatus  HTTP Code Status
+     * @param  StreamInterface  $body  HTTP Body
+     * @param  array  $headers  HTTP Headers
+     * @return $this
+     */
+    public function addMockResponse($codeStatus, $body = null, $headers = [])
+    {
+        $headers = array_merge($headers, ['Content-Type' => 'application/json']);
+        $this->mocks[] = new Response($codeStatus, ['Content-Type' => 'application/json'], $body);
+
+        return $this;
+    }
+
+    /**
+     * Get HTTP Client
+     *
+     * @return GuzzleHttp\Message\Request
+     */
     public function getHttpClient()
     {
         return $this->client;
     }
 
+    /**
+     * Get request body content
+     *
+     * @return string
+     */
     public function getBodyContent()
     {
         return (string) $this->request->getBody();
     }
 
+    /**
+     * Get HTTP request method
+     *
+     * @return int
+     */
     public function getHttpMethod()
     {
         return $this->request->getMethod();
     }
 
+    /**
+     * Get HTTP request URL
+     *
+     * @return string
+     */
     public function getUrl()
     {
         return $this->request->getUrl();

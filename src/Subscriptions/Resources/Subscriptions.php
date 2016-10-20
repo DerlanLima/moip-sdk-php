@@ -28,9 +28,7 @@ class Subscriptions extends MoipResource {
     protected $resource = 'subscriptions';
 
     /**
-     * Initialize Orders Data Object
-     *
-     * @return void
+     * {@inheritdoc}
      */
     protected function initialize()
     {

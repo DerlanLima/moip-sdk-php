@@ -66,4 +66,14 @@ class MoipEvent {
         $this->dispatcher->dispatch($eventName, $object);
     }
 
+    /**
+     * Get Symfony EventDispatcher
+     *
+     * @return EventDispatcher
+     */
+    public function getDispatcher()
+    {
+        return $this->dispatcher;
+    }
+
 }

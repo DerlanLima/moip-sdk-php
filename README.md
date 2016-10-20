@@ -5,8 +5,9 @@ Biblioteca para integrar sua aplicação PHP com a API do Moip.
 ## Dependências
 
 * php >= 5.4.0
-* guzzlehttp/guzzle ~5.3
-* illuminate/support ~4.*|~5.*
+* guzzlehttp/guzzle 5.3
+* illuminate/support 4.\* | 5.\*
+* symfony/event-dispatcher ^3.1
 
 ## Sobre
 
