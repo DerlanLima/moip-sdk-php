@@ -10,6 +10,7 @@
 
 namespace Softpampa\Moip\Subscriptions\Resources;
 
+use DateTime;
 use stdClass;
 use Illuminate\Support\Collection;
 use Softpampa\Moip\MoipResource;
@@ -178,6 +179,24 @@ class Subscriptions extends MoipResource {
         if (!$response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.UPDATE', new SubscriptionsEvent($this->data));
         }
+
+        return $this;
+    }
+
+    /**
+     * Set next invoice date
+     *
+     * @param  string  $date
+     * @return $this
+     */
+    public function setNextInvoiceDate($date)
+    {
+        $date = DateTime::createFromFormat('Y-m-d', $date);
+
+        $this->next_invoice_date = new stdClass();
+        $this->next_invoice_date->day = $date->format('d');
+        $this->next_invoice_date->month = $date->format('m');
+        $this->next_invoice_date->year = $date->format('Y');
 
         return $this;
     }

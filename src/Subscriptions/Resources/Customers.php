@@ -31,7 +31,7 @@ class Customers extends MoipResource {
     /**
      * Get all customers
      *
-     * @return Collection
+     * @return Illuminate\Support\Collection
      */
     public function all()
     {

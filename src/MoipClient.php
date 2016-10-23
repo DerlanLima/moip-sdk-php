@@ -4,12 +4,15 @@ namespace Softpampa\Moip;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\Message\Request;
+use GuzzleHttp\Message\Response;
+use GuzzleHttp\Stream\StreamInterface;
 use GuzzleHttp\Exception\RequestException;
 use Softpampa\Moip\Traits\Utils;
 use Softpampa\Moip\MoipHttpResponse;
-use Softpampa\Moip\Contracts\MoipAuthentication;
-use Softpampa\Moip\Exceptions\UnautorizedException;
 use Softpampa\Moip\Exceptions\UnexpectedException;
+use Softpampa\Moip\Exceptions\UnautorizedException;
+use Softpampa\Moip\Contracts\MoipAuthentication;
 
 class MoipClient implements Contracts\MoipClient {
 
@@ -41,12 +44,12 @@ class MoipClient implements Contracts\MoipClient {
     protected $version;
 
     /**
-     * @var  GuzzleHttp\Client  $httpClient  HTTP Client
+     * @var  Client  $httpClient  HTTP Client
      */
     protected $client;
 
     /**
-     * @var  GuzzleHttp\Message\Request  $request  HTTP Client Request
+     * @var  Request  $request  HTTP Client Request
      */
     protected $request;
 
@@ -188,7 +191,7 @@ class MoipClient implements Contracts\MoipClient {
             if ($statusCode == 401) {
                 throw new UnautorizedException;
             } elseif ($statusCode > 400 && $statusCode < 500) {
-                
+
             }
 
             throw new UnexpectedException($e);
@@ -315,7 +318,7 @@ class MoipClient implements Contracts\MoipClient {
     /**
      * Get HTTP Client
      *
-     * @return GuzzleHttp\Message\Request
+     * @return Request
      */
     public function getHttpClient()
     {

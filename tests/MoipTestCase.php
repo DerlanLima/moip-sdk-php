@@ -2,12 +2,16 @@
 
 namespace Softpampa\Moip\Tests;
 
-use GuzzleHttp\Subscriber\Mock;
+use GuzzleHttp\Stream\Stream;
 use PHPUnit\Framework\TestCase;
+use PHPUnit_Framework_MockObject_MockObject;
 use Softpampa\Moip\Moip;
 use Softpampa\Moip\MoipClient;
+use Softpampa\Moip\Tests\Helpers\JsonFile;
 
 abstract class MoipTestCase extends TestCase {
+
+    const SANDBOX = 'https://sandbox.moip.com.br/';
 
     /**
      * @var  Moip  $moip
@@ -20,14 +24,9 @@ abstract class MoipTestCase extends TestCase {
     protected $client;
 
     /**
-     * @var  GuzzleHttp\Client  $httpClient
+     * @var  GuzzleHttp\Stream\Stream  $emptyBody
      */
-    protected $httpClient;
-
-    /**
-     * @var  Symfony\Component\EventDispatcher\EventDispatcher  $eventDispatcher
-     */
-    protected $eventDispatcher;
+    protected $emptyBody;
 
     /**
      * Set up all tests
@@ -35,21 +34,43 @@ abstract class MoipTestCase extends TestCase {
     public function setUp()
     {
         $this->moip = new Moip($this->mockMoipAuthentication(), Moip::SANDBOX);
-
         $this->client = $this->moip->getClient();
-        $this->httpClient = $this->client->getHttpClient();
-        $this->eventDispatcher = $this->moip->getEvent()->getDispatcher();
+        $this->emptyBody = Stream::factory('{}');
+    }
+
+    public function getBodyMock($filename)
+    {
+        return Stream::factory(JsonFile::read($filename));
     }
 
     /**
-     * Attack Mock subscriber on GuzzleHttp\Client
+     * Get HTTP Request Method
      *
-     * @param  GuzzleHttp\Subscriber\Mock  $mock
-     * @return void
+     * @return string
      */
-    public function attackMockSubscriber(Mock $mock)
+    public function getHttpMethod()
     {
-        $this->httpClient->getEmitter()->attach($mock);
+        return $this->client->getHttpMethod();
+    }
+
+    /**
+     * Get HTTP Response Status Code
+     *
+     * @return string
+     */
+    public function getHttpStatusCode()
+    {
+        return $this->client->getResponse()->getStatusCode();
+    }
+
+    /**
+     * Get HTTP Request URL
+     *
+     * @return string
+     */
+    public function getHttpUrl()
+    {
+        return $this->client->getUrl();
     }
 
     /**

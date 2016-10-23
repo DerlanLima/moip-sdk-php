@@ -35,7 +35,7 @@ class Invoices extends MoipResource {
     /**
      * Return all payments from a invoice
      *
-     * @return $this
+     * @return Illuminate\Support\Collection
      */
     public function payments()
     {
