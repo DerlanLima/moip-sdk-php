@@ -2,7 +2,6 @@
 
 namespace Softpampa\Moip\Tests\Resources\Subscriptions;
 
-use GuzzleHttp\Stream\Stream;
 use Illuminate\Support\Collection;
 use Softpampa\Moip\Tests\MoipTestCase;
 use Softpampa\Moip\Subscriptions\Resources\Invoices;
@@ -15,9 +14,7 @@ class InvoicesTest extends MoipTestCase {
     private $invoices;
 
     /**
-     * Setup test
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function setUp()
     {
@@ -27,12 +24,14 @@ class InvoicesTest extends MoipTestCase {
     }
 
     /**
-     * Find a invoice
+     * Find a invoice by id
+     *
+     * @see http://dev.moip.com.br/assinaturas-api/#consultar-detalhes-de-uma-fatura-get
      */
-    public function test_find_a_invoice()
+    public function testFindAInvoiceById()
     {
         // Mock response
-        $this->client->addMockResponse(200, $this->getBodyMock('invoice.json'));
+        $this->addMockResponse(200, 'invoice.json');
 
         $invoice = $this->invoices->find('1729934');
 
@@ -44,13 +43,15 @@ class InvoicesTest extends MoipTestCase {
     }
 
     /**
-     * Get all payments
+     * Get all payments from invoice
+     *
+     * @see http://dev.moip.com.br/assinaturas-api/#listar-todos-os-pagamentos-de-uma-fatura-get
      */
-    public function test_get_all_payments()
+    public function testGetAllPaymentsFromInvoice()
     {
         // Mock response
-        $this->client->addMockResponse(200, $this->getBodyMock('invoice.json'));
-        $this->client->addMockResponse(200, $this->getBodyMock('payments.json'));
+        $this->addMockResponse(200, 'invoice.json');
+        $this->addMockResponse(200, 'payments.json');
 
         $payments = $this->invoices->find('1729934')->payments();
 

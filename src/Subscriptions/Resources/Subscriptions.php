@@ -69,7 +69,7 @@ class Subscriptions extends MoipResource {
     {
         $response = $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
 
-        if (!$response->hasErrors()) {
+        if (! $response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.UPDATE', new SubscriptionsEvent($this->data));
         }
 
@@ -83,13 +83,13 @@ class Subscriptions extends MoipResource {
      */
     public function suspend($code = null)
     {
-        if (!$code) {
+        if (! $code) {
             $code = $this->data->code;
         }
 
-        $response = $this->client->put('/{id}/suspend', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}/suspend', ['id' => $code]);
 
-        if (!$response->hasErrors()) {
+        if (! $response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.SUSPENDED', new SubscriptionsEvent($this->data));
         }
 
@@ -101,15 +101,15 @@ class Subscriptions extends MoipResource {
      *
      * @return $this
      */
-    public function activate($code)
+    public function activate($code = null)
     {
-        if (!$code) {
+        if (! $code) {
             $code = $this->data->code;
         }
 
-        $response = $this->client->put('/{id}/activate', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}/activate', ['id' => $code], $this->data);
 
-        if (!$response->hasErrors()) {
+        if (! $response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.ACTIVATED', new SubscriptionsEvent($this->data));
         }
 
@@ -121,15 +121,15 @@ class Subscriptions extends MoipResource {
      *
      * @return $this
      */
-    public function cancel($code)
+    public function cancel($code = null)
     {
-        if (!$code) {
+        if (! $code) {
             $code = $this->data->code;
         }
 
-        $response = $this->client->put('/{id}/cancel', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}/cancel', ['id' => $code]);
 
-        if (!$response->hasErrors()) {
+        if (! $response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.CANCELED', new SubscriptionsEvent($this->data));
         }
 
@@ -141,9 +141,15 @@ class Subscriptions extends MoipResource {
      *
      * @return $this
      */
-    public function invoices()
+    public function invoices($code = null)
     {
-        return $this->client->get('/{id}/invoices', ['id' => $this->data->code], $this->data)->setResource('invoices')->getResults();
+        if (! $code) {
+            $code = $this->data->code;
+        }
+
+        return $this->client->get('/{id}/invoices', ['id' => $code])
+                            ->setResource('invoices')
+                            ->getResults();
     }
 
     /**
@@ -168,7 +174,7 @@ class Subscriptions extends MoipResource {
      */
     public function create($data = [])
     {
-        if (!$data) {
+        if (! $data) {
             $data = $this->data;
         } else {
             $this->populate($data);
@@ -230,13 +236,20 @@ class Subscriptions extends MoipResource {
     /**
      * Set Plan
      *
-     * @param  Plans  $plan
+     * @param  string|Plans  $plan
      * @return $this
      */
-    public function setPlan(Plans $plan)
+    public function setPlan($plan)
     {
         $this->data->plan = new stdClass;
-        $this->data->plan->code = $plan->code;
+
+        if ($plan instanceof Plans) {
+            $code = $plan->code;
+        } else {
+            $code = $plan;
+        }
+
+        $this->data->plan->code = $code;
 
         return $this;
     }
@@ -261,17 +274,23 @@ class Subscriptions extends MoipResource {
     /**
      * Set Customer
      *
-     * @param  Customers  $customer
+     * @param  string|Customers  $customer
      * @return $this
      */
-    public function setCustomer(Customers $customer)
+    public function setCustomer($customer)
     {
         $this->client->addQueryString([
             'new_customer' => 'false'
         ]);
 
+        if ($customer instanceof Customers) {
+            $code = $customer->code;
+        } else {
+            $code = $customer;
+        }
+
         $this->data->customer = new stdClass;
-        $this->data->customer->code = $customer->code;
+        $this->data->customer->code = $code;
 
         return $this;
     }

@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
 use Softpampa\Moip\Moip;
 use Softpampa\Moip\MoipClient;
+use Softpampa\Moip\MoipBasicAuth;
 use Softpampa\Moip\Tests\Helpers\JsonFile;
 
 abstract class MoipTestCase extends TestCase {
@@ -29,6 +30,11 @@ abstract class MoipTestCase extends TestCase {
     protected $emptyBody;
 
     /**
+     * @var  string  $env  Moip environment
+     */
+    protected $env;
+
+    /**
      * Set up all tests
      */
     public function setUp()
@@ -40,7 +46,20 @@ abstract class MoipTestCase extends TestCase {
 
     public function getBodyMock($filename)
     {
-        return Stream::factory(JsonFile::read($filename));
+        if (! $filename) {
+            $body = $this->emptyBody;
+        } else {
+            $body = JsonFile::read($filename);
+        }
+
+        return Stream::factory($body);
+    }
+
+    public function addMockResponse($code, $mockFilename = null)
+    {
+        if ($this->env == 'MOCKBOX') {
+            $this->client->addMockResponse($code, $this->getBodyMock($mockFilename));
+        }
     }
 
     /**
@@ -80,12 +99,22 @@ abstract class MoipTestCase extends TestCase {
      */
     private function mockMoipAuthentication()
     {
+        $moipKey = getenv('MOIP_KEY');
+        $moipToken = getenv('MOIP_TOKEN');
+
+        if ($moipKey && $moipToken) {
+            $this->env = 'SANDBOX';
+            return new MoipBasicAuth($moipToken, $moipKey);
+        }
+
         $auth = $this->getMockBuilder('Softpampa\Moip\MoipBasicAuth')
                 ->setConstructorArgs(['MOIP_API_TOKEN', 'MOIP_API_KEY'])
                 ->getMock();
 
         $auth->method('generateAuthorization')
                 ->willReturn('Basic BASE64(MOIP_API_TOKEN:MOIP_API_KEY)');
+
+        $this->env = 'MOCKBOX';
 
         return $auth;
     }

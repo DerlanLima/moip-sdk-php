@@ -74,7 +74,7 @@ class Customers extends MoipResource {
      */
     public function create($data = [])
     {
-        if (!$data) {
+        if (! $data) {
             $data = $this->data;
         } else {
             $this->populate($data);
@@ -82,10 +82,9 @@ class Customers extends MoipResource {
 
         $response = $this->client->post('', [], $data);
 
-        if (!$response->hasErrors()) {
+        if (! $response->hasErrors()) {
             $this->event->dispatch('CUSTOMER.CREATED', new CustomersEvent($this->data));
         }
-
 
         return $this;
     }
@@ -97,7 +96,7 @@ class Customers extends MoipResource {
      * @param  array  $data
      * @return $this
      */
-    public function edit($code, $data)
+    public function edit($code, $data = [])
     {
         $this->client->put('/{code}', ['code' => $code], $data);
 
@@ -109,9 +108,19 @@ class Customers extends MoipResource {
      *
      * @return $this
      */
-    public function updateBillingInfo()
+    public function updateBillingInfo($code = null, $data = [])
     {
-        $this->client->put('/{code}/billing_infos', ['code' => $this->data->code], $this->data->billing_info);
+        if (! $code) {
+            $code = $this->data->code;
+        }
+
+        if (! empty($data)) {
+            $payload['credit_card'] = $data;
+        } elseif (isset($this->data->billing_info)) {
+            $payload = $this->data->billing_info;
+        }
+
+        $this->client->put('/{code}/billing_infos', ['code' => $code], $payload);
 
         return $this;
     }

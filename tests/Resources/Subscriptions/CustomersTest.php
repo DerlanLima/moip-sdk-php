@@ -2,19 +2,19 @@
 
 namespace Softpampa\Moip\Tests\Resources\Subscriptions;
 
-use GuzzleHttp\Stream\Stream;
 use Illuminate\Support\Collection;
-use Softpampa\Moip\Subscriptions\Resources\Customers;
 use Softpampa\Moip\Tests\MoipTestCase;
+use Softpampa\Moip\Subscriptions\Resources\Customers;
 
 class CustomersTest extends MoipTestCase {
 
+    /**
+     * @var  Customers  $customer
+     */
     private $customer;
 
     /**
-     * Setup test
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function setUp()
     {
@@ -25,11 +25,12 @@ class CustomersTest extends MoipTestCase {
 
     /**
      * Gel all customers
+     * @see http://dev.moip.com.br/assinaturas-api/#listar-assinantes-get
      */
-    public function test_get_all_customers()
+    public function testGetAllCustomers()
     {
         // Mock response
-        $this->client->addMockResponse(200, $this->getBodyMock('customers.json'));
+        $this->addMockResponse(200, 'customers.json');
 
         $customers = $this->customer->all();
 
@@ -40,12 +41,13 @@ class CustomersTest extends MoipTestCase {
     }
 
     /**
-     * Find a customer
+     * Find a customer by code
+     * @see http://dev.moip.com.br/assinaturas-api/#consultar-assinante-get
      */
-    public function test_find_a_customer()
+    public function testFindACustomerByCode()
     {
         // Mock response
-        $this->client->addMockResponse(200, $this->getBodyMock('customer.json'));
+        $this->addMockResponse(200, 'customer.json');
 
         $customers = $this->customer->find('cliente02');
 
@@ -56,22 +58,23 @@ class CustomersTest extends MoipTestCase {
     }
 
     /**
-     * Create a customer
+     * Create a new customer
+     * @see http://dev.moip.com.br/assinaturas-api/#criar-um-assinante-post
      */
-    public function test_create_a_customer()
+    public function testCreateANewCustomer()
     {
         // Mock response
-        $this->client->addMockResponse(201, $this->getBodyMock('customer.json'));
+        $this->addMockResponse(201, 'customer.json');
 
         $customer = $this->customer->setCode('cliente2')
-                ->setFullname('ClienteSobrenome')
-                ->setCpf(12345679891)
-                ->setBirthdate('1980-04-26')
-                ->setEmail('nome2@exemplo.com.br')
-                ->setPhone(26, 934343434)
-                ->setAddress('RuaNomedaRua2', 1002, 'Casa2', 'NomedoBairro2', 'SãoPaulo', 'SP', 05015010)
-                ->setBillingInfo('Nomedocliente', 5267691661858194, 4, 20)
-                ->create();
+                                    ->setFullname('ClienteSobrenome')
+                                    ->setCpf(12345679891)
+                                    ->setBirthdate('1980-04-26')
+                                    ->setEmail('nome2@exemplo.com.br')
+                                    ->setPhone(26, 934343434)
+                                    ->setAddress('RuaNomedaRua2', 1002, 'Casa2', 'NomedoBairro2', 'SãoPaulo', 'SP', 05015010)
+                                    ->setBillingInfo('Nomedocliente', 5267691661858194, 4, 20)
+                                    ->create();
 
         $this->assertInstanceOf(Customers::class, $customer);
 
@@ -97,13 +100,14 @@ class CustomersTest extends MoipTestCase {
     }
 
     /**
-     * Update a customer by id
+     * Update a customer by code
+     * @see http://dev.moip.com.br/assinaturas-api/#alterar-um-assinante-put
      */
-    public function test_update_a_customer()
+    public function testUpdateACustomer()
     {
         // Mock response
-        $this->client->addMockResponse(200, $this->getBodyMock('customer.json'));
-        $this->client->addMockResponse(200);
+        $this->addMockResponse(200, 'customer.json');
+        $this->addMockResponse(200);
 
         $customer = $this->customer->find('cliente02');
         $customer->setEmail('outromail@exemplo.com.br');
@@ -117,16 +121,39 @@ class CustomersTest extends MoipTestCase {
 
     /**
      * Update a customer credit card
+     * @see http://dev.moip.com.br/assinaturas-api/#atualizar-carto-do-assinante-put
      */
-    public function test_update_customer_creadit_card()
+    public function testUpdateCustomerCreditCard()
     {
         // Mock response
-        $this->client->addMockResponse(200, $this->getBodyMock('customer.json'));
-        $this->client->addMockResponse(200);
+        $this->addMockResponse(200, 'customer.json');
+        $this->addMockResponse(200);
 
         $customer = $this->customer->find('cliente02');
         $customer->setBillingInfo('Nomedocliente', 5267691661858194, 4, 20);
         $customer->updateBillingInfo();
+
+        $this->assertInstanceOf(Customers::class, $customer);
+        $this->assertEquals('PUT', $this->getHttpMethod());
+        $this->assertEquals(200, $this->getHttpStatusCode());
+        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/customers/cliente02/billing_infos', $this->getHttpUrl());
+    }
+
+    /**
+     * Update customer credit card with single request
+     * @see http://dev.moip.com.br/assinaturas-api/#atualizar-carto-do-assinante-put
+     */
+    public function testUpdateCustomerCreditCardByCodeSettingBillingInfoAsDataArray()
+    {
+        // Mock response
+        $this->addMockResponse(200);
+
+        $customer = $this->customer->updateBillingInfo('cliente02', [
+            'holder_name' => 'Novo nome',
+            'number' => '5555666677778884',
+            'expiration_month' => 04,
+            'expiration_year' => 18
+        ]);
 
         $this->assertInstanceOf(Customers::class, $customer);
         $this->assertEquals('PUT', $this->getHttpMethod());

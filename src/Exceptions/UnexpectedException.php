@@ -1,6 +1,6 @@
 <?php
 
-namespace Moip\Exceptions;
+namespace Softpampa\Moip\Exceptions;
 
 use RuntimeException;
 

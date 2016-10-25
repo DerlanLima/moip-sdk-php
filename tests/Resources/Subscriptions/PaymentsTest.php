@@ -2,9 +2,8 @@
 
 namespace Softpampa\Moip\Tests\Resources\Subscriptions;
 
-use GuzzleHttp\Stream\Stream;
-use Softpampa\Moip\Subscriptions\Resources\Payments;
 use Softpampa\Moip\Tests\MoipTestCase;
+use Softpampa\Moip\Subscriptions\Resources\Payments;
 
 class PaymentsTest extends MoipTestCase {
 
@@ -14,9 +13,7 @@ class PaymentsTest extends MoipTestCase {
     private $payments;
 
     /**
-     * Setup test
-     *
-     * @return void
+     * {@inheritdoc}
      */
     public function setUp()
     {
@@ -27,11 +24,13 @@ class PaymentsTest extends MoipTestCase {
 
     /**
      * Find a payment by id
+     *
+     * @see http://dev.moip.com.br/assinaturas-api/#consultar-detalhes-de-um-pagamento-de-assinatura-get
      */
-    public function test_find_a_payment()
+    public function testFindAPaymentById()
     {
         // Mock response
-        $this->client->addMockResponse(200, $this->getBodyMock('payment.json'));
+        $this->addMockResponse(200, 'payment.json');
 
         $payment = $this->payments->find(6);
 
