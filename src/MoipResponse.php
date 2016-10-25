@@ -142,7 +142,7 @@ class MoipResponse implements Contracts\MoipResponse {
     /**
      * Return all errors
      *
-     * @return array
+     * @return Illuminate\Support\Collection
      */
     public function getErrors()
     {

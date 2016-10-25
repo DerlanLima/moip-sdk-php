@@ -3,35 +3,32 @@
 namespace Softpampa\Moip\Exceptions;
 
 use RuntimeException;
+use Softpampa\Moip\MoipResponse;
+use GuzzleHttp\Exception\RequestException;
 
-/**
- * Class ValidationException.
- */
 class ValidationException extends RuntimeException {
 
     /**
-     * @var int
+     * @var  Softpampa\Moip\MoipResponse  $response
      */
-    private $statusCode;
+    private $response;
 
     /**
-     * @var Error[]
+     * @var  GuzzleHttp\Message\Request  $request
      */
-    private $errors;
+    private $request;
 
     /**
-     * ValidationException constructor.
+     * Constructor.
      *
-     * Exception thrown when the moip API returns a 4xx http code.
-     * Indicates that an invalid value was passed.
-     *
-     * @param int     $statusCode
-     * @param Error[] $errors
+     * @param  GuzzleHttp\Exception\RequestException  $requestException
      */
-    public function __construct($statusCode, $errors)
+    public function __construct(RequestException $requestException)
     {
-        $this->errors = $errors;
-        $this->statusCode = $statusCode;
+        $this->response = new MoipResponse($requestException->getResponse(), '');
+        $this->request = $requestException->getRequest();
+
+        parent::__construct('Erro na requisição! Os dados enviados não passaram na validação do Moip.');
     }
 
     /**
@@ -41,36 +38,57 @@ class ValidationException extends RuntimeException {
      */
     public function getStatusCode()
     {
-        return $this->statusCode;
+        return $this->response->getStatusCode();
     }
 
     /**
      * Returns the list of errors returned by the API.
      *
-     * @return Error[]
+     * @return Illuminate\Support\Collection
      */
     public function getErrors()
     {
-        return $this->errors;
+        return $this->response->getErrors();
     }
 
     /**
-     * Convert error variables in string.
+     * Get HTTP request method
+     *
+     * @return string
+     */
+    public function getHttpRequestMethod()
+    {
+        return $this->request->getMethod();
+    }
+
+    /**
+     * Get HTTP request URL
+     *
+     * @return string
+     */
+    public function getHttpRequestUrl()
+    {
+        return $this->request->getUrl();
+    }
+
+    /**
+     * Convert errors variables in string.
      *
      * @return string
      */
     public function __toString()
     {
-        $template = "[$this->code] The following errors ocurred:\n%s";
-        $temp_list = '';
+        $code = $this->getStatusCode();
+        $template = "[$code] The following errors ocurred:\n%s";
+        $errorsList = '';
 
-        foreach ($this->errors as $error) {
-            $path = $error->getPath();
-            $desc = $error->getDescription();
-            $temp_list .= "$path: $desc\n";
+        foreach ($this->getErrors() as $error) {
+            $code = $error->code;
+            $desc = $error->description;
+            $errorsList .= "$code: $desc\n";
         }
 
-        return sprintf($template, $temp_list);
+        return sprintf($template, $errorsList);
     }
 
 }

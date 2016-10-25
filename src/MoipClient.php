@@ -2,6 +2,7 @@
 
 namespace Softpampa\Moip;
 
+use UnexpectedValueException;
 use GuzzleHttp\Client;
 use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Message\Request;
@@ -10,9 +11,8 @@ use GuzzleHttp\Stream\StreamInterface;
 use GuzzleHttp\Exception\RequestException;
 use Softpampa\Moip\Traits\Utils;
 use Softpampa\Moip\MoipHttpResponse;
-use Softpampa\Moip\Exceptions\UnexpectedException;
-use Softpampa\Moip\Exceptions\UnautorizedException;
 use Softpampa\Moip\Contracts\MoipAuthentication;
+use Softpampa\Moip\Exceptions\MoipClientException;
 
 class MoipClient implements Contracts\MoipClient {
 
@@ -67,7 +67,9 @@ class MoipClient implements Contracts\MoipClient {
      * @var  array  $options Moip API Options
      */
     protected $options = [
-        'exceptions' => false
+        'exceptions' => false,
+        'timeout' => 10,
+        'connect_timeout' => 10
     ];
 
     /**
@@ -83,8 +85,6 @@ class MoipClient implements Contracts\MoipClient {
         $this->client = new Client;
         $this->environment = $environment;
         $this->options = array_merge($this->options, $options);
-
-        $this->setupHttpClient();
     }
 
     /**
@@ -161,6 +161,7 @@ class MoipClient implements Contracts\MoipClient {
      */
     protected function makeHttpRequest($method, $params = null, $payload = [])
     {
+        $this->setupHttpClient();
         $this->setMockResponses();
 
         $this->request = $this->client->createRequest($method, $this->environment, ['json' => $payload]);
@@ -181,20 +182,7 @@ class MoipClient implements Contracts\MoipClient {
         try {
             $response = $this->client->send($this->request);
         } catch (RequestException $e) {
-
-            if (!$e->hasResponse()) {
-                throw new UnexpectedException($e);
-            }
-
-            $statusCode = $e->getResponse()->getStatusCode();
-
-            if ($statusCode == 401) {
-                throw new UnautorizedException;
-            } elseif ($statusCode > 400 && $statusCode < 500) {
-
-            }
-
-            throw new UnexpectedException($e);
+            throw new MoipClientException($e);
         }
 
         return $this->response = new MoipResponse($response, $this->path);
@@ -207,7 +195,7 @@ class MoipClient implements Contracts\MoipClient {
      */
     protected function setMockResponses()
     {
-        if (!empty($this->mocks)) {
+        if (! empty($this->mocks)) {
             $this->client->getEmitter()->attach(new Mock($this->mocks));
         }
     }
@@ -313,6 +301,22 @@ class MoipClient implements Contracts\MoipClient {
         $this->mocks[] = new Response($codeStatus, ['Content-Type' => 'application/json'], $body);
 
         return $this;
+    }
+
+    /**
+     * Set default option
+     *
+     * @param  string  $option
+     * @param  string  $value
+     * @return void
+     */
+    public function setDefaultOption($option, $value)
+    {
+        if (! array_key_exists($option, $this->options)) {
+            throw new UnexpectedValueException("Unexpected MoipClient {$option} option");
+        }
+
+        $this->options[$option] = $value;
     }
 
     /**
