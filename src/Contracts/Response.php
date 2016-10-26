@@ -2,7 +2,7 @@
 
 namespace Softpampa\Moip\Contracts;
 
-interface MoipResponse {
+interface Response {
 
     /**
      * Set Response resource

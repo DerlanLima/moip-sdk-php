@@ -3,13 +3,14 @@
 namespace Softpampa\Moip;
 
 use stdClass;
-use GuzzleHttp\Message\Response;
+use GuzzleHttp\Message\Response as HttpResponse;
 use Illuminate\Support\Collection;
+use Softpampa\Moip\Contracts\Response;
 
-class MoipResponse implements Contracts\MoipResponse {
+class MoipResponse implements Response {
 
     /**
-     * @var  Response  $response
+     * @var  GuzzleHttp\Message\Response  $response
      */
     protected $response;
 
@@ -31,10 +32,10 @@ class MoipResponse implements Contracts\MoipResponse {
     /**
      * Constructor.
      *
-     * @param  Response $response
+     * @param  GuzzleHttp\Message\Response $response
      * @param  string  $resource
      */
-    public function __construct(Response $response, $resource)
+    public function __construct(HttpResponse $response, $resource)
     {
         $this->response = $response;
         $this->resource = $resource;
@@ -66,7 +67,7 @@ class MoipResponse implements Contracts\MoipResponse {
     }
 
     /**
-     * Check if has HTTP errors
+     * Check if has HTTP errors in response
      *
      * @return boolean
      */
@@ -153,7 +154,7 @@ class MoipResponse implements Contracts\MoipResponse {
     /**
      * Return response content
      *
-     * @return Collection
+     * @return Illuminate\Support\Collection
      */
     public function getResults()
     {
