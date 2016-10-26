@@ -12,8 +12,6 @@ use Softpampa\Moip\Tests\Helpers\JsonFile;
 
 abstract class MoipTestCase extends TestCase {
 
-    const SANDBOX = 'https://sandbox.moip.com.br/';
-
     /**
      * @var  Moip  $moip
      */

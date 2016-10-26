@@ -3,6 +3,7 @@
 namespace Softpampa\Moip\Tests\Resources\Subscriptions;
 
 use Illuminate\Support\Collection;
+use Softpampa\Moip\Moip;
 use Softpampa\Moip\Tests\MoipTestCase;
 use Softpampa\Moip\Subscriptions\Resources\Customers;
 
@@ -37,7 +38,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Collection::class, $customers);
         $this->assertEquals('GET', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/customers', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers', $this->getHttpUrl());
     }
 
     /**
@@ -54,7 +55,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Customers::class, $customers);
         $this->assertEquals('GET', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/customers/cliente02', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02', $this->getHttpUrl());
     }
 
     /**
@@ -114,7 +115,7 @@ class CustomersTest extends MoipTestCase {
 
         $this->assertEquals('POST', $this->getHttpMethod());
         $this->assertEquals(201, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/customers', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers', $this->getHttpUrl());
     }
 
     /**
@@ -135,7 +136,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Customers::class, $customer);
         $this->assertEquals('PUT', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/customers/cliente02', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02', $this->getHttpUrl());
     }
 
     /**
@@ -156,7 +157,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Customers::class, $customer);
         $this->assertEquals('PUT', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/customers/cliente02/billing_infos', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02/billing_infos', $this->getHttpUrl());
     }
 
     /**
@@ -179,7 +180,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Customers::class, $customer);
         $this->assertEquals('PUT', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/customers/cliente02/billing_infos', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02/billing_infos', $this->getHttpUrl());
     }
 
 }

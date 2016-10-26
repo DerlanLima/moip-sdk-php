@@ -3,6 +3,7 @@
 namespace Softpampa\Moip\Tests\Resources\Subscriptions;
 
 use Illuminate\Support\Collection;
+use Softpampa\Moip\Moip;
 use Softpampa\Moip\Tests\MoipTestCase;
 use Softpampa\Moip\Subscriptions\Resources\Invoices;
 
@@ -39,7 +40,7 @@ class InvoicesTest extends MoipTestCase {
         $this->assertInstanceOf(Invoices::class, $invoice);
         $this->assertEquals('GET', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/invoices/1729934', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/invoices/1729934', $this->getHttpUrl());
     }
 
     /**
@@ -58,7 +59,7 @@ class InvoicesTest extends MoipTestCase {
         $this->assertInstanceOf(Collection::class, $payments);
         $this->assertEquals('GET', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/invoices/1729934/payments', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/invoices/1729934/payments', $this->getHttpUrl());
     }
 
 }

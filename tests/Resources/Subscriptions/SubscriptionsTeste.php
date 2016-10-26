@@ -42,7 +42,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertEquals('assinatura21', $subscriptions->last()->code);
         $this->assertEquals('GET', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/subscriptions', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions', $this->getHttpUrl());
     }
 
     /**
@@ -61,7 +61,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertEquals('assinatura21', $subscription->code);
         $this->assertEquals('GET', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/subscriptions/assinatura21', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21', $this->getHttpUrl());
     }
 
     /**
@@ -90,7 +90,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertEquals('assinatura21', $subscription->code);
         $this->assertEquals('POST', $this->getHttpMethod());
         $this->assertEquals(201, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/subscriptions?new_customer=false', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions?new_customer=false', $this->getHttpUrl());
     }
 
     /**
@@ -116,7 +116,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertEquals('assinatura21', $subscription->code);
         $this->assertEquals('PUT', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/subscriptions/assinatura21', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21', $this->getHttpUrl());
     }
 
     /**
@@ -137,7 +137,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertInstanceOf(stdClass::class, $invoices->last());
         $this->assertEquals('GET', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/subscriptions/assinatura21/invoices', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/invoices', $this->getHttpUrl());
     }
 
     /**
@@ -156,7 +156,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertInstanceOf(stdClass::class, $subscription->last());
         $this->assertEquals('GET', $this->getHttpMethod());
         $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(MoipTestCase::SANDBOX . 'assinaturas/v1/subscriptions/assinatura21/invoices', $this->getHttpUrl());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/invoices', $this->getHttpUrl());
     }
 
     /**
