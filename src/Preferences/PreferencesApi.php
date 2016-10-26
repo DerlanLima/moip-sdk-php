@@ -10,10 +10,10 @@
 
 namespace Softpampa\Moip\Preferences;
 
-use Softpampa\Moip\Api;
+use Softpampa\Moip\MoipApi;
 use Softpampa\Moip\Preferences\Resources\Notifications;
 
-class PreferencesApi extends Api {
+class PreferencesApi extends MoipApi {
 
     /**
      * @var  string  Moip API Version

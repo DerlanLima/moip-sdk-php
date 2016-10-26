@@ -10,12 +10,12 @@
 
 namespace Softpampa\Moip\Payments;
 
-use Softpampa\Moip\Api;
+use Softpampa\Moip\MoipApi;
 use Softpampa\Moip\Payments\Resources\Orders;
 use Softpampa\Moip\Payments\Resources\Customers;
 use Softpampa\Moip\Subscriptions\Resources\Payments;
 
-class PaymentApi extends Api {
+class PaymentApi extends MoipApi {
 
     /**
      * @const  string  Moip API Version

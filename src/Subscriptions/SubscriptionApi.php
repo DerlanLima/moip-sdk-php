@@ -10,14 +10,14 @@
 
 namespace Softpampa\Moip\Subscriptions;
 
-use Softpampa\Moip\Api;
+use Softpampa\Moip\MoipApi;
 use Softpampa\Moip\Subscriptions\Resources\Plans;
 use Softpampa\Moip\Subscriptions\Resources\Invoices;
 use Softpampa\Moip\Subscriptions\Resources\Payments;
 use Softpampa\Moip\Subscriptions\Resources\Customers;
 use Softpampa\Moip\Subscriptions\Resources\Subscriptions;
 
-class SubscriptionApi extends Api {
+class SubscriptionApi extends MoipApi {
 
     /**
      * @var  string  Moip API Version

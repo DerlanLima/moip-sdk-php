@@ -13,7 +13,7 @@ abstract class MoipResource implements JsonSerializable, Contracts\MoipResource 
     protected $client;
 
     /**
-     * @var  Api  $api  Moip API
+     * @var  MoipApi  $api  Moip API
      */
     protected $api;
 
@@ -30,9 +30,9 @@ abstract class MoipResource implements JsonSerializable, Contracts\MoipResource 
     /**
      * Constructor.
      *
-     * @param  Api  $api  Moip Api
+     * @param  MoipApi  $api  Moip Api
      */
-    public function __construct(Api $api)
+    public function __construct(MoipApi $api)
     {
         $this->data = new stdClass;
         $this->api = $api;

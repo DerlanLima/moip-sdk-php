@@ -2,7 +2,7 @@
 
 namespace Softpampa\Moip;
 
-abstract class Api {
+abstract class MoipApi {
 
     /**
      * @var  Moip  $moip  Moip API
