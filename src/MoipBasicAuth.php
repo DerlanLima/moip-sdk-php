@@ -2,9 +2,9 @@
 
 namespace Softpampa\Moip;
 
-use Softpampa\Moip\Contracts\MoipAuthentication;
+use Softpampa\Moip\Contracts\Authenticatable;
 
-class MoipBasicAuth implements MoipAuthentication {
+class MoipBasicAuth implements Authenticatable {
 
     /**
      * @var  string  $token  Moip Token

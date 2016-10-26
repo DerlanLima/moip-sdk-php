@@ -7,10 +7,10 @@ interface MoipClient {
     /**
      * Constructor.
      *
-     * @param  MoipAuthentication  $auth
+     * @param  Authenticatable  $auth
      * @param  string  $enviroment
      */
-    public function __construct(MoipAuthentication $auth, $enviroment);
+    public function __construct(Authenticatable $auth, $enviroment);
 
     /**
      * Add Request Query String

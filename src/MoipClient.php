@@ -11,7 +11,7 @@ use GuzzleHttp\Stream\StreamInterface;
 use GuzzleHttp\Exception\RequestException;
 use Softpampa\Moip\Traits\Utils;
 use Softpampa\Moip\MoipHttpResponse;
-use Softpampa\Moip\Contracts\MoipAuthentication;
+use Softpampa\Moip\Contracts\Authenticatable;
 use Softpampa\Moip\Exceptions\MoipClientException;
 
 class MoipClient implements Contracts\MoipClient {
@@ -19,7 +19,7 @@ class MoipClient implements Contracts\MoipClient {
     use Utils;
 
     /**
-     * @var  MoipAuthentication  $auth  Moip Authentication
+     * @var  Authenticatable  $auth  Moip Authentication
      */
     protected $auth;
 
@@ -75,11 +75,11 @@ class MoipClient implements Contracts\MoipClient {
     /**
      * Constructor.
      *
-     * @param  MoipAuthentication  $auth  Moip Authentication method
+     * @param  Authenticatable  $auth  Moip Authentication method
      * @param  string  $environment  Moip environment
      * @param  array  $options  Moip options
      */
-    public function __construct(MoipAuthentication $auth, $environment, $options = [])
+    public function __construct(Authenticatable $auth, $environment, $options = [])
     {
         $this->auth = $auth;
         $this->client = new Client;

@@ -4,7 +4,7 @@ namespace Softpampa\Moip;
 
 use Softpampa\Moip\MoipClient;
 use Softpampa\Moip\Payments\PaymentApi;
-use Softpampa\Moip\Contracts\MoipAuthentication;
+use Softpampa\Moip\Contracts\Authenticatable;
 use Softpampa\Moip\Subscriptions\SubscriptionApi;
 use Softpampa\Moip\Preferences\PreferencesApi;
 
@@ -37,7 +37,7 @@ class Moip {
      * @param  string  $environment  Moip environment
      * @param  array  $options  Moip defaults pptions
      */
-    public function __construct(MoipAuthentication $auth, $environment = self::SANDBOX, $options = [])
+    public function __construct(Authenticatable $auth, $environment = self::SANDBOX, $options = [])
     {
         $this->event = new MoipEvent;
         $this->client = new MoipClient($auth, $environment, $options);

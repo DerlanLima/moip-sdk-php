@@ -2,7 +2,7 @@
 
 namespace Softpampa\Moip\Contracts;
 
-interface MoipAuthentication {
+interface Authenticatable {
 
     public function generateAuthorization();
 }
