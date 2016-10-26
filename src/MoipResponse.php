@@ -116,10 +116,11 @@ class MoipResponse implements Contracts\MoipResponse {
     protected function setResponseErrors()
     {
         if (isset($this->content) && property_exists($this->content, 'errors')) {
-
             foreach ($this->content->errors as $error) {
                 $this->setError($error->code, $error->description);
             }
+        } else if ($this->getStatusCode() == 404) {
+            $this->setError('SDK01', 'Resource not found');
         }
     }
 

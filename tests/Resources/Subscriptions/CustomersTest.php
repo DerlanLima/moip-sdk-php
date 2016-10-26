@@ -58,7 +58,25 @@ class CustomersTest extends MoipTestCase {
     }
 
     /**
+     * Find a not found customer
+     *
+     * @see http://dev.moip.com.br/assinaturas-api/#criar-um-assinante-post
+     * @expectedException \Softpampa\Moip\Exceptions\ResourceNotFoundException
+     */
+    public function testFindANotFoundCustomerByCode()
+    {
+        // Set option to throw exceptions
+        $this->client->setDefaultOption('exceptions', true);
+
+        // Mock response
+        $this->addMockResponse(404);
+
+        $customer = $this->customer->find('NUMIXISTI');
+    }
+
+    /**
      * Create a new customer
+     *
      * @see http://dev.moip.com.br/assinaturas-api/#criar-um-assinante-post
      */
     public function testCreateANewCustomer()
@@ -101,6 +119,7 @@ class CustomersTest extends MoipTestCase {
 
     /**
      * Update a customer by code
+     *
      * @see http://dev.moip.com.br/assinaturas-api/#alterar-um-assinante-put
      */
     public function testUpdateACustomer()
@@ -121,6 +140,7 @@ class CustomersTest extends MoipTestCase {
 
     /**
      * Update a customer credit card
+     *
      * @see http://dev.moip.com.br/assinaturas-api/#atualizar-carto-do-assinante-put
      */
     public function testUpdateCustomerCreditCard()
@@ -141,6 +161,7 @@ class CustomersTest extends MoipTestCase {
 
     /**
      * Update customer credit card with single request
+     *
      * @see http://dev.moip.com.br/assinaturas-api/#atualizar-carto-do-assinante-put
      */
     public function testUpdateCustomerCreditCardByCodeSettingBillingInfoAsDataArray()
