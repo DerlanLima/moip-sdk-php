@@ -2,7 +2,7 @@
 
 namespace Softpampa\Moip\Contracts;
 
-interface MoipClient {
+interface Client {
 
     /**
      * Constructor.

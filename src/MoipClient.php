@@ -3,18 +3,18 @@
 namespace Softpampa\Moip;
 
 use UnexpectedValueException;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Subscriber\Mock;
 use GuzzleHttp\Message\Request;
 use GuzzleHttp\Message\Response;
 use GuzzleHttp\Stream\StreamInterface;
 use GuzzleHttp\Exception\RequestException;
 use Softpampa\Moip\Traits\Utils;
-use Softpampa\Moip\MoipHttpResponse;
+use Softpampa\Moip\Contracts\Client;
 use Softpampa\Moip\Contracts\Authenticatable;
 use Softpampa\Moip\Exceptions\MoipClientException;
 
-class MoipClient implements Contracts\MoipClient {
+class MoipClient implements Client {
 
     use Utils;
 
@@ -46,7 +46,7 @@ class MoipClient implements Contracts\MoipClient {
     /**
      * @var  Client  $httpClient  HTTP Client
      */
-    protected $client;
+    protected $httpClient;
 
     /**
      * @var  Request  $request  HTTP Client Request
@@ -82,7 +82,7 @@ class MoipClient implements Contracts\MoipClient {
     public function __construct(Authenticatable $auth, $environment, $options = [])
     {
         $this->auth = $auth;
-        $this->client = new Client;
+        $this->httpClient = new HttpClient;
         $this->environment = $environment;
         $this->options = array_merge($this->options, $options);
     }
@@ -94,11 +94,11 @@ class MoipClient implements Contracts\MoipClient {
      */
     protected function setupHttpClient()
     {
-        $this->client->setDefaultOption('exceptions', $this->options['exceptions']);
-        $this->client->setDefaultOption('timeout', 10);
-        $this->client->setDefaultOption('connect_timeout', 10);
+        $this->httpClient->setDefaultOption('exceptions', $this->options['exceptions']);
+        $this->httpClient->setDefaultOption('timeout', 10);
+        $this->httpClient->setDefaultOption('connect_timeout', 10);
 
-        $this->client->setDefaultOption('headers', [
+        $this->httpClient->setDefaultOption('headers', [
             'Authorization' => $this->auth->generateAuthorization()
         ]);
     }
@@ -164,7 +164,7 @@ class MoipClient implements Contracts\MoipClient {
         $this->setupHttpClient();
         $this->setMockResponses();
 
-        $this->request = $this->client->createRequest($method, $this->environment, ['json' => $payload]);
+        $this->request = $this->httpClient->createRequest($method, $this->environment, ['json' => $payload]);
 
         $this->setRequestQueryString();
         $this->setRequestUrlPaths($params);
@@ -180,7 +180,7 @@ class MoipClient implements Contracts\MoipClient {
     protected function send()
     {
         try {
-            $response = $this->client->send($this->request);
+            $response = $this->httpClient->send($this->request);
         } catch (RequestException $e) {
             throw new MoipClientException($e);
         }
@@ -196,7 +196,7 @@ class MoipClient implements Contracts\MoipClient {
     protected function setMockResponses()
     {
         if (! empty($this->mocks)) {
-            $this->client->getEmitter()->attach(new Mock($this->mocks));
+            $this->httpClient->getEmitter()->attach(new Mock($this->mocks));
         }
     }
 
@@ -338,7 +338,7 @@ class MoipClient implements Contracts\MoipClient {
      */
     public function getHttpClient()
     {
-        return $this->client;
+        return $this->httpClient;
     }
 
     /**
