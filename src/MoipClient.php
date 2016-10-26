@@ -249,6 +249,18 @@ class MoipClient implements Contracts\MoipClient {
     }
 
     /**
+     * HTTP method DELETE
+     *
+     * @param  string  $route
+     * @param  array  $binds
+     * @return MoipResponse
+     */
+    public function delete($route, $binds = [])
+    {
+        return $this->makeHttpRequest('DELETE', $this->interpolate($route, $binds));
+    }
+
+    /**
      * Set Request URI
      *
      * @param  string  $uri

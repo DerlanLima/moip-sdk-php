@@ -6,6 +6,7 @@ use Softpampa\Moip\MoipClient;
 use Softpampa\Moip\Payments\PaymentApi;
 use Softpampa\Moip\Contracts\MoipAuthentication;
 use Softpampa\Moip\Subscriptions\SubscriptionApi;
+use Softpampa\Moip\Preferences\PreferencesApi;
 
 class Moip {
 
@@ -80,6 +81,11 @@ class Moip {
     public function payments()
     {
         return new PaymentApi($this);
+    }
+
+    public function preferences()
+    {
+        return new PreferencesApi($this);
     }
 
 }

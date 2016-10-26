@@ -157,8 +157,10 @@ class MoipResponse implements Contracts\MoipResponse {
      */
     public function getResults()
     {
-        if (isset($this->content) && property_exists($this->content, $this->resource)) {
+        if (is_object($this->content) && property_exists($this->content, $this->resource)) {
             return new Collection($this->content->{$this->resource});
+        } else if (is_array($this->content)) {
+            return new Collection($this->content);
         }
 
         return $this->content;

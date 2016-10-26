@@ -4,3 +4,4 @@ vendor/
 .DS_STORE
 nbproject/
 .idea
+test.php
