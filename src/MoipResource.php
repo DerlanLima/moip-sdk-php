@@ -4,8 +4,9 @@ namespace Softpampa\Moip;
 
 use stdClass;
 use JsonSerializable;
+use Softpampa\Moip\Contracts\Resource;
 
-abstract class MoipResource implements JsonSerializable, Contracts\MoipResource {
+abstract class MoipResource implements JsonSerializable, Resource {
 
     /**
      * @var  MoipClient  $client  Moip HTTP Client

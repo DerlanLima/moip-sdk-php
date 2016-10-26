@@ -2,7 +2,7 @@
 
 namespace Softpampa\Moip\Contracts;
 
-interface MoipResource {
+interface Resource {
 
     public function addFilter($pattern, $binds);
 }
