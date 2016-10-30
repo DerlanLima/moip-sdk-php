@@ -10,20 +10,23 @@
 
 namespace Softpampa\Moip\Payments\Resources;
 
-use Illuminate\Support\Collection;
+use stdClass;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Payments\Events\OrdersEvent;
-use stdClass;
 
 class Orders extends MoipResource {
 
     /**
-     * @var  string  $path
+     * Resource name
+     *
+     * @var string
      */
     protected $resource = 'orders';
 
     /**
-     * @const  string  AMOUNT_CURRENCY
+     * Default amount currency
+     *
+     * @const string
      */
     const AMOUNT_CURRENCY = 'BRL';
 
@@ -48,7 +51,7 @@ class Orders extends MoipResource {
     /**
      * Get all orders
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     public function all()
     {
@@ -58,12 +61,12 @@ class Orders extends MoipResource {
     /**
      * Find a order
      *
-     * @param  int  $code
+     * @param  int  $order_id
      * @return $this
      */
     public function find($order_id)
     {
-        return $this->populate($this->client->get('/{order_id}', ['order_id' => $order_id]));
+        return $this->populate($this->client->get('/{order_id}', [$order_id]));
     }
 
     /**
@@ -81,9 +84,11 @@ class Orders extends MoipResource {
             $this->populate($data);
         }
 
-        $response = $this->populate($this->client->post('', [], $data));
+        $response = $this->client->post('', [], $data);
 
-        if (!$response->hasErrors()) {
+        $this->populate($response);
+
+        if (! $response->hasErrors()) {
             $this->event->dispatch('ORDER.CREATED', new OrdersEvent($this->data));
         }
 
@@ -92,7 +97,7 @@ class Orders extends MoipResource {
 
     public function payments()
     {
-        $payment = new Payments($this->client);
+        $payment = new Payments($this->api);
         $payment->setOrder($this);
 
         return $payment;
@@ -149,13 +154,13 @@ class Orders extends MoipResource {
     /**
      * Set a new Customer
      *
-     * @param  Customers  $customer
+     * @param  \Softpampa\Moip\Payments\Resources\Customers  $customer
      * @return $this
      */
-    public function setCustomer($customer_id)
+    public function setCustomer($customer)
     {
         $this->data->customer = new stdClass;
-        $this->data->customer->id = $customer_id;
+        $this->data->customer = $customer;
 
         return $this;
     }

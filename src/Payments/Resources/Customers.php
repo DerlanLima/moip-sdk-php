@@ -11,43 +11,52 @@
 namespace Softpampa\Moip\Payments\Resources;
 
 use DateTime;
-use Illuminate\Support\Collection;
-use Softpampa\Moip\MoipResource;
-use Softpampa\Moip\Payments\Events\CustomersEvent;
 use stdClass;
 use UnexpectedValueException;
+use Softpampa\Moip\MoipResource;
+use Softpampa\Moip\Payments\Events\CustomersEvent;
 
 class Customers extends MoipResource {
 
     /**
-     * @const  string  Address type
+     * Address type billing
+     *
+     * @const string
      */
     const ADDRESS_BILLING = 'BILLING';
 
     /**
-     * @const  string  Address type
+     * Address type shipping
+     *
+     * @const string
      */
     const ADDRESS_SHIPPING = 'SHIPPING';
 
     /**
-     * @const  string  Default country
+     * Default country
+     *
+     * @const string
      */
     const ADDRESS_COUNTRY = 'BRA';
 
     /**
-     * @const  string  Default document type
+     * Default document type
+     *
+     * @const string
      */
     const TAX_DOCUMENT = 'CPF';
 
     /**
-     * @var  string  $path
+     * Resource name
+     *
+     * @var string
      */
     protected $resource = 'customers';
 
     /**
      * Get all customers
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     public function all()
     {
@@ -62,7 +71,7 @@ class Customers extends MoipResource {
      */
     public function find($customer_id)
     {
-        return $this->populate($this->client->get('/{customer_id}', ['customer_id' => $customer_id]));
+        return $this->populate($this->client->get('/{customer_id}', [$customer_id]));
     }
 
     /**
@@ -73,15 +82,17 @@ class Customers extends MoipResource {
      */
     public function create($data = [])
     {
-        if (!$data) {
+        if (! $data) {
             $data = $this->data;
         } else {
             $this->populate($data);
         }
 
-        $response = $this->populate($this->client->post('', [], $data));
+        $response = $this->client->post('', [], $data);
 
-        if (!$response->hasErrors()) {
+        $this->populate($response);
+
+        if (! $response->hasErrors()) {
             $this->event->dispatch('CLIENT.CREATE', new CustomersEvent($this->data));
         }
 
@@ -216,6 +227,13 @@ class Customers extends MoipResource {
         }
 
         return $this;
+    }
+
+    public function addNewCreditCard($expirationMonth, $expirationYear, $number, $cvc, Customers $holder)
+    {
+        $
+        $this->data = new stdClass;
+
     }
 
 }

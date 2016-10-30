@@ -7,12 +7,16 @@ use Symfony\Component\EventDispatcher\EventDispatcher;
 class MoipEvent {
 
     /**
-     * @var  EventDispatcher  $dispatcher
+     * Event dispatcher
+     *
+     * @var \Symfony\Component\EventDispatcher\EventDispatcher
      */
     protected $dispatcher;
 
     /**
-     * @var  array  $eventsDispatchers
+     * List of events
+     *
+     * @var array
      */
     protected $eventsDispatchers = [
         'PLAN.CREATE',
@@ -43,8 +47,8 @@ class MoipEvent {
      * Add event listener
      *
      * @param  string  $eventName
-     * @param Object $object
-     * @param string $method
+     * @param  mixed  $object
+     * @param  string  $method
      * @return $this
      */
     public function addListener($eventName, $object, $method = null)
@@ -58,18 +62,20 @@ class MoipEvent {
      * Dispatch a event
      *
      * @param  string  $eventName
-     * @param Object $object
+     * @param  mixed  $object
      * @return $this
      */
     public function dispatch($eventName, $object)
     {
         $this->dispatcher->dispatch($eventName, $object);
+
+        return $this;
     }
 
     /**
-     * Get Symfony EventDispatcher
+     * Get Symfony event dispatcher
      *
-     * @return EventDispatcher
+     * @return \Symfony\Component\EventDispatcher\EventDispatcher
      */
     public function getDispatcher()
     {

@@ -15,7 +15,9 @@ use Softpampa\Moip\MoipResource;
 class Invoices extends MoipResource {
 
     /**
-     * @var  string  $path
+     * Resource name
+     *
+     * @var string
      */
     protected $resource = 'invoices';
 
@@ -27,7 +29,7 @@ class Invoices extends MoipResource {
      */
     public function find($id)
     {
-        $this->populate($this->client->get('/{id}', ['id' => $id]));
+        $this->populate($this->client->get('/{id}', [$id]));
 
         return $this;
     }

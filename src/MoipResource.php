@@ -9,22 +9,30 @@ use Softpampa\Moip\Contracts\Resource;
 abstract class MoipResource implements JsonSerializable, Resource {
 
     /**
-     * @var  MoipClient  $client  Moip HTTP Client
+     * Moip client
+     *
+     * @var \Softpampa\Moip\MoipClient
      */
     protected $client;
 
     /**
-     * @var  MoipApi  $api  Moip API
+     * Moip API
+     *
+     * @var \Softpampa\Moip\MoipApi
      */
     protected $api;
 
     /**
-     * @var  stdClass  $data  Resource
+     * Resource data
+     *
+     * @var \stdClass
      */
     protected $data;
 
     /**
-     * @var  MoipEvent  $event
+     * Moip event system
+     *
+     * @var \Softpampa\Moip\MoipEvent
      */
     protected $event;
 

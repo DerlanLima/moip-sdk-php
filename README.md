@@ -4,8 +4,9 @@ Biblioteca para integrar sua aplicação PHP com a API do Moip.
 
 ## Dependências
 
-* php >= 5.4.0
-* guzzlehttp/guzzle 5.3
+* PHP >= 5.4.0
+* cURL >= 7.16.2
+* guzzlehttp/guzzle 5.3.1
 * illuminate/support 4.\* | 5.\*
 * symfony/event-dispatcher ^3.1
 
@@ -20,7 +21,7 @@ A biblioteca foi criada para poder inetgrar a API do Moip em aplicações PHP co
 ## Documentação
 
 * [Wiki](https://github.com/Softpampa/moip-sdk-php/wiki)
-* [Documentação Oficial Moip](http://dev.moip.com.br)
+* [Documentação Oficial Moip Pagamentos](http://dev.moip.com.br)
 * [Documentação Oficial Moip Assinaturas](http://dev.moip.com.br/assinaturas-api/)
 
 ## Licença

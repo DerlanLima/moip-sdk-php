@@ -13,27 +13,34 @@ namespace Softpampa\Moip\Payments\Resources;
 use DateTime;
 use stdClass;
 use Softpampa\Moip\MoipResource;
-use Softpampa\Moip\Payments\Resources\Customers;
 
 class Payments extends MoipResource {
 
     /**
-     * @const  string  METHOD_CREDIT_CARD  Payment method
+     * Credit card payment method
+     *
+     * @const string
      */
     const METHOD_CREDIT_CARD = 'CREDIT_CARD';
 
     /**
-     * @const  string  METHOD_BOLETO  Payment method
+     * Boleto payment method
+     *
+     * @const string
      */
     const METHOD_BOLETO = 'BOLETO';
 
     /**
-     * @var  string  $path
+     * Resource path
+     *
+     * @var string
      */
     protected $resource = 'payments';
 
     /**
-     * @var  Orders  $order
+     * Order instance
+     *
+     * @var \Softpampa\Moip\Payments\Resources\Orders
      */
     private $order;
 
@@ -59,7 +66,7 @@ class Payments extends MoipResource {
      */
     public function find($payment_id)
     {
-        return $this->populate($this->client->get('/{payment_id}', ['payment_id' => $payment_id]));
+        return $this->populate($this->client->get('/{payment_id}', [$payment_id]));
     }
 
     /**
@@ -69,9 +76,9 @@ class Payments extends MoipResource {
      */
     public function execute()
     {
-        $this->client->setPath($this->order->getPath());
+        $this->client->setResource($this->order->getResource());
 
-        $this->client->post('/{order_id}/payments', ['order_id' => $this->order->id], $this->data);
+        $this->client->post('/{order_id}/payments', [$this->order->id], $this->data);
 
         return $this;
     }
@@ -79,8 +86,8 @@ class Payments extends MoipResource {
     /**
      * Set order
      *
-     * @param Orders $order
-     * @retrun $this
+     * @param  \Softpampa\Moip\Payments\Resources\Orders  $order
+     * @return $this
      */
     public function setOrder(Orders $order)
     {
@@ -103,7 +110,7 @@ class Payments extends MoipResource {
      * @param  int  $expirationYear
      * @param  int  $number
      * @param  int  $cvc
-     * @param  Customer  $holder
+     * @param  \Softpampa\Moip\Payments\Resources\Customers  $holder
      * @return $this
      */
     public function setCreditCard($expirationMonth, $expirationYear, $number, $cvc, Customers $holder)
@@ -122,7 +129,7 @@ class Payments extends MoipResource {
     /**
      * Set credit card holder.
      *
-     * @param  Customer  $holder
+     * @param  \Softpampa\Moip\Payments\Resources\Customers  $holder
      * @return void
      */
     private function setCreditCardHolder(Customers $holder)
@@ -144,10 +151,10 @@ class Payments extends MoipResource {
      * Set credit card hash.
      *
      * @param  string  $hash
-     * @param  Customer  $holder
+     * @param  \Softpampa\Moip\Payments\Resources\Customers  $holder
      * @return $this
      */
-    public function setCreditCardHash($hash, Customer $holder)
+    public function setCreditCardHash($hash, Customers $holder)
     {
         $this->data->fundingInstrument->method = self::METHOD_CREDIT_CARD;
         $this->data->fundingInstrument->creditCard = new stdClass();

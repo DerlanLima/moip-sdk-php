@@ -11,54 +11,71 @@
 namespace Softpampa\Moip\Subscriptions\Resources;
 
 use stdClass;
-use Illuminate\Support\Collection;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Subscriptions\Events\PlansEvent;
 
 class Plans extends MoipResource {
 
     /**
-     * @var  string  INTERVAL_MONTH  Interval in months
+     * Interval in months
+     *
+     * @var string
      */
     const INTERVAL_MONTH = 'MONTH';
 
     /**
-     * @var  string  INTERVAL_DAY  Interval in days
+     * Interval in days
+     *
+     * @var string
      */
     const INTERVAL_DAY = 'DAY';
 
     /**
-     * @var  string  INTERVAL_YEAR  Interval in years
+     * Interval in years
+     *
+     * @var string
      */
     const INTERVAL_YEAR = 'YEAR';
 
     /**
-     * @var  string  PAYMNET_BOLETO  Boleto payment method
+     * Boleto payment method
+     *
+     * @var string
      */
-    const PAYMNET_BOLETO = 'BOLETO';
+    const PAYMENT_BOLETO = 'BOLETO';
 
     /**
-     * @var  string  PAYMNET_CREDIT_CARD  Credit card payment method
+     * Credit card payment method
+     *
+     * @var string
      */
-    const PAYMNET_CREDIT_CARD = 'CREDIT_CARD';
+    const PAYMENT_CREDIT_CARD = 'CREDIT_CARD';
 
     /**
-     * @var  string  PAYMNET_ALL  All payments methods
+     * All payments methods
+     *
+     * @var string
      */
-    const PAYMNET_ALL = 'ALL';
+    const PAYMENT_ALL = 'ALL';
 
     /**
-     * @var  string  STATUS_INACTIVE  Status inactive
+     * Status inactive
+     *
+     * @var string
      */
     const STATUS_INACTIVE = 'INACTIVE';
 
     /**
-     * @var  string  STATUS_INACTIVE  Status active
+     * Status active
+     *
+     * @var string
      */
     const STATUS_ACTIVE = 'ACTIVE';
 
     /**
-     * @var  string  $resource
+     * Resource name
+     *
+     * @var string
      */
     protected $resource = 'plans';
 
@@ -80,20 +97,19 @@ class Plans extends MoipResource {
      */
     public function find($code)
     {
-        return $this->populate($this->client->get('/{code}', ['code' => $code]));
+        return $this->populate($this->client->get('/{code}', [$code]));
     }
 
     /**
      * Save a plan
      *
-     * @param  int  $code
      * @return $this
      */
     public function save()
     {
-        $response = $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}', [$this->data->code], $this->data);
 
-        if (!$response->hasErrors()) {
+        if (! $response->hasErrors()) {
             $this->event->dispatch('PLAN.UPDATE', new PlansEvent($this->data));
         }
 
@@ -109,7 +125,7 @@ class Plans extends MoipResource {
      */
     public function edit($code, $data)
     {
-        $this->client->put('/{code}', ['code' => $code], $data);
+        $this->client->put('/{code}', [$code], $data);
 
         return $this;
     }
@@ -122,7 +138,7 @@ class Plans extends MoipResource {
      */
     public function create($data = [])
     {
-        if (!$data) {
+        if (! $data) {
             $data = $this->data;
         } else {
             $this->populate($data);
@@ -145,13 +161,13 @@ class Plans extends MoipResource {
      */
     public function activate($code = null)
     {
-        if (!$code) {
+        if (! $code) {
             $code = $this->data->code;
         }
 
-        $response = $this->client->put('/{code}/activate', ['code' => $code]);
+        $response = $this->client->put('/{code}/activate', [$code]);
 
-        if (!$response->hasErrors()) {
+        if (! $response->hasErrors()) {
             $this->event->dispatch('PLAN.ACTIVATED', new PlansEvent($this->data));
         }
 
@@ -166,13 +182,13 @@ class Plans extends MoipResource {
      */
     public function inactivate($code = null)
     {
-        if (!$code) {
+        if (! $code) {
             $code = $this->data->code;
         }
 
-        $response = $this->client->put('/{code}/inactivate', ['code' => $code]);
+        $response = $this->client->put('/{code}/inactivate', [$code]);
 
-        if (!$response->hasErrors()) {
+        if (! $response->hasErrors()) {
             $this->event->dispatch('PLAN.INACTIVATED', new PlansEvent($this->data));
         }
 
@@ -247,7 +263,8 @@ class Plans extends MoipResource {
     /**
      * Set plan interval
      *
-     * @param  int  $setup_fee
+     * @param  string  $unit
+     * @param  int  $length
      * @return $this
      */
     public function setInterval($unit = self::INTERVAL_MONTH, $length = 1)
@@ -322,7 +339,7 @@ class Plans extends MoipResource {
      * @param  string  $paymentMethod
      * @return $this
      */
-    public function setPaymentMethod($paymentMethod = self::PAYMNET_CREDIT_CARD)
+    public function setPaymentMethod($paymentMethod = self::PAYMENT_CREDIT_CARD)
     {
         $this->data->payment_method = $paymentMethod;
 

@@ -8,14 +8,14 @@ use Symfony\Component\EventDispatcher\Event;
 class CustomersEvent extends Event {
 
     /**
-     * @var  stdClass  $customer
+     * @var \stdClass
      */
     public $customer;
 
     /**
      * Constructor.
      *
-     * @param  stdClass  $customer
+     * @param  \stdClass  $customer
      */
     public function __construct(stdClass $customer)
     {

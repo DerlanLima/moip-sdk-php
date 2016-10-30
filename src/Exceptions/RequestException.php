@@ -67,4 +67,14 @@ abstract class RequestException extends Exception {
         return $this->response->getBodyContent();
     }
 
+    /**
+     * Get effective URL
+     *
+     * @reuturn string
+     */
+    public function getEffectiveUrl()
+    {
+        return $this->response->getEffectiveUrl();
+    }
+
 }

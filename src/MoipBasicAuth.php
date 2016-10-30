@@ -7,20 +7,24 @@ use Softpampa\Moip\Contracts\Authenticatable;
 class MoipBasicAuth implements Authenticatable {
 
     /**
-     * @var  string  $token  Moip Token
+     * Moip token
+     *
+     * @var string
      */
     protected $token;
 
     /**
-     * @var  string  $key  Moip Key
+     * Moip Key
+     *
+     * @var string
      */
     protected $key;
 
     /**
      * Constructor.
      *
-     * @param  string  $token  Moip Token
-     * @param  string  $key  Moip Key
+     * @param  string  $token
+     * @param  string  $key
      */
     public function __construct($token, $key)
     {

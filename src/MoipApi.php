@@ -5,7 +5,8 @@ namespace Softpampa\Moip;
 abstract class MoipApi {
 
     /**
-     * @var  Moip  $moip  Moip API
+     * Moip API
+     * @var \Softpampa\Moip\Moip
      */
     protected $moip;
 

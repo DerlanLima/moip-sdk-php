@@ -8,14 +8,14 @@ use Symfony\Component\EventDispatcher\Event;
 class SubscriptionsEvent extends Event {
 
     /**
-     * @var  stdClass  $subscription
+     * @var \stdClass
      */
     public $subscription;
 
     /**
      * Constructor.
      *
-     * @param  stdClass  $subscription
+     * @param  \stdClass  $subscription
      */
     public function __construct(stdClass $subscription)
     {

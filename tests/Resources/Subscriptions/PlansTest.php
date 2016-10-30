@@ -64,7 +64,7 @@ class PlansTest extends MoipTestCase {
         $this->assertEquals('plan101', $plan->code);
         $this->assertEquals(990, $plan->amount);
         $this->assertEquals(Plans::STATUS_ACTIVE, $plan->status);
-        $this->assertEquals(Plans::PAYMNET_CREDIT_CARD, $plan->payment_method);
+        $this->assertEquals(Plans::PAYMENT_CREDIT_CARD, $plan->payment_method);
         $this->assertEquals('PlanoEspecial', $plan->name);
         $this->assertEquals('DescriçãodoPlanoEspecial', $plan->description);
         $this->assertEquals(true, $plan->trial->enabled);

@@ -13,24 +13,28 @@ namespace Softpampa\Moip\Payments;
 use Softpampa\Moip\MoipApi;
 use Softpampa\Moip\Payments\Resources\Orders;
 use Softpampa\Moip\Payments\Resources\Customers;
-use Softpampa\Moip\Subscriptions\Resources\Payments;
+use Softpampa\Moip\Payments\Resources\Payments;
 
 class PaymentApi extends MoipApi {
 
     /**
-     * @const  string  Moip API Version
+     * Moip API Version
+     *
+     * @const string
      */
     protected $version = 'v2';
 
     /**
-     * @const  string  Moip base URI
+     * Moip base URI
+     *
+     * @const string
      */
-    protected $uri = '';
+    protected $path = '';
 
     /**
      * Customers API
      *
-     * @return Softpampa\Moip\Payments\Customers
+     * @return \Softpampa\Moip\Payments\Resources\Customers
      */
     public function customers()
     {
@@ -40,7 +44,7 @@ class PaymentApi extends MoipApi {
     /**
      * Orders API
      *
-     * @return Softpampa\Moip\Payments\Orders
+     * @return \Softpampa\Moip\Payments\Resources\Orders
      */
     public function orders()
     {
@@ -50,7 +54,7 @@ class PaymentApi extends MoipApi {
     /**
      * Payments API
      *
-     * @return Softpampa\Moip\Payments\Payments
+     * @return \Softpampa\Moip\Payments\Resources\Payments
      */
     public function payments()
     {

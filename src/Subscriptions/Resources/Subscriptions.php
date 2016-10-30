@@ -12,19 +12,22 @@ namespace Softpampa\Moip\Subscriptions\Resources;
 
 use DateTime;
 use stdClass;
-use Illuminate\Support\Collection;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Subscriptions\Events\SubscriptionsEvent;
 
 class Subscriptions extends MoipResource {
 
     /**
-     * @const  string  METHOD_CREDIT_CARD  Payment method
+     * Credit card payment method
+     *
+     * @const string
      */
     const METHOD_CREDIT_CARD = 'CREDIT_CARD';
 
     /**
-     * @var  string  $path
+     * Resource name
+     *
+     * @var string
      */
     protected $resource = 'subscriptions';
 
@@ -41,7 +44,7 @@ class Subscriptions extends MoipResource {
     /**
      * Get all subscriptions
      *
-     * @return Collection
+     * @return \Illuminate\Support\Collection
      */
     public function all()
     {
@@ -56,18 +59,17 @@ class Subscriptions extends MoipResource {
      */
     public function find($code)
     {
-        return $this->populate($this->client->get('/{code}', ['code' => $code]));
+        return $this->populate($this->client->get('/{code}', [$code]));
     }
 
     /**
      * Save a subscription
      *
-     * @param  int  $code
      * @return $this
      */
     public function save()
     {
-        $response = $this->client->put('/{id}', ['id' => $this->data->code], $this->data);
+        $response = $this->client->put('/{id}', [$this->data->code], $this->data);
 
         if (! $response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.UPDATE', new SubscriptionsEvent($this->data));
@@ -79,6 +81,7 @@ class Subscriptions extends MoipResource {
     /**
      * Suspend a subscription
      *
+     * @param  string  $code
      * @return $this
      */
     public function suspend($code = null)
@@ -87,7 +90,7 @@ class Subscriptions extends MoipResource {
             $code = $this->data->code;
         }
 
-        $response = $this->client->put('/{id}/suspend', ['id' => $code]);
+        $response = $this->client->put('/{code}/suspend', [$code]);
 
         if (! $response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.SUSPENDED', new SubscriptionsEvent($this->data));
@@ -99,6 +102,7 @@ class Subscriptions extends MoipResource {
     /**
      * Activate a subscription
      *
+     * @param  string  $code
      * @return $this
      */
     public function activate($code = null)
@@ -107,7 +111,7 @@ class Subscriptions extends MoipResource {
             $code = $this->data->code;
         }
 
-        $response = $this->client->put('/{id}/activate', ['id' => $code], $this->data);
+        $response = $this->client->put('/{code}/activate', [$code], $this->data);
 
         if (! $response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.ACTIVATED', new SubscriptionsEvent($this->data));
@@ -119,6 +123,7 @@ class Subscriptions extends MoipResource {
     /**
      * Cancel a subscription
      *
+     * @param  string  $code
      * @return $this
      */
     public function cancel($code = null)
@@ -127,7 +132,7 @@ class Subscriptions extends MoipResource {
             $code = $this->data->code;
         }
 
-        $response = $this->client->put('/{id}/cancel', ['id' => $code]);
+        $response = $this->client->put('/{code}/cancel', [$code]);
 
         if (! $response->hasErrors()) {
             $this->event->dispatch('SUBSCRIPTION.CANCELED', new SubscriptionsEvent($this->data));
@@ -139,6 +144,7 @@ class Subscriptions extends MoipResource {
     /**
      * Subscription invoices
      *
+     * @param  string  $code
      * @return $this
      */
     public function invoices($code = null)
@@ -147,7 +153,7 @@ class Subscriptions extends MoipResource {
             $code = $this->data->code;
         }
 
-        return $this->client->get('/{id}/invoices', ['id' => $code])
+        return $this->client->get('/{code}/invoices', [$code])
                             ->setDataKey('invoices')
                             ->getResults();
     }
@@ -161,7 +167,7 @@ class Subscriptions extends MoipResource {
      */
     public function edit($code, $data)
     {
-        $this->client->put('/{code}', ['code' => $code], $data);
+        $this->client->put('/{code}', [$code], $data);
 
         return $this;
     }

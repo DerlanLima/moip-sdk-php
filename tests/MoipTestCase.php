@@ -8,12 +8,32 @@ use PHPUnit_Framework_MockObject_MockObject;
 
 abstract class MoipTestCase extends TestCase {
 
+    /**
+     * Http 200 Response
+     *
+     * @const string
+     */
     const HTTP_OK = 'HTTP/1.1 200 OK';
 
+    /**
+     * Http 404 Response
+     *
+     * @const string
+     */
     const HTTP_NOT_FOUND = 'HTTP/1.1 404 Not Found';
 
+    /**
+     * Http 201 Response
+     *
+     * @const string
+     */
     const HTTP_CREATED = 'HTTP/1.1 201 Created';
 
+    /**
+     * Http 204 Response
+     *
+     * @const string
+     */
     const HTTP_NO_CONTENT = 'HTTP/1.1 204 No Content';
 
     /**

@@ -12,19 +12,22 @@ namespace Softpampa\Moip\Subscriptions\Resources;
 
 use stdClass;
 use DateTime;
-use Illuminate\Support\Collection;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Subscriptions\Events\CustomersEvent;
 
 class Customers extends MoipResource {
 
     /**
-     * @const  string  Default country
+     * Default country
+     *
+     * @const string
      */
     const ADDRESS_COUNTRY = 'BRA';
 
     /**
-     * @var  string  $path
+     * Resource name
+     *
+     * @var string
      */
     protected $resource = 'customers';
 
@@ -105,10 +108,14 @@ class Customers extends MoipResource {
     /**
      * Update Billing info
      *
+     * @param  string  $code
+     * @param  array  $data
      * @return $this
      */
     public function updateBillingInfo($code = null, $data = [])
     {
+        $payload = [];
+
         if (! $code) {
             $code = $this->data->code;
         }
@@ -119,7 +126,7 @@ class Customers extends MoipResource {
             $payload = $this->data->billing_info;
         }
 
-        $this->client->put('/{code}/billing_infos', ['code' => $code], $payload);
+        $this->client->put('/{code}/billing_infos', [$code], $payload);
 
         return $this;
     }

@@ -8,14 +8,14 @@ use Symfony\Component\EventDispatcher\Event;
 class PlansEvent extends Event {
 
     /**
-     * @var  stdClass  $plan
+     * @var \stdClass
      */
     public $plan;
 
     /**
      * Constructor.
      *
-     * @param  stdClass  $plan
+     * @param  \stdClass  $plan
      */
     public function __construct(stdClass $plan)
     {
