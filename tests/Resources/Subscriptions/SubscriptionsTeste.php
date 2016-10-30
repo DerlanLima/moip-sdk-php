@@ -23,6 +23,7 @@ class SubscriptionsTeste extends MoipTestCase {
         parent::setUp();
 
         $this->subscription = $this->moip->subscriptions()->subscriptions();
+        $this->client = $this->subscription->getClient();
     }
 
     /**
@@ -33,16 +34,16 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testGetAllSubscriptions()
     {
         // Mock response
-        $this->addMockResponse(200, 'subscriptions.json');
+        $this->client->addMockResponse('./tests/Mocks/subscriptions');
 
         $subscriptions = $this->subscription->all();
 
         $this->assertInstanceOf(Collection::class, $subscriptions);
         $this->assertInstanceOf(stdClass::class, $subscriptions->last());
         $this->assertEquals('assinatura21', $subscriptions->last()->code);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions', $this->client->getUrl());
     }
 
     /**
@@ -53,15 +54,15 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testFindASubscriptionByCode()
     {
         // Mock response
-        $this->addMockResponse(200, 'subscription.json');
+        $this->client->addMockResponse('./tests/Mocks/subscription');
 
         $subscription = $this->subscription->find('assinatura21');
 
         $this->assertInstanceOf(Subscriptions::class, $subscription);
         $this->assertEquals('assinatura21', $subscription->code);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21', $this->client->getUrl());
     }
 
     /**
@@ -71,26 +72,28 @@ class SubscriptionsTeste extends MoipTestCase {
      */
     public function testCreateANewSubscription()
     {
+        $customers = $this->moip->subscriptions()->customers();
+        $plans = $this->moip->subscriptions()->plans();
+
         // Mock response
-        $this->addMockResponse(200, 'plan.json');
-        $this->addMockResponse(200, 'customer.json');
-        $this->addMockResponse(201);
+        $customers->getClient()->addMockResponse('./tests/Mocks/customer');
+        $plans->getClient()->addMockResponse('./tests/Mocks/plan');
+        $this->client->addMockResponse(self::HTTP_CREATED);
 
-        $customer = $this->moip->subscriptions()->customers()->find('cliente02');
-        $plan = $this->moip->subscriptions()->plans()->find('plan101');
+        $customer = $customers->find('cliente02');
+        $plan = $plans->find('plan101');
 
-        $subscription = $this->moip->subscriptions()->subscriptions();
-        $subscription->setCode('assinatura21')
-                     ->setPlan($plan)
+        $subscription = $this->subscription->setCode('assinatura21');
+        $subscription->setPlan($plan)
                      ->setAmount(9990)
                      ->setCustomer($customer)
                      ->create();
 
         $this->assertInstanceOf(Subscriptions::class, $subscription);
         $this->assertEquals('assinatura21', $subscription->code);
-        $this->assertEquals('POST', $this->getHttpMethod());
-        $this->assertEquals(201, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions?new_customer=false', $this->getHttpUrl());
+        $this->assertEquals('POST', $this->client->getMethod());
+        $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions?new_customer=false', $this->client->getUrl());
     }
 
     /**
@@ -101,8 +104,8 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testUpdateASubscriptionByCode()
     {
         // Mock response
-        $this->addMockResponse(200, 'subscription.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/subscription');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $subscription = $this->subscription->find('assinatura21');
         $subscription->setNextInvoiceDate('2016-04-20');
@@ -114,9 +117,9 @@ class SubscriptionsTeste extends MoipTestCase {
 
         $this->assertInstanceOf(Subscriptions::class, $subscription);
         $this->assertEquals('assinatura21', $subscription->code);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21', $this->client->getUrl());
     }
 
     /**
@@ -127,17 +130,17 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testGetAllInvoicesFromSubscription()
     {
         // Mock response
-        $this->addMockResponse(200, 'subscription.json');
-        $this->addMockResponse(200, 'invoices.json');
+        $this->client->addMockResponse('./tests/Mocks/subscription');
+        $this->client->addMockResponse('./tests/Mocks/invoices');
 
         $subscription = $this->subscription->find('assinatura21');
         $invoices = $subscription->invoices();
 
         $this->assertInstanceOf(Collection::class, $invoices);
         $this->assertInstanceOf(stdClass::class, $invoices->last());
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/invoices', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/invoices', $this->client->getUrl());
     }
 
     /**
@@ -148,15 +151,15 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testGetAllInvoicesBySubscriptionCode()
     {
         // Mock response
-        $this->addMockResponse(200, 'invoices.json');
+        $this->client->addMockResponse('./tests/Mocks/invoices');
 
         $subscription = $this->subscription->invoices('assinatura21');
 
         $this->assertInstanceOf(Collection::class, $subscription);
         $this->assertInstanceOf(stdClass::class, $subscription->last());
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/invoices', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/invoices', $this->client->getUrl());
     }
 
     /**
@@ -167,15 +170,15 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testSuspendASubscription()
     {
         // Mock response
-        $this->addMockResponse(200, 'subscription.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/subscription');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $subscription = $this->subscription->find('assinatura21');
         $subscription->suspend();
 
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/suspend', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/suspend', $this->client->getUrl());
     }
 
     /**
@@ -186,13 +189,13 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testSuspendASubscriptionByCode()
     {
         // Mock response
-        $this->addMockResponse(200);
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $subscription = $this->subscription->suspend('assinatura21');
 
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/suspend', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/suspend', $this->client->getUrl());
     }
 
     /**
@@ -203,15 +206,15 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testCanceldASubscription()
     {
         // Mock response
-        $this->addMockResponse(200, 'subscription.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/subscription');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $subscription = $this->subscription->find('assinatura21');
         $subscription->cancel();
 
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/cancel', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/cancel', $this->client->getUrl());
     }
 
     /**
@@ -222,13 +225,13 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testCanceldASubscriptionByCode()
     {
         // Mock response
-        $this->addMockResponse(200);
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $subscription = $this->subscription->cancel('assinatura21');
 
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/cancel', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/cancel', $this->client->getUrl());
     }
 
     /**
@@ -239,15 +242,15 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testActivateASubscription()
     {
         // Mock response
-        $this->addMockResponse(200, 'subscription.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/subscription');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $subscription = $this->subscription->find('assinatura21');
         $subscription->activate();
 
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/activate', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/activate', $this->client->getUrl());
     }
 
     /**
@@ -258,13 +261,13 @@ class SubscriptionsTeste extends MoipTestCase {
     public function testActivateASubscriptionByCode()
     {
         // Mock response
-        $this->addMockResponse(200);
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $subscription = $this->subscription->activate('assinatura21');
 
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/activate', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/activate', $this->client->getUrl());
     }
 
 }

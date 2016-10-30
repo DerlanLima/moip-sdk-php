@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 class NotificationsTest extends MoipTestCase {
 
     /**
-     * @var Preferences\Resources\Notifications  $notifications
+     * @var \Softpampa\Moip\Preferences\Resources\Notifications
      */
     protected $notifications;
 
@@ -23,6 +23,7 @@ class NotificationsTest extends MoipTestCase {
         parent::setUp();
 
         $this->notifications = $this->moip->preferences()->notifications();
+        $this->client = $this->notifications->getClient();
     }
 
     public function testGetNotificationResourceInstance()
@@ -36,7 +37,7 @@ class NotificationsTest extends MoipTestCase {
     public function testCreateANewNotification()
     {
         // Mock response
-        $this->addMockResponse(200, 'notification.json');
+        $this->client->addMockResponse('./tests/Mocks/notification');
 
         $notification = $this->notifications;
 
@@ -48,9 +49,9 @@ class NotificationsTest extends MoipTestCase {
         $this->assertInstanceOf(Notifications::class, $notification);
         $this->assertEquals('http://requestb.in/1dhjesw1', $notification->target);
         $this->assertContains('PAYMENT.AUTHORIZED', $notification->events);
-        $this->assertEquals('POST', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications', $this->getHttpUrl());
+        $this->assertEquals('POST', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications', $this->client->getUrl());
     }
 
     /**
@@ -59,16 +60,16 @@ class NotificationsTest extends MoipTestCase {
     public function testGetAllNotifications()
     {
         // Mock response
-        $this->addMockResponse(200, 'notifications.json');
+        $this->client->addMockResponse('./tests/Mocks/notifications');
 
         $notifications = $this->notifications->all();
 
         $this->assertInstanceOf(Collection::class, $notifications);
         $this->assertInstanceOf(stdClass::class, $notifications->last());
         $this->assertEquals('NPR-9XSBSCS09RZ2', $notifications->last()->id);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications', $this->client->getUrl());
     }
 
     /**
@@ -77,15 +78,15 @@ class NotificationsTest extends MoipTestCase {
     public function testFindANotificationById()
     {
         // Mock response
-        $this->addMockResponse(200, 'notification.json');
+        $this->client->addMockResponse('./tests/Mocks/notification');
 
         $notification = $this->notifications->find('NPR-DV61EEGGUFCQ');
 
         $this->assertInstanceOf(Notifications::class, $notification);
         $this->assertEquals('NPR-DV61EEGGUFCQ', $notification->id);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
     }
 
     /**
@@ -94,27 +95,27 @@ class NotificationsTest extends MoipTestCase {
     public function testDeleteANotification()
     {
         // Mock response
-        $this->addMockResponse(200, 'notification.json');
-        $this->addMockResponse(204);
+        $this->client->addMockResponse('./tests/Mocks/notification');
+        $this->client->addMockResponse(self::HTTP_NO_CONTENT);
 
         $notification = $this->notifications->find('NPR-DV61EEGGUFCQ');
         $notification->delete();
 
-        $this->assertEquals('DELETE', $this->getHttpMethod());
-        $this->assertEquals(204, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->getHttpUrl());
+        $this->assertEquals('DELETE', $this->client->getMethod());
+        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
     }
 
     public function testDeleteANotificationById()
     {
         // Mock response
-        $this->addMockResponse(204);
+        $this->client->addMockResponse(self::HTTP_NO_CONTENT);
 
         $this->notifications->delete('NPR-DV61EEGGUFCQ');
 
-        $this->assertEquals('DELETE', $this->getHttpMethod());
-        $this->assertEquals(204, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->getHttpUrl());
+        $this->assertEquals('DELETE', $this->client->getMethod());
+        $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
     }
 
 }

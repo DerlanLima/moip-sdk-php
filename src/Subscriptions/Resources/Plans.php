@@ -65,7 +65,7 @@ class Plans extends MoipResource {
     /**
      * Get all plans
      *
-     * @return Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function all()
     {

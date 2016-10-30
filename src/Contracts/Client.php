@@ -5,31 +5,32 @@ namespace Softpampa\Moip\Contracts;
 interface Client {
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param  Authenticatable  $auth
-     * @param  string  $enviroment
+     * @param  \Softpampa\Moip\Contracts\Authenticatable  $auth
+     * @param  string  $environment
      */
-    public function __construct(Authenticatable $auth, $enviroment);
+    public function __construct(Authenticatable $auth, $environment);
 
     /**
-     * Add Request Query String
+     * Add request query string
      *
-     * @param  string  $query
+     * @param  string  $key
+     * @param  string  $value
      * @return $this
      */
-    public function addQueryString($query);
+    public function addQueryString($key, $value);
 
     /**
-     * Set Request URI
+     * Set request URL path
      *
-     * @param  string  $uri
+     * @param  string  $path
      * @return $this
      */
-    public function setUri($uri);
+    public function setPath($path);
 
     /**
-     * Set Request URL API Version
+     * Set request URL API version
      *
      * @param  string  $version
      * @return $this
@@ -37,12 +38,21 @@ interface Client {
     public function setVersion($version);
 
     /**
-     * Set Request URL Path
+     * Set request resource
      *
-     * @param  string  $path
+     * @param  string  $resource
      * @return $this
      */
-    public function setPath($path);
+    public function setResource($resource);
+
+    /**
+     * Set request param
+     *
+     * @param  string  $param
+     * @param  array  $binds
+     * @return $this
+     */
+    public function setParam($param, array $binds = []);
 
     /**
      * Get HTTP request URL
@@ -63,35 +73,51 @@ interface Client {
      *
      * @return string
      */
-    public function getHttpMethod();
+    public function getMethod();
 
     /**
      * Get Moip Response Object
      *
-     * @return MoipResponse
+     * @return \Softpampa\Moip\MoipResponse
      */
     public function getResponse();
 
     /**
-     * Send HTTP Request method GET
+     * Send HTTP request method GET
      *
-     * @return MoipResponse
+     * @param  string  $route
+     * @param  array  $binds
+     * @return \Softpampa\Moip\MoipResponse
      */
-    public function get($route = '', $binds = []);
+    public function get($route = '', array $binds = []);
 
     /**
-     * Send HTTP Request method PUT
+     * Send HTTP request method PUT
      *
-     * @return MoipResponse
+     * @param  string  $route
+     * @param  array  $binds
+     * @param  array  $payload
+     * @return \Softpampa\Moip\MoipResponse
      */
-    public function put($route, $binds = [], $payload = []);
+    public function put($route, array $binds = [], $payload = []);
 
     /**
-     * Send HTTP Request method POST
+     * Send HTTP request method POST
      *
-     * @return MoipResponse
+     * @param  string  $route
+     * @param  array  $binds
+     * @param  array  $payload
+     * @return \Softpampa\Moip\MoipResponse
      */
-    public function post($route, $binds = [], $payload = []);
+    public function post($route, array $binds = [], $payload = []);
 
-//    public function delete();
+    /**
+     * Send HTTP request method DELETE
+     *
+     * @param  string  $route
+     * @param  array  $binds
+     * @return \Softpampa\Moip\MoipResponse
+     */
+    public function delete($route, array $binds = []);
+
 }

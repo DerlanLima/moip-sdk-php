@@ -2,35 +2,33 @@
 
 namespace Softpampa\Moip\Tests;
 
-use GuzzleHttp\Stream\Stream;
+use Softpampa\Moip\Moip;
 use PHPUnit\Framework\TestCase;
 use PHPUnit_Framework_MockObject_MockObject;
-use Softpampa\Moip\Moip;
-use Softpampa\Moip\MoipClient;
-use Softpampa\Moip\MoipBasicAuth;
-use Softpampa\Moip\Tests\Helpers\JsonFile;
 
 abstract class MoipTestCase extends TestCase {
 
+    const HTTP_OK = 'HTTP/1.1 200 OK';
+
+    const HTTP_NOT_FOUND = 'HTTP/1.1 404 Not Found';
+
+    const HTTP_CREATED = 'HTTP/1.1 201 Created';
+
+    const HTTP_NO_CONTENT = 'HTTP/1.1 204 No Content';
+
     /**
-     * @var  Moip  $moip
+     * Moip
+     *
+     * @var \Softpampa\Moip\Moip
      */
     protected $moip;
 
     /**
-     * @var  MoipClient  $client
+     * Moip client
+     *
+     * @var \Softpampa\Moip\MoipClient
      */
     protected $client;
-
-    /**
-     * @var  GuzzleHttp\Stream\Stream  $emptyBody
-     */
-    protected $emptyBody;
-
-    /**
-     * @var  string  $env  Moip environment
-     */
-    protected $env;
 
     /**
      * Set up all tests
@@ -38,56 +36,6 @@ abstract class MoipTestCase extends TestCase {
     public function setUp()
     {
         $this->moip = new Moip($this->mockMoipAuthentication(), Moip::SANDBOX);
-        $this->client = $this->moip->getClient();
-        $this->emptyBody = Stream::factory('{}');
-    }
-
-    public function getBodyMock($filename)
-    {
-        if (! $filename) {
-            $body = $this->emptyBody;
-        } else {
-            $body = JsonFile::read($filename);
-        }
-
-        return Stream::factory($body);
-    }
-
-    public function addMockResponse($code, $mockFilename = null)
-    {
-        if ($this->env == 'MOCKBOX') {
-            $this->client->addMockResponse($code, $this->getBodyMock($mockFilename));
-        }
-    }
-
-    /**
-     * Get HTTP Request Method
-     *
-     * @return string
-     */
-    public function getHttpMethod()
-    {
-        return $this->client->getHttpMethod();
-    }
-
-    /**
-     * Get HTTP Response Status Code
-     *
-     * @return string
-     */
-    public function getHttpStatusCode()
-    {
-        return $this->client->getResponse()->getStatusCode();
-    }
-
-    /**
-     * Get HTTP Request URL
-     *
-     * @return string
-     */
-    public function getHttpUrl()
-    {
-        return $this->client->getUrl();
     }
 
     /**
@@ -97,22 +45,12 @@ abstract class MoipTestCase extends TestCase {
      */
     private function mockMoipAuthentication()
     {
-        $moipKey = getenv('MOIP_KEY');
-        $moipToken = getenv('MOIP_TOKEN');
-
-        if ($moipKey && $moipToken) {
-            $this->env = 'SANDBOX';
-            return new MoipBasicAuth($moipToken, $moipKey);
-        }
-
         $auth = $this->getMockBuilder('Softpampa\Moip\MoipBasicAuth')
-                ->setConstructorArgs(['MOIP_API_TOKEN', 'MOIP_API_KEY'])
-                ->getMock();
+                     ->setConstructorArgs(['MOIP_API_TOKEN', 'MOIP_API_KEY'])
+                     ->getMock();
 
         $auth->method('generateAuthorization')
-                ->willReturn('Basic BASE64(MOIP_API_TOKEN:MOIP_API_KEY)');
-
-        $this->env = 'MOCKBOX';
+             ->willReturn('Basic BASE64(MOIP_API_TOKEN:MOIP_API_KEY)');
 
         return $auth;
     }

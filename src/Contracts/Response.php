@@ -5,21 +5,21 @@ namespace Softpampa\Moip\Contracts;
 interface Response {
 
     /**
-     * Set Response resource
+     * Set response resource data key
      *
-     * @param  strinf  $resource
+     * @param  string  $key
      */
-    public function setResource($resource);
+    public function setDataKey($key);
 
     /**
-     * Get Response HTTP Body content
+     * Get response HTTP Body content
      *
      * @return string
      */
     public function getBodyContent();
 
     /**
-     * Get Response HTTP Code Status
+     * Get response HTTP Code Status
      *
      * @return int
      */
@@ -35,23 +35,14 @@ interface Response {
     /**
      * Return all errors
      *
-     * @return stdClass
+     * @return \Illuminate\Support\Collection;
      */
     public function getErrors();
 
     /**
-     * Set an error
-     *
-     * @param  string  $code
-     * @param  string  $description
-     * @return stdClass
-     */
-    public function setError($code, $description);
-
-    /**
      * Get response Resource Object
      *
-     * @return MoipResource
+     * @return \Illuminate\Support\Collection;
      */
     public function getResults();
 }

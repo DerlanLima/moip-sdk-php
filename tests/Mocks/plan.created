@@ -1,0 +1,25 @@
+HTTP/1.1 201 Created
+Connection: close
+Server: Apache/2.4.6 (CentOS)
+Content-Type: application/json
+
+{
+   "amount":990,
+   "max_qty":1,
+   "setup_fee":500,
+   "interval":{
+      "unit":"MONTH",
+      "length":1
+   },
+   "status":"ACTIVE",
+   "description":"DescriçãodoPlanoEspecial",
+   "name":"PlanoEspecial",
+   "billing_cycles":12,
+   "code":"plan101",
+   "trial":{
+      "enabled":true,
+      "days":30,
+      "hold_setup_fee":true
+   },
+   "payment_method":"CREDIT_CARD"
+}

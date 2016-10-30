@@ -35,11 +35,13 @@ class Invoices extends MoipResource {
     /**
      * Return all payments from a invoice
      *
-     * @return Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function payments()
     {
-        return $this->client->get('/{id}/payments', ['id' => $this->data->id])->setResource('payments')->getResults();
+        return $this->client->get('/{id}/payments', [$this->data->id])
+                            ->setDataKey('payments')
+                            ->getResults();
     }
 
 }

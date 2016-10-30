@@ -2,7 +2,6 @@
 
 namespace Softpampa\Moip;
 
-use Softpampa\Moip\MoipClient;
 use Softpampa\Moip\Payments\PaymentApi;
 use Softpampa\Moip\Contracts\Authenticatable;
 use Softpampa\Moip\Subscriptions\SubscriptionApi;
@@ -11,42 +10,66 @@ use Softpampa\Moip\Preferences\PreferencesApi;
 class Moip {
 
     /**
-     * @const  string  Moip Production base URI
+     * Moip Production base URI
+     *
+     * @const string
      */
     const PRODUCTION = 'https://api.moip.com.br';
 
     /**
-     * @const  string  Moip Sandbox base URI
+     * Moip Sandbox base URI
+     *
+     * @const string
      */
     const SANDBOX = 'https://sandbox.moip.com.br';
 
     /**
-     * @var  MoipClient  $client  Moip HTTP Client
+     * Moip auth
+     *
+     * @var \Softpampa\Moip\Contracts\Authenticatable
      */
-    protected $client;
+    protected $auth;
 
     /**
-     * @var  MoipEvent  $event  Moip Event Dispatcher
+     * Moip environment
+     *
+     * @return string
+     */
+    protected $environment;
+
+    /**
+     * Moip options
+     *
+     * @return array
+     */
+    protected $options;
+
+    /**
+     * Moip Event Dispatcher
+     *
+     * @var \Softpampa\Moip\MoipEvent
      */
     protected $event;
 
     /**
      * Constructor.
      *
-     * @param  MoipAuth  $auth  Moip authentication
-     * @param  string  $environment  Moip environment
-     * @param  array  $options  Moip defaults pptions
+     * @param  \Softpampa\Moip\Contracts\Authenticatable  $auth
+     * @param  string  $environment
+     * @param  array  $options
      */
     public function __construct(Authenticatable $auth, $environment = self::SANDBOX, $options = [])
     {
         $this->event = new MoipEvent;
-        $this->client = new MoipClient($auth, $environment, $options);
+        $this->auth = $auth;
+        $this->options = $options;
+        $this->environment = $environment;
     }
 
     /**
-     * Get Moip Events
+     * Get Moip event system
      *
-     * @return MoipEvents
+     * @return \Softpampa\Moip\MoipEvent
      */
     public function getEvent()
     {
@@ -54,19 +77,29 @@ class Moip {
     }
 
     /**
-     * Get Http Client.
+     * Get Moip auth
      *
-     * @return MoipClient
+     * @return \Softpampa\Moip\Contracts\Authenticatable
      */
-    public function getClient()
+    public function getAuth()
     {
-        return $this->client;
+        return $this->auth;
+    }
+
+    /**
+     * Get Moip environment
+     *
+     * @return string
+     */
+    public function getEnv()
+    {
+        return $this->environment;
     }
 
     /**
      * Moip Subscription
      *
-     * @return Softpampa\Subscriptions\SubscriptionApi
+     * @return \Softpampa\Moip\Subscriptions\SubscriptionApi
      */
     public function subscriptions()
     {
@@ -76,13 +109,18 @@ class Moip {
     /**
      * Moip Payments
      *
-     * @return Softpampa\Subscriptions\PaymentApi
+     * @return \Softpampa\Moip\Payments\PaymentApi
      */
     public function payments()
     {
         return new PaymentApi($this);
     }
 
+    /**
+     * Moip Preferences
+     *
+     * @return \Softpampa\Moip\Preferences\PreferencesApi
+     */
     public function preferences()
     {
         return new PreferencesApi($this);

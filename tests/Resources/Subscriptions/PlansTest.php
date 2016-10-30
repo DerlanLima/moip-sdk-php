@@ -3,6 +3,7 @@
 namespace Softpampa\Moip\Tests\Resources\Subscriptions;
 
 use Illuminate\Support\Collection;
+use Softpampa\Moip\Exceptions\Client\ResourceNotFoundException;
 use Softpampa\Moip\Moip;
 use Softpampa\Moip\Tests\MoipTestCase;
 use Softpampa\Moip\Subscriptions\Resources\Plans;
@@ -22,6 +23,7 @@ class PlansTest extends MoipTestCase {
         parent::setUp();
 
         $this->plans = $this->moip->subscriptions()->plans();
+        $this->client = $this->plans->getClient();
     }
 
     /**
@@ -32,14 +34,14 @@ class PlansTest extends MoipTestCase {
     public function testGetAllPlans()
     {
         // Mock response
-        $this->addMockResponse(200, 'plans.json');
+        $this->client->addMockResponse('./tests/Mocks/plans');
 
         $plans = $this->plans->all();
 
         $this->assertInstanceOf(Collection::class, $plans);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans', $this->client->getUrl());
     }
 
     /**
@@ -50,14 +52,14 @@ class PlansTest extends MoipTestCase {
     public function testFindAPlanByCode()
     {
         // Mock response
-        $this->addMockResponse(200, 'plan.json');
+        $this->client->addMockResponse('./tests/Mocks/plan');
 
         $plan = $this->plans->find('plan101');
 
         $this->assertInstanceOf(Plans::class, $plan);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101', $this->client->getUrl());
 
         $this->assertEquals('plan101', $plan->code);
         $this->assertEquals(990, $plan->amount);
@@ -72,18 +74,15 @@ class PlansTest extends MoipTestCase {
 
     /**
      * Find a not found plan
+     *
+     * @expectedException \Softpampa\Moip\Exceptions\Client\ResourceNotFoundException
      */
     public function testFindANotFoundPlan()
     {
         // Mock response
-        $this->addMockResponse(404);
+        $this->client->addMockResponse(self::HTTP_NOT_FOUND);
 
-        $plans = $this->plans->find('NOT_FOUND');
-
-        $this->assertInstanceOf(Plans::class, $plans);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(404, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/NOT_FOUND', $this->client->getUrl());
+        $this->plans->find('NOT_FOUND');
     }
 
     /**
@@ -94,22 +93,22 @@ class PlansTest extends MoipTestCase {
     public function testCreateANewPlan()
     {
         // Mock response
-        $this->addMockResponse(201, 'plan.json');
+        $this->client->addMockResponse('./tests/Mocks/plan.created');
 
-        $plans = $this->plans->setCode('plan101')
-                ->setAmount(990)
-                ->setName('PlanoEspecial')
-                ->setDescription('DescriçãodoPlanoEspecial')
-                ->setSetupFee(500)
-                ->setMaxQdy(1)
-                ->setInterval(Plans::INTERVAL_MONTH, 1)
-                ->setTrial(true, 30, true)
-                ->setPaymentMethod()
-                ->create();
+        $plan = $this->plans->setCode('plan101');
+        $plan->setAmount(990)
+             ->setName('PlanoEspecial')
+             ->setDescription('DescriçãodoPlanoEspecial')
+             ->setSetupFee(500)
+             ->setMaxQdy(1)
+             ->setInterval(Plans::INTERVAL_MONTH, 1)
+             ->setTrial(true, 30, true)
+             ->setPaymentMethod()
+             ->create();
 
-        $this->assertInstanceOf(Plans::class, $plans);
-        $this->assertEquals('POST', $this->getHttpMethod());
-        $this->assertEquals(201, $this->getHttpStatusCode());
+        $this->assertInstanceOf(Plans::class, $plan);
+        $this->assertEquals('POST', $this->client->getMethod());
+        $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans', $this->client->getUrl());
     }
 
@@ -121,8 +120,8 @@ class PlansTest extends MoipTestCase {
     public function testUpdateAPlan()
     {
         // Mock response
-        $this->addMockResponse(200, 'plan.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/plan');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $plan = $this->plans->find('plan101');
 
@@ -131,8 +130,8 @@ class PlansTest extends MoipTestCase {
         $plan->save();
 
         $this->assertInstanceOf(Plans::class, $plan);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101', $this->client->getUrl());
     }
 
@@ -144,16 +143,16 @@ class PlansTest extends MoipTestCase {
     public function testActivateAPlan()
     {
         // Mock response
-        $this->addMockResponse(200, 'plan.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/plan');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $plan = $this->plans->find('plan101');
         $plan->activate();
 
         $this->assertInstanceOf(Plans::class, $plan);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/activate', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/activate', $this->client->getUrl());
     }
 
     /**
@@ -164,14 +163,14 @@ class PlansTest extends MoipTestCase {
     public function testActivateAPlanByCode()
     {
         // Mock response
-        $this->addMockResponse(200);
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $plan = $this->plans->activate('plan101');
 
         $this->assertInstanceOf(Plans::class, $plan);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/activate', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/activate', $this->client->getUrl());
     }
 
     /**
@@ -182,16 +181,16 @@ class PlansTest extends MoipTestCase {
     public function testInactivateAPlan()
     {
         // Mock response
-        $this->addMockResponse(200, 'plan.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/plan');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $plan = $this->plans->find('plan101');
         $plan->inactivate();
 
         $this->assertInstanceOf(Plans::class, $plan);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/inactivate', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/inactivate', $this->client->getUrl());
     }
 
     /**
@@ -202,14 +201,14 @@ class PlansTest extends MoipTestCase {
     public function testInactivateAPlanByCode()
     {
         // Mock response
-        $this->addMockResponse(200);
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $plan = $this->plans->inactivate('plan101');
 
         $this->assertInstanceOf(Plans::class, $plan);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/inactivate', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/inactivate', $this->client->getUrl());
     }
 
 }

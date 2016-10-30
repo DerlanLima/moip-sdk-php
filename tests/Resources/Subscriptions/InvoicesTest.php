@@ -22,6 +22,7 @@ class InvoicesTest extends MoipTestCase {
         parent::setUp();
 
         $this->invoices = $this->moip->subscriptions()->invoices();
+        $this->client = $this->invoices->getClient();
     }
 
     /**
@@ -32,15 +33,15 @@ class InvoicesTest extends MoipTestCase {
     public function testFindAInvoiceById()
     {
         // Mock response
-        $this->addMockResponse(200, 'invoice.json');
+        $this->client->addMockResponse('./tests/Mocks/invoice');
 
         $invoice = $this->invoices->find('1729934');
 
         $this->assertEquals('1729934', $invoice->id);
         $this->assertInstanceOf(Invoices::class, $invoice);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/invoices/1729934', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/invoices/1729934', $this->client->getUrl());
     }
 
     /**
@@ -51,15 +52,15 @@ class InvoicesTest extends MoipTestCase {
     public function testGetAllPaymentsFromInvoice()
     {
         // Mock response
-        $this->addMockResponse(200, 'invoice.json');
-        $this->addMockResponse(200, 'payments.json');
+        $this->client->addMockResponse('./tests/Mocks/invoice');
+        $this->client->addMockResponse('./tests/Mocks/payments');
 
         $payments = $this->invoices->find('1729934')->payments();
 
         $this->assertInstanceOf(Collection::class, $payments);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/invoices/1729934/payments', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/invoices/1729934/payments', $this->client->getUrl());
     }
 
 }

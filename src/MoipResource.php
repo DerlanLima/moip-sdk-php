@@ -31,14 +31,13 @@ abstract class MoipResource implements JsonSerializable, Resource {
     /**
      * Constructor.
      *
-     * @param  MoipApi  $api  Moip Api
+     * @param  \Softpampa\Moip\MoipApi  $api
      */
     public function __construct(MoipApi $api)
     {
-        $this->data = new stdClass;
         $this->api = $api;
         $this->event = $api->getMoip()->getEvent();
-        $this->client = $api->getMoip()->getClient();
+        $this->client = $api->getClient();
 
         $this->initialize();
     }
@@ -50,6 +49,7 @@ abstract class MoipResource implements JsonSerializable, Resource {
      */
     protected function initialize()
     {
+        $this->data = new stdClass;
         $this->prepareResourcePath();
     }
 
@@ -60,7 +60,7 @@ abstract class MoipResource implements JsonSerializable, Resource {
      */
     protected function prepareResourcePath()
     {
-        $this->client->setPath($this->resource);
+        $this->client->setResource($this->resource);
     }
 
     /**
@@ -71,6 +71,16 @@ abstract class MoipResource implements JsonSerializable, Resource {
     public function getResource()
     {
         return $this->resource;
+    }
+
+    /**
+     * Moip client
+     *
+     * @return \Softpampa\Moip\MoipClient
+     */
+    public function getClient()
+    {
+        return $this->client;
     }
 
     /**
@@ -106,11 +116,11 @@ abstract class MoipResource implements JsonSerializable, Resource {
     /**
      * Define filter
      *
-     * @param  int  $pattern
-     * @param  int  $binds
+     * @param  string  $pattern
+     * @param  array  $binds
      * @return $this
      */
-    public function addFilter($pattern, $binds)
+    public function addFilter($pattern, array $binds)
     {
         //
 
@@ -135,7 +145,7 @@ abstract class MoipResource implements JsonSerializable, Resource {
     /**
      * Specify data which should be serialized to JSON.
      *
-     * @return stdClass
+     * @return \stdClass
      */
     public function jsonSerialize()
     {

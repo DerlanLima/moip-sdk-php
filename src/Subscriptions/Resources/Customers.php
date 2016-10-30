@@ -31,7 +31,7 @@ class Customers extends MoipResource {
     /**
      * Get all customers
      *
-     * @return Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function all()
     {
@@ -52,7 +52,6 @@ class Customers extends MoipResource {
     /**
      * Save a customer
      *
-     * @param  int  $code
      * @return $this
      */
     public function save()

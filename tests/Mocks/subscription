@@ -1,0 +1,50 @@
+HTTP/1.1 200 OK
+Connection: close
+Server: Apache/2.4.6 (CentOS)
+Content-Type: application/json
+
+{
+   "creation_date":{
+      "minute":52,
+      "second":5,
+      "month":11,
+      "year":2014,
+      "hour":15,
+      "day":27
+   },
+   "amount":9990,
+   "plan":{
+      "name":"NovoPlano",
+      "code":"planonew"
+   },
+   "status":"TRIAL",
+   "expiration_date":{
+      "month":8,
+      "year":2015,
+      "day":28
+   },
+   "next_invoice_date":{
+      "month":12,
+      "year":2014,
+      "day":28
+   },
+   "code":"assinatura21",
+   "customer":{
+      "email":"novoemail@exemplo.com.br",
+      "code":"cliente01",
+      "fullname":"NomeSobrenome"
+   },
+   "trial":{
+      "start":{
+         "month":11,
+         "year":2014,
+         "day":27
+      },
+      "end":{
+         "month":12,
+         "year":2014,
+         "day":27
+      }
+   },
+   "payment_method":"CREDIT_CARD"
+}

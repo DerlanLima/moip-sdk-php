@@ -21,6 +21,7 @@ class PaymentsTest extends MoipTestCase {
         parent::setUp();
 
         $this->payments = $this->moip->subscriptions()->payments();
+        $this->client = $this->payments->getClient();
     }
 
     /**
@@ -31,15 +32,15 @@ class PaymentsTest extends MoipTestCase {
     public function testFindAPaymentById()
     {
         // Mock response
-        $this->addMockResponse(200, 'payment.json');
+        $this->client->addMockResponse('./tests/Mocks/payment');
 
         $payment = $this->payments->find(6);
 
         $this->assertEquals(6, $payment->id);
         $this->assertInstanceOf(Payments::class, $payment);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/payments/6', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/payments/6', $this->client->getUrl());
     }
 
 }

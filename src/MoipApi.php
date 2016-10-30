@@ -10,19 +10,21 @@ abstract class MoipApi {
     protected $moip;
 
     /**
-     * @var  MoipHttpClient  $client  Http Client
+     * Moip client
+     *
+     * @var \Softpampa\Moip\MoipClient
      */
     protected $client;
 
     /**
      * Constructor.
      *
-     * @param  Moip  $moip  Moip API
+     * @param  \Softpampa\Moip\Moip  $moip
      */
     public function __construct(Moip $moip)
     {
         $this->moip = $moip;
-        $this->client = $this->moip->getClient();
+        $this->client = new MoipClient($moip->getAuth(), $moip->getEnv());
 
         $this->prepareClient();
     }
@@ -30,11 +32,21 @@ abstract class MoipApi {
     /**
      * Get Moip
      *
-     * @return Moip
+     * @return \Softpampa\Moip\Moip
      */
     public function getMoip()
     {
         return $this->moip;
+    }
+
+    /**
+     * Get Moip client
+     *
+     * @return \Softpampa\Moip\MoipClient
+     */
+    public function getClient()
+    {
+        return $this->client;
     }
 
     /**
@@ -44,7 +56,8 @@ abstract class MoipApi {
      */
     protected function prepareClient()
     {
-        $this->client->setUri($this->uri)->setVersion($this->version);
+        $this->client->setPath($this->path)
+                     ->setVersion($this->version);
     }
 
 }

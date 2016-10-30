@@ -16,19 +16,23 @@ use Softpampa\Moip\Preferences\Resources\Notifications;
 class PreferencesApi extends MoipApi {
 
     /**
-     * @var  string  Moip API Version
+     * Moip API Version
+     *
+     * @var string
      */
     protected $version = 'v2';
 
     /**
-     * @var  string  Moip base URI
+     * Moip base URI
+     *
+     * @var string
      */
-    protected $uri = '';
+    protected $path = '';
 
     /**
      * Payments API
      *
-     * @return Resources\Notifications
+     * @return \Softpampa\Moip\Preferences\Resources\Notifications
      */
     public function notifications()
     {

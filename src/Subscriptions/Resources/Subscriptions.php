@@ -148,7 +148,7 @@ class Subscriptions extends MoipResource {
         }
 
         return $this->client->get('/{id}/invoices', ['id' => $code])
-                            ->setResource('invoices')
+                            ->setDataKey('invoices')
                             ->getResults();
     }
 
@@ -262,9 +262,7 @@ class Subscriptions extends MoipResource {
      */
     public function setNewCustomer(Customers $customer)
     {
-        $this->client->addQueryString([
-            'new_customer' => 'true'
-        ]);
+        $this->client->addQueryString('new_customer', true);
 
         $this->data->customer = $customer->jsonSerialize();
 
@@ -279,9 +277,7 @@ class Subscriptions extends MoipResource {
      */
     public function setCustomer($customer)
     {
-        $this->client->addQueryString([
-            'new_customer' => 'false'
-        ]);
+        $this->client->addQueryString('new_customer', false);
 
         if ($customer instanceof Customers) {
             $code = $customer->code;

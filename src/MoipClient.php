@@ -5,85 +5,109 @@ namespace Softpampa\Moip;
 use UnexpectedValueException;
 use GuzzleHttp\Client as HttpClient;
 use GuzzleHttp\Subscriber\Mock;
-use GuzzleHttp\Message\Request;
-use GuzzleHttp\Message\Response;
-use GuzzleHttp\Stream\StreamInterface;
-use GuzzleHttp\Exception\RequestException;
-use Softpampa\Moip\Traits\Utils;
 use Softpampa\Moip\Contracts\Client;
 use Softpampa\Moip\Contracts\Authenticatable;
-use Softpampa\Moip\Exceptions\MoipClientException;
 
 class MoipClient implements Client {
 
-    use Utils;
-
     /**
-     * @var  Authenticatable  $auth  Moip Authentication
+     * Moip API authentication
+     *
+     * @var \Softpampa\Moip\Contracts\Authenticatable
      */
     protected $auth;
 
     /**
-     * @var  string  $environment  Moip Environment
+     * Moip API environment
+     *
+     * @var string
      */
     protected $environment;
 
     /**
-     * @var  string  $path  Moip Environment
+     * Request URL path
+     *
+     * @var string
      */
     protected $path;
 
     /**
-     * @var  string  $queryString  Request Query String
-     */
-    protected $queryString = [];
-
-    /**
-     * @var  string  $version  Moip Environment
+     * Moip API version
+     *
+     * @var string
      */
     protected $version;
 
     /**
-     * @var  Client  $httpClient  HTTP Client
+     * Moip API resource
+     *
+     * @var string
+     */
+    protected $resource;
+
+    /**
+     * Moip API param
+     *
+     * @var string
+     */
+    protected $param;
+
+    /**
+     * Request URL query strings
+     * @var array
+     */
+    protected $queryStrings = [];
+
+    /**
+     * Guzzle Http Client
+     *
+     * @var \GuzzleHttp\Client
      */
     protected $httpClient;
 
     /**
-     * @var  Request  $request  HTTP Client Request
+     * Guzzle Http Request
+     *
+     * @var \GuzzleHttp\Message\Request
      */
     protected $request;
 
     /**
-     * @var  MoipResponse  $response  Moip Response
+     * Moip Response
+     *
+     * @var \Softpampa\Moip\MoipResponse
      */
     protected $response;
 
     /**
-     * @var  array  $mocks  Response Mocks
+     * Mocks responses
+     *
+     * @var array
      */
     protected $mocks;
 
     /**
-     * @var  array  $options Moip API Options
+     * Moip client default options
+     *
+     * @var array
      */
     protected $options = [
-        'exceptions' => false,
         'timeout' => 10,
         'connect_timeout' => 10
     ];
 
     /**
-     * Constructor.
+     * Constructor
      *
-     * @param  Authenticatable  $auth  Moip Authentication method
-     * @param  string  $environment  Moip environment
-     * @param  array  $options  Moip options
+     * @param  \Softpampa\Moip\Contracts\Authenticatable $auth
+     * @param  string  $environment
+     * @param  array  $options
      */
     public function __construct(Authenticatable $auth, $environment, $options = [])
     {
         $this->auth = $auth;
-        $this->httpClient = new HttpClient;
         $this->environment = $environment;
+        $this->httpClient = new HttpClient;
         $this->options = array_merge($this->options, $options);
     }
 
@@ -92,13 +116,14 @@ class MoipClient implements Client {
      *
      * @return void
      */
-    protected function setupHttpClient()
+    protected function setupHttpClientSettings()
     {
-        $this->httpClient->setDefaultOption('exceptions', $this->options['exceptions']);
-        $this->httpClient->setDefaultOption('timeout', 10);
-        $this->httpClient->setDefaultOption('connect_timeout', 10);
+        $this->httpClient->setDefaultOption('exceptions', false);
+        $this->httpClient->setDefaultOption('timeout', $this->options['timeout']);
+        $this->httpClient->setDefaultOption('connect_timeout', $this->options['connect_timeout']);
 
         $this->httpClient->setDefaultOption('headers', [
+            'Content-Type' => 'application/json',
             'Authorization' => $this->auth->generateAuthorization()
         ]);
     }
@@ -106,22 +131,13 @@ class MoipClient implements Client {
     /**
      * Set URL Request Paths
      *
-     * @param  string  $params
      * @return void
      */
-    protected function setRequestUrlPaths($params)
+    protected function setRequestFullPath()
     {
-        if (isset($this->uri)) {
-            $fullPath = $this->uri . '/';
-        }
+        $fullPath = sprintf('%s/%s/%s/%s', $this->path, $this->version, $this->resource, $this->param);
 
-        $fullPath .= sprintf('%s/%s', $this->version, $this->path);
-
-        if (isset($params)) {
-            $fullPath .= $params;
-        }
-
-        $this->request->setPath($fullPath);
+        $this->request->setPath(str_replace('//', '', rtrim($fullPath, '/')));
     }
 
     /**
@@ -133,41 +149,27 @@ class MoipClient implements Client {
     {
         $query = $this->request->getQuery();
 
-        foreach ($this->queryString as $key => $value) {
+        foreach ($this->queryStrings as $key => $value) {
             $query->set($key, $value);
         }
-    }
-
-    /**
-     * Add Query String to Request
-     *
-     * @param  array  $query
-     * @return $this
-     */
-    public function addQueryString($query)
-    {
-        $this->queryString = array_merge($this->queryString, $query);
-
-        return $this;
     }
 
     /**
      * Create a request to Moip API
      *
      * @param  string  $method
-     * @param  string  $params
      * @param  array  $payload
-     * @return MoipHttpResponse
+     * @return \Softpampa\Moip\MoipResponse
      */
-    protected function makeHttpRequest($method, $params = null, $payload = [])
+    protected function createRequest($method, $payload = [])
     {
-        $this->setupHttpClient();
         $this->setMockResponses();
+        $this->setupHttpClientSettings();
 
         $this->request = $this->httpClient->createRequest($method, $this->environment, ['json' => $payload]);
 
+        $this->setRequestFullPath();
         $this->setRequestQueryString();
-        $this->setRequestUrlPaths($params);
 
         return $this->send();
     }
@@ -175,17 +177,13 @@ class MoipClient implements Client {
     /**
      * Send a request to Moip API
      *
-     * @return MoipHttpResponse
+     * @return \Softpampa\Moip\MoipResponse
      */
     protected function send()
     {
-        try {
-            $response = $this->httpClient->send($this->request);
-        } catch (RequestException $e) {
-            throw new MoipClientException($e);
-        }
+        $response = $this->httpClient->send($this->request);
 
-        return $this->response = new MoipResponse($response, $this->path);
+        return $this->response = new MoipResponse($response, $this->resource);
     }
 
     /**
@@ -195,7 +193,7 @@ class MoipClient implements Client {
      */
     protected function setMockResponses()
     {
-        if (! empty($this->mocks)) {
+        if ($this->mocks) {
             $this->httpClient->getEmitter()->attach(new Mock($this->mocks));
         }
     }
@@ -215,11 +213,13 @@ class MoipClient implements Client {
      *
      * @param  string  $route
      * @param  array  $binds
-     * @return MoipResponse
+     * @return \Softpampa\Moip\MoipResponse
      */
-    public function get($route = '', $binds = [])
+    public function get($route = '', array $binds = [])
     {
-        return $this->makeHttpRequest('GET', $this->interpolate($route, $binds));
+        $this->setParam($route, $binds);
+
+        return $this->createRequest('GET');
     }
 
     /**
@@ -228,11 +228,13 @@ class MoipClient implements Client {
      * @param  string  $route
      * @param  array  $binds
      * @param  array  $payload
-     * @return MoipResponse
+     * @return \Softpampa\Moip\MoipResponse
      */
-    public function put($route, $binds = [], $payload = [])
+    public function put($route, array $binds = [], $payload = [])
     {
-        return $this->makeHttpRequest('PUT', $this->interpolate($route, $binds), $payload);
+        $this->setParam($route, $binds);
+
+        return $this->createRequest('PUT', $payload);
     }
 
     /**
@@ -241,11 +243,13 @@ class MoipClient implements Client {
      * @param  string  $route
      * @param  array  $binds
      * @param  array  $payload
-     * @return MoipResponse
+     * @return \Softpampa\Moip\MoipResponse
      */
-    public function post($route, $binds = [], $payload = [])
+    public function post($route, array $binds = [], $payload = [])
     {
-        return $this->makeHttpRequest('POST', $this->interpolate($route, $binds), $payload);
+        $this->setParam($route, $binds);
+
+        return $this->createRequest('POST', $payload);
     }
 
     /**
@@ -253,41 +257,30 @@ class MoipClient implements Client {
      *
      * @param  string  $route
      * @param  array  $binds
-     * @return MoipResponse
+     * @return \Softpampa\Moip\MoipResponse
      */
-    public function delete($route, $binds = [])
+    public function delete($route, array $binds = [])
     {
-        return $this->makeHttpRequest('DELETE', $this->interpolate($route, $binds));
+        $this->setParam($route, $binds);
+
+        return $this->createRequest('DELETE');
     }
 
     /**
-     * Set Request URI
-     *
-     * @param  string  $uri
-     * @return $this
-     */
-    public function setUri($uri)
-    {
-        $this->uri = $uri;
-
-        return $this;
-    }
-
-    /**
-     * Set Request Path
+     * Set request path
      *
      * @param  string  $path
      * @return $this
      */
     public function setPath($path)
     {
-        $this->path = $path;
+        $this->path = trim($path, '/');
 
         return $this;
     }
 
     /**
-     * Set Request Version
+     * Set request API version
      *
      * @param  string  $version
      * @return $this
@@ -300,17 +293,63 @@ class MoipClient implements Client {
     }
 
     /**
-     * Add a mock response
+     * Add request path
      *
-     * @param  int  $codeStatus  HTTP Code Status
-     * @param  StreamInterface  $body  HTTP Body
-     * @param  array  $headers  HTTP Headers
+     * @param  string  $resource
      * @return $this
      */
-    public function addMockResponse($codeStatus, $body = null, $headers = [])
+    public function setResource($resource)
     {
-        $headers = array_merge($headers, ['Content-Type' => 'application/json']);
-        $this->mocks[] = new Response($codeStatus, ['Content-Type' => 'application/json'], $body);
+        $this->resource = trim($resource, '/');
+
+        return $this;
+    }
+
+    /**
+     * Set request param
+     *
+     * @param  string  $param
+     * @param  array  $binds
+     * @return $this
+     */
+    public function setParam($param, array $binds = [])
+    {
+        $this->param = preg_replace_callback('/\{\w+\}/', function() use (&$binds) {
+            return array_shift($binds);
+        }, trim($param, '/'));
+
+        return $this;
+    }
+
+    /**
+     * Add Query String to Request
+     *
+     * @param  string  $key
+     * @param  string  $value
+     * @return $this
+     */
+    public function addQueryString($key, $value)
+    {
+        if (is_bool($value)) {
+            $value = $value ? 'true' : 'false';
+        }
+
+        $item[$key] = (string) $value;
+
+        $this->queryStrings[] = $item;
+
+        return $this;
+    }
+
+    /**
+     * Add a mock response
+     *
+     * @param  string  $content
+     * @return $this
+     */
+    public function addMockResponse($content)
+    {
+        $this->mocks[] = $content;
 
         return $this;
     }
@@ -320,6 +359,7 @@ class MoipClient implements Client {
      *
      * @param  string  $option
      * @param  string  $value
+     * @throws UnexpectedValueException
      * @return void
      */
     public function setDefaultOption($option, $value)
@@ -332,9 +372,9 @@ class MoipClient implements Client {
     }
 
     /**
-     * Get HTTP Client
+     * Get Guzzle Http Client
      *
-     * @return Request
+     * @return \GuzzleHttp\Client
      */
     public function getHttpClient()
     {
@@ -344,31 +384,31 @@ class MoipClient implements Client {
     /**
      * Get request body content
      *
-     * @return string
+     * @return string|null
      */
     public function getBodyContent()
     {
-        return (string) $this->request->getBody();
+        return $this->request ? (string) $this->request->getBody() : null;
     }
 
     /**
      * Get HTTP request method
      *
-     * @return int
+     * @return int|null
      */
-    public function getHttpMethod()
+    public function getMethod()
     {
-        return $this->request->getMethod();
+        return $this->request ? $this->request->getMethod() : null;
     }
 
     /**
      * Get HTTP request URL
      *
-     * @return string
+     * @return string|null
      */
     public function getUrl()
     {
-        return $this->request->getUrl();
+        return $this->request ? $this->request->getUrl() : null;
     }
 
 }

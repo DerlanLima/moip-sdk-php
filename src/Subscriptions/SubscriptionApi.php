@@ -20,19 +20,23 @@ use Softpampa\Moip\Subscriptions\Resources\Subscriptions;
 class SubscriptionApi extends MoipApi {
 
     /**
-     * @var  string  Moip API Version
+     * Moip API Version
+     *
+     * @var string
      */
     protected $version = 'v1';
 
     /**
-     * @var  string  Moip base URI
+     * Moip base path
+     *
+     * @var string
      */
-    protected $uri = 'assinaturas';
+    protected $path = 'assinaturas';
 
     /**
      * Plans API
      *
-     * @return Softpampa\Moip\Resources\Plans
+     * @return \Softpampa\Moip\Subscriptions\Resources\Plans
      */
     public function plans()
     {
@@ -42,7 +46,7 @@ class SubscriptionApi extends MoipApi {
     /**
      * Customers API
      *
-     * @return Softpampa\Moip\Resources\Customers
+     * @return \Softpampa\Moip\Subscriptions\Resources\Customers
      */
     public function customers()
     {
@@ -52,7 +56,7 @@ class SubscriptionApi extends MoipApi {
     /**
      * Subscriptions API
      *
-     * @return Softpampa\Moip\Resources\Customers
+     * @return \Softpampa\Moip\Subscriptions\Resources\Subscriptions
      */
     public function subscriptions()
     {
@@ -62,7 +66,7 @@ class SubscriptionApi extends MoipApi {
     /**
      * Invoices API
      *
-     * @return Softpampa\Moip\Resources\Customers
+     * @return \Softpampa\Moip\Subscriptions\Resources\Invoices
      */
     public function invoices()
     {
@@ -72,7 +76,7 @@ class SubscriptionApi extends MoipApi {
     /**
      * Payments API
      *
-     * @return Softpampa\Moip\Resources\Customers
+     * @return \Softpampa\Moip\Subscriptions\Resources\Payments
      */
     public function payments()
     {

@@ -1,0 +1,41 @@
+HTTP/1.1 200 OK
+Connection: close
+Server: Apache/2.4.6 (CentOS)
+Content-Type: application/json
+
+{
+   "creation_date":"27/11/2014",
+   "birthdate_month":"04",
+   "phone_area_code":"11",
+   "phone_number":"934343434",
+   "birthdate_day":26,
+   "address":{
+      "complement":"Casa2",
+      "zipcode":"05015010",
+      "street":"RuaNomedaRua2",
+      "state":"SP",
+      "number":"1002",
+      "district":"NomedoBairro2",
+      "country":"BRA",
+      "city":"SãoPaulo"
+   },
+   "email":"nome2@exemplo.com.br",
+   "birthdate_year":1980,
+   "creation_time":"11:11:50",
+   "cpf":"12345679891",
+   "code":"cliente02",
+   "fullname":"ClienteSobrenome",
+   "billing_info":{
+      "credit_cards":[
+         {
+            "holder_name":"Nomedocliente",
+            "first_six_digits":"211111",
+            "expiration_month":"04",
+            "brand":"VISA",
+            "expiration_year":"15",
+            "vault":"teste-teste00-1teste-t35t3-141709",
+            "last_four_digits":"1111"
+         }
+      ]
+   }
+}

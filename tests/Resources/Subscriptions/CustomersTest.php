@@ -22,6 +22,7 @@ class CustomersTest extends MoipTestCase {
         parent::setUp();
 
         $this->customer = $this->moip->subscriptions()->customers();
+        $this->client = $this->customer->getClient();
     }
 
     /**
@@ -31,14 +32,14 @@ class CustomersTest extends MoipTestCase {
     public function testGetAllCustomers()
     {
         // Mock response
-        $this->addMockResponse(200, 'customers.json');
+        $this->client->addMockResponse('./tests/Mocks/customers');
 
         $customers = $this->customer->all();
 
         $this->assertInstanceOf(Collection::class, $customers);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers', $this->client->getUrl());
     }
 
     /**
@@ -48,31 +49,29 @@ class CustomersTest extends MoipTestCase {
     public function testFindACustomerByCode()
     {
         // Mock response
-        $this->addMockResponse(200, 'customer.json');
+        $this->client->addMockResponse('./tests/Mocks/customer');
 
         $customers = $this->customer->find('cliente02');
 
         $this->assertInstanceOf(Customers::class, $customers);
-        $this->assertEquals('GET', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02', $this->getHttpUrl());
+        $this->assertEquals('GET', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02', $this->client->getUrl());
     }
 
     /**
      * Find a not found customer
      *
      * @see http://dev.moip.com.br/assinaturas-api/#criar-um-assinante-post
-     * @expectedException \Softpampa\Moip\Exceptions\ResourceNotFoundException
+     * @expectedException \Softpampa\Moip\Exceptions\Client\ResourceNotFoundException
      */
     public function testFindANotFoundCustomerByCode()
     {
-        // Set option to throw exceptions
-        $this->client->setDefaultOption('exceptions', true);
 
         // Mock response
-        $this->addMockResponse(404);
+        $this->client->addMockResponse(self::HTTP_NOT_FOUND);
 
-        $customer = $this->customer->find('NUMIXISTI');
+        $this->customer->find('NUMIXISTI');
     }
 
     /**
@@ -83,17 +82,17 @@ class CustomersTest extends MoipTestCase {
     public function testCreateANewCustomer()
     {
         // Mock response
-        $this->addMockResponse(201, 'customer.json');
+        $this->client->addMockResponse('./tests/Mocks/customer.created');
 
-        $customer = $this->customer->setCode('cliente2')
-                                    ->setFullname('ClienteSobrenome')
-                                    ->setCpf(12345679891)
-                                    ->setBirthdate('1980-04-26')
-                                    ->setEmail('nome2@exemplo.com.br')
-                                    ->setPhone(26, 934343434)
-                                    ->setAddress('RuaNomedaRua2', 1002, 'Casa2', 'NomedoBairro2', 'SãoPaulo', 'SP', 05015010)
-                                    ->setBillingInfo('Nomedocliente', 5267691661858194, 4, 20)
-                                    ->create();
+        $customer = $this->customer->setCode('cliente2');
+        $customer->setFullname('ClienteSobrenome')
+                 ->setCpf(12345679891)
+                 ->setBirthdate('1980-04-26')
+                 ->setEmail('nome2@exemplo.com.br')
+                 ->setPhone(26, 934343434)
+                 ->setAddress('RuaNomedaRua2', 1002, 'Casa2', 'NomedoBairro2', 'SãoPaulo', 'SP', 05015010)
+                 ->setBillingInfo('Nomedocliente', 5267691661858194, 4, 20)
+                 ->create();
 
         $this->assertInstanceOf(Customers::class, $customer);
 
@@ -113,9 +112,9 @@ class CustomersTest extends MoipTestCase {
         $this->assertEquals(4, $customer->billing_info->credit_card->expiration_month);
         $this->assertEquals(20, $customer->billing_info->credit_card->expiration_year);
 
-        $this->assertEquals('POST', $this->getHttpMethod());
-        $this->assertEquals(201, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers', $this->getHttpUrl());
+        $this->assertEquals('POST', $this->client->getMethod());
+        $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers', $this->client->getUrl());
     }
 
     /**
@@ -126,17 +125,17 @@ class CustomersTest extends MoipTestCase {
     public function testUpdateACustomer()
     {
         // Mock response
-        $this->addMockResponse(200, 'customer.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/customer');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $customer = $this->customer->find('cliente02');
         $customer->setEmail('outromail@exemplo.com.br');
         $customer->save();
 
         $this->assertInstanceOf(Customers::class, $customer);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02', $this->client->getUrl());
     }
 
     /**
@@ -147,17 +146,17 @@ class CustomersTest extends MoipTestCase {
     public function testUpdateCustomerCreditCard()
     {
         // Mock response
-        $this->addMockResponse(200, 'customer.json');
-        $this->addMockResponse(200);
+        $this->client->addMockResponse('./tests/Mocks/customer');
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $customer = $this->customer->find('cliente02');
         $customer->setBillingInfo('Nomedocliente', 5267691661858194, 4, 20);
         $customer->updateBillingInfo();
 
         $this->assertInstanceOf(Customers::class, $customer);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02/billing_infos', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02/billing_infos', $this->client->getUrl());
     }
 
     /**
@@ -168,7 +167,7 @@ class CustomersTest extends MoipTestCase {
     public function testUpdateCustomerCreditCardByCodeSettingBillingInfoAsDataArray()
     {
         // Mock response
-        $this->addMockResponse(200);
+        $this->client->addMockResponse(self::HTTP_OK);
 
         $customer = $this->customer->updateBillingInfo('cliente02', [
             'holder_name' => 'Novo nome',
@@ -178,9 +177,9 @@ class CustomersTest extends MoipTestCase {
         ]);
 
         $this->assertInstanceOf(Customers::class, $customer);
-        $this->assertEquals('PUT', $this->getHttpMethod());
-        $this->assertEquals(200, $this->getHttpStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02/billing_infos', $this->getHttpUrl());
+        $this->assertEquals('PUT', $this->client->getMethod());
+        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02/billing_infos', $this->client->getUrl());
     }
 
 }

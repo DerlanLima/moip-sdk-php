@@ -1,0 +1,37 @@
+HTTP/1.1 200 OK
+Connection: close
+Server: Apache/2.4.6 (CentOS)
+Content-Type: application/json
+
+{
+   "payments":[
+      {
+         "id":6,
+         "moip_id":7205895,
+         "status":{
+            "code":6,
+            "description":"Emanálise"
+         },
+         "payment_method":{
+            "code":1,
+            "description":"CartãodeCrédito",
+            "credit_card":{
+               "brand":"VISA",
+               "holder_name":"FulanoTestador",
+               "first_six_digits":"411111",
+               "last_four_digits":"1111",
+               "expiration_month":"03",
+               "expiration_year":"16"
+            }
+         },
+         "creation_date":{
+            "day":28,
+            "month":12,
+            "year":2012,
+            "hour":15,
+            "minute":38,
+            "second":41
+         }
+      }
+   ]
+}

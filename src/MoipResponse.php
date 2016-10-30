@@ -3,46 +3,57 @@
 namespace Softpampa\Moip;
 
 use stdClass;
-use GuzzleHttp\Message\Response as HttpResponse;
 use Illuminate\Support\Collection;
+use GuzzleHttp\Message\Response as HttpResponse;
 use Softpampa\Moip\Contracts\Response;
+use Softpampa\Moip\Exceptions\ServerRequestException;
+use Softpampa\Moip\Exceptions\Client\ValidationException;
+use Softpampa\Moip\Exceptions\Client\UnauthorizedException;
+use Softpampa\Moip\Exceptions\Client\ClientRequestException;
+use Softpampa\Moip\Exceptions\Client\ResourceNotFoundException;
 
 class MoipResponse implements Response {
 
     /**
-     * @var  GuzzleHttp\Message\Response  $response
+     * Guzzle Http Response
+     *
+     * @var  \GuzzleHttp\Message\Response
      */
     protected $response;
 
     /**
-     * @var  stdClass  $content
+     * @var \stdClass
      */
     protected $content;
 
     /**
-     * @var  string  $resource
+     * JSON response data key
+     *
+     * @var string
      */
-    protected $resource;
+    protected $dataKey;
 
     /**
-     * @var  array  $errors
+     * List of errors
+     *
+     * @var array
      */
     protected $errors;
 
     /**
      * Constructor.
      *
-     * @param  GuzzleHttp\Message\Response $response
-     * @param  string  $resource
+     * @param  \GuzzleHttp\Message\Response $response
+     * @param  string  $dataKey
      */
-    public function __construct(HttpResponse $response, $resource)
+    public function __construct(HttpResponse $response, $dataKey)
     {
         $this->response = $response;
-        $this->resource = $resource;
+        $this->dataKey = $dataKey;
         $this->content = json_decode($this->getBodyContent());
 
         if ($this->hasErrors()) {
-            $this->setResponseErrors();
+            $this->analyzeResponseErrors();
         }
     }
 
@@ -77,51 +88,47 @@ class MoipResponse implements Response {
     }
 
     /**
-     * Check if has HTTP Client Error
-     *
-     * @return boolean
-     */
-    public function hasClientErrors()
-    {
-        return $this->getStatusCode() >= 400 && $this->getStatusCode() < 500;
-    }
-
-    /**
-     * Check if has HTTP Server Error
-     *
-     * @return boolean
-     */
-    public function hasServerErrors()
-    {
-        return $this->getStatusCode() >= 500;
-    }
-
-    /**
      * Change resource
      *
-     * @param  string  $resource
+     * @param  string  $dataKey
      * @return $this
      */
-    public function setResource($resource)
+    public function setDataKey($dataKey)
     {
-        $this->resource = $resource;
+        $this->dataKey = $dataKey;
 
         return $this;
     }
 
     /**
-     * Set errors from response
+     * Analyze errors from response
      *
      * @return void
      */
-    protected function setResponseErrors()
+    protected function analyzeResponseErrors()
     {
-        if (isset($this->content) && property_exists($this->content, 'errors')) {
-            foreach ($this->content->errors as $error) {
-                $this->setError($error->code, $error->description);
-            }
-        } else if ($this->getStatusCode() == 404) {
-            $this->setError('SDK01', 'Resource not found');
+        $content = $this->content;
+
+        if ($content && property_exists($content, 'errors')) {
+            $this->setErrors($content, 'errors');
+        } else if ($content && property_exists($content, 'ERROR')) {
+            $this->setError('Unknown', $content->ERROR);
+        }
+
+        $this->throwExceptions();
+    }
+
+    /**
+     * Set errors from response
+     *
+     * @param  array  $response
+     * @param  string  $key
+     * @return void
+     */
+    protected function setErrors($response, $key)
+    {
+        foreach ($response->{$key} as $error) {
+            $this->setError($error->code, $error->description);
         }
     }
 
@@ -142,29 +149,82 @@ class MoipResponse implements Response {
     }
 
     /**
+     * Throw request exceptions
+     *
+     * @throws ValidationException
+     * @throws UnauthorizedException
+     * @throws ResourceNotFoundException
+     * @throws ClientRequestException
+     * @throws ServerRequestException
+     * @return void
+     */
+    protected function throwExceptions()
+    {
+        $status = $this->getStatusCode();
+
+        switch ($status) {
+            case 400:
+                throw new ValidationException($this);
+                break;
+            case 401:
+                throw new UnauthorizedException($this);
+                break;
+            case 404:
+                throw new ResourceNotFoundException($this);
+                break;
+            default:
+                //
+                break;
+        }
+
+        if ($status >= 400 && $status < 500) {
+            throw new ClientRequestException($this, 'Whoops looks like something went wrong');
+        } elseif ($status >= 500) {
+            throw new ServerRequestException($this);
+        }
+    }
+
+    /**
+     * Get effective URL
+     *
+     * @return string
+     */
+    public function getEffectiveUrl()
+    {
+        return $this->response->getEffectiveUrl();
+    }
+
+    /**
      * Return all errors
      *
-     * @return Illuminate\Support\Collection
+     * @return array|\Illuminate\Support\Collection
      */
     public function getErrors()
     {
-        return new Collection($this->errors);
+        if ($this->errors) {
+            return new Collection($this->errors);
+        }
+
+        return $this->errors;
     }
 
     /**
      * Return response content
      *
-     * @return Illuminate\Support\Collection
+     * @return \Illuminate\Support\Collection
      */
     public function getResults()
     {
-        if (is_object($this->content) && property_exists($this->content, $this->resource)) {
-            return new Collection($this->content->{$this->resource});
-        } else if (is_array($this->content)) {
-            return new Collection($this->content);
+        $key = $this->dataKey;
+        $content = $this->content;
+
+        if (is_object($content) && property_exists($content, $key)) {
+            return new Collection($content->{$key});
+        } else if (is_array($content)) {
+            return new Collection($content);
         }
 
-        return $this->content;
+        return $content;
     }
 
 }
