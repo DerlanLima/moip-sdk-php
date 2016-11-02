@@ -1,0 +1,61 @@
+HTTP/1.1 201 Created
+Connection: close
+Server: Apache/2.4.6 (CentOS)
+Content-Type: application/json
+
+{
+   "id":"PAY-VZ1HI48256ZX",
+   "status":"IN_ANALYSIS",
+   "amount":{
+      "fees":187,
+      "refunds":0,
+      "liquid":1813,
+      "currency":"BRL",
+      "total":2000
+   },
+   "installmentCount":1,
+   "fundingInstrument":{
+      "creditCard":{
+         "id":"CRC-V0AAG27AAFG7",
+         "brand":"MASTERCARD",
+         "first6":"555566",
+         "last4":"8884",
+         "holder":{
+            "birthdate":"30/12/1988",
+            "taxDocument":{
+               "type":"CPF",
+               "number":"33333333333"
+            },
+            "fullname":"Jose Portador da Silva"
+         }
+      },
+      "method":"CREDIT_CARD"
+   },
+   "fees":[
+      {
+         "type":"TRANSACTION",
+         "amount":187
+      }
+   ],
+   "events":[
+      {
+         "createdAt":"2015-01-14T12:17:50-0200",
+         "type":"PAYMENT.IN_ANALYSIS"
+      },
+      {
+         "createdAt":"2015-01-14T12:17:48-0200",
+         "type":"PAYMENT.CREATED"
+      }
+   ],
+   "_links":{
+      "order":{
+         "title":"ORD-VULX1EWDKXHF",
+         "href":"https://sandbox.moip.com.br/v2/orders/ORD-VULX1EWDKXHF"
+      },
+      "self":{
+         "href":"https://sandbox.moip.com.br/v2/payments/PAY-VZ1HI48256ZX"
+      }
+   },
+   "updatedAt":"2015-01-14T12:17:50-0200",
+   "createdAt":"2015-01-14T12:17:48-0200"
+}

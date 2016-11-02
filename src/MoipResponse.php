@@ -6,7 +6,7 @@ use stdClass;
 use Illuminate\Support\Collection;
 use GuzzleHttp\Message\Response as HttpResponse;
 use Softpampa\Moip\Contracts\Response;
-use Softpampa\Moip\Exceptions\ServerRequestException;
+use Softpampa\Moip\Exceptions\Server\ServerRequestException;
 use Softpampa\Moip\Exceptions\Client\ValidationException;
 use Softpampa\Moip\Exceptions\Client\UnauthorizedException;
 use Softpampa\Moip\Exceptions\Client\ClientRequestException;

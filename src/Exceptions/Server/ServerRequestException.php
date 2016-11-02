@@ -1,10 +1,11 @@
 <?php
 
-namespace Softpampa\Moip\Exceptions;
+namespace Softpampa\Moip\Exceptions\Server;
 
 use Softpampa\Moip\MoipResponse;
+use Softpampa\Moip\Exceptions\RequestException;
 
-class ServerRequestException extends RequestException {
+class ServerRequestException extends RequestException  {
 
     /**
      * Constructor.

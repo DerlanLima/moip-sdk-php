@@ -1,0 +1,14 @@
+HTTP/1.1 201 Created
+Connection: close
+Server: Apache/2.4.6 (CentOS)
+Content-Type: application/json
+
+{
+   "method":"CREDIT_CARD",
+   "creditCard":{
+      "id":"CRC-NLBLOTNB6LLT",
+      "brand":"MASTERCARD",
+      "first6":"555566",
+      "last4":"8884"
+   }
+}

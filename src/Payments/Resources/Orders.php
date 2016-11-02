@@ -66,7 +66,11 @@ class Orders extends MoipResource {
      */
     public function find($order_id)
     {
-        return $this->populate($this->client->get('/{order_id}', [$order_id]));
+        $response = $this->client->get('/{order_id}', [$order_id]);
+
+        $this->populate($response);
+
+        return $this;
     }
 
     /**

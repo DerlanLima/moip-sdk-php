@@ -24,6 +24,20 @@ class Moip {
     const SANDBOX = 'https://sandbox.moip.com.br';
 
     /**
+     * Moip Payment
+     *
+     * @const string
+     */
+    const PAYMENT = 'PAYMENT';
+
+    /**
+     * Moip Subscription
+     *
+     * @const string
+     */
+    const SUBSCRIPTION = 'SUBSCRIPTION';
+
+    /**
      * Moip auth
      *
      * @var \Softpampa\Moip\Contracts\Authenticatable

@@ -1,0 +1,144 @@
+HTTP/1.1 200 OK
+Connection: close
+Server: Apache/2.4.6 (CentOS)
+Content-Type: application/json
+
+{
+  "id": "ORD-4HY0KOA9Q73F",
+  "ownId": "meu_pedido_sandbox_xxxxx",
+  "status": "CREATED",
+  "createdAt": "2015-01-14T11:39:15-0200",
+  "amount": {
+    "total": 2000,
+    "fees": 0,
+    "refunds": 0,
+    "liquid": 0,
+    "otherReceivers": 0,
+    "currency": "BRL",
+    "subtotals": {
+      "shipping": 1000,
+      "addition": 0,
+      "discount": 0,
+      "items": 1000
+    }
+  },
+  "items": [
+    {
+      "detail": "Mais info...",
+      "quantity": 1,
+      "price": 1000,
+      "product": "Produto de testes Sandbox - xxxx"
+    }
+  ],
+  "addresses": [
+    {
+      "city": "Sao Paulo",
+      "complement": "8",
+      "street": "Avenida Faria Lima",
+      "streetNumber": "2927",
+      "zipCode": "01234000",
+      "district": "Itaim",
+      "state": "SP",
+      "type": "SHIPPING",
+      "country": "BRA"
+    }
+  ],
+  "customer": {
+    "id": "CUS-Y6L4AGQN8HKQ",
+    "ownId": "meu_id_sandbox_1231234",
+    "fullname": "Jose Silva",
+    "createdAt": "2015-01-14T11:28:22-0200",
+    "birthDate": "1988-12-30T00:00:00-0200",
+    "email": "jose_silva0@email.com",
+    "phone": {
+      "countryCode": "55",
+      "areaCode": "11",
+      "number": "66778899"
+    },
+    "taxDocument": {
+      "type": "CPF",
+      "number": "22222222222"
+    },
+    "addresses": [
+      {
+        "city": "Sao Paulo",
+        "complement": "8",
+        "street": "Avenida Faria Lima",
+        "streetNumber": "2927",
+        "zipCode": "01234000",
+        "district": "Itaim",
+        "state": "SP",
+        "type": "SHIPPING",
+        "country": "BRA"
+      },
+    "moipAccount": {
+      "id": "MPA-M1M01PACC0NT"
+    },
+    ],
+    "shippingAddress": {
+      "zipCode": "01234000",
+      "street": "Avenida Faria Lima",
+      "streetNumber": "2927",
+      "complement": "8",
+      "city": "Sao Paulo",
+      "district": "Itaim",
+      "state": "SP",
+      "country": "BRA"
+    },
+    "_links": {
+      "self": {
+        "href": "https://sandbox.moip.com.br/v2/customers/CUS-Y6L4AGQN8HKQ"
+      }
+    }
+  },
+  "payments": [],
+  "refunds": [],
+  "entries": [],
+  "events": [
+    {
+      "createdAt": "2015-01-14T11:39:15-0200",
+      "description": "",
+      "type": "ORDER.CREATED"
+    }
+  ],
+  "receivers": [
+    {
+      "amount": {
+        "fees": 0,
+        "refunds": 0,
+        "total": 2000
+      },
+      "moipAccount": {
+        "fullname": "Moip SandBox",
+        "login": "integracao@labs.moip.com.br",
+        "id": "MPA-CULBBYHD11"
+      },
+      "type": "PRIMARY"
+    }
+  ],
+  "_links": {
+    "self": {
+      "href": "https://sandbox.moip.com.br/v2/orders/ORD-4HY0KOA9Q73F"
+    },
+    "checkout": {
+      "payOnlineBankDebitItau": {
+        "redirectHref": "https://checkout-sandbox.moip.com.br/debit/itau/ORD-4HY0KOA9Q73F"
+      },
+      "payOnlineBankDebitBB": {
+        "redirectHref": "https://checkout-sandbox.moip.com.br/debit/bancobrasil/ORD-4HY0KOA9Q73F"
+      },
+      "payCreditCard": {
+        "redirectHref": "https://checkout-sandbox.moip.com.br/creditcard/ORD-4HY0KOA9Q73F"
+      },
+      "payOnlineBankDebitBradesco": {
+        "redirectHref": "https://checkout-sandbox.moip.com.br/debit/bradesco/ORD-4HY0KOA9Q73F"
+      },
+      "payBoleto": {
+        "redirectHref": "https://checkout-sandbox.moip.com.br/boleto/ORD-4HY0KOA9Q73F"
+      },
+      "payOnlineBankDebitBanrisul": {
+        "redirectHref": "https://checkout-sandbox.moip.com.br/debit/banrisul/ORD-4HY0KOA9Q73F"
+      }
+    }
+  }
+}

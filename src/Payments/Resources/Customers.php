@@ -10,13 +10,19 @@
 
 namespace Softpampa\Moip\Payments\Resources;
 
-use DateTime;
 use stdClass;
+use DateTime;
 use UnexpectedValueException;
+use Softpampa\Moip\Moip;
 use Softpampa\Moip\MoipResource;
+use Softpampa\Moip\Contracts\Holder;
+use Softpampa\Moip\Helpers\Phone;
+use Softpampa\Moip\Helpers\Address;
+use Softpampa\Moip\Helpers\CreditCard;
+use Softpampa\Moip\Helpers\TaxDocument;
 use Softpampa\Moip\Payments\Events\CustomersEvent;
 
-class Customers extends MoipResource {
+class Customers extends MoipResource implements Holder {
 
     /**
      * Address type billing
@@ -31,20 +37,6 @@ class Customers extends MoipResource {
      * @const string
      */
     const ADDRESS_SHIPPING = 'SHIPPING';
-
-    /**
-     * Default country
-     *
-     * @const string
-     */
-    const ADDRESS_COUNTRY = 'BRA';
-
-    /**
-     * Default document type
-     *
-     * @const string
-     */
-    const TAX_DOCUMENT = 'CPF';
 
     /**
      * Resource name
@@ -158,17 +150,13 @@ class Customers extends MoipResource {
     /**
      * Set customer phone
      *
-     * @param  int  $ddi
-     * @param  int  $ddd
-     * @param  int  $number
+     * @param  \Softpampa\Moip\Helpers\Phone  $phone
      * @return $this
      */
-    public function setPhone($ddd, $number, $ddi = 55)
+    public function setPhone(Phone $phone)
     {
-        $this->data->phone = new stdClass();
-        $this->data->phone->countryCode = $ddi;
-        $this->data->phone->areaCode = $ddd;
-        $this->data->phone->number = $number;
+        $phone->setContext(Moip::PAYMENT);
+        $this->data->phone = $phone->getData();
 
         return $this;
     }
@@ -176,15 +164,13 @@ class Customers extends MoipResource {
     /**
      * Set customer tax document
      *
-     * @param  int  $number
-     * @param  string  $type
+     * @param  \Softpampa\Moip\Helpers\TaxDocument  $taxDocument
      * @return $this
      */
-    public function setTaxDocument($number, $type = self::TAX_DOCUMENT)
+    public function setTaxDocument(TaxDocument $taxDocument)
     {
-        $this->data->taxDocument = new stdClass();
-        $this->data->taxDocument->type = $type;
-        $this->data->taxDocument->number = $number;
+        $taxDocument->setContext(Moip::PAYMENT);
+        $this->data->taxDocument = $taxDocument->getData();
 
         return $this;
     }
@@ -193,27 +179,13 @@ class Customers extends MoipResource {
      * Set customer address
      *
      * @param  string  $type
-     * @param  string  $street
-     * @param  string  $number
-     * @param  string  $complement
-     * @param  string  $district
-     * @param  string  $city
-     * @param  string  $state
-     * @param  string  $zipCode
-     * @param  string  $country
+     * @param  \Softpampa\Moip\Helpers\Address  $address
      * @return $this
      */
-    public function addAddress($type = self::ADDRESS_BILLING, $street, $number, $complement, $district, $city, $state, $zipCode, $country = self::ADDRESS_COUNTRY)
+    public function addAddress($type = self::ADDRESS_BILLING, Address $address)
     {
-        $address = new stdClass();
-        $address->street = $street;
-        $address->streetNumber = $number;
-        $address->complement = $complement;
-        $address->district = $district;
-        $address->city = $city;
-        $address->state = $state;
-        $address->country = $country;
-        $address->zipCode = $zipCode;
+        $address->setContext(Moip::PAYMENT);
+        $address = $address->getData();
 
         switch ($type) {
             case self::ADDRESS_BILLING:
@@ -229,11 +201,48 @@ class Customers extends MoipResource {
         return $this;
     }
 
-    public function addNewCreditCard($expirationMonth, $expirationYear, $number, $cvc, Customers $holder)
+    public function getData()
     {
-        $
-        $this->data = new stdClass;
+        $holder = new stdClass;
+        $holder->fullname = $this->fullname;
+        $holder->birthdate = $this->birthDate;
+        $holder->phone = $this->phone;
+        $holder->taxDocument = $this->taxDocument;
 
+        return $holder;
+    }
+
+    /**
+     * Add a credit card
+     *
+     * @param  \Softpampa\Moip\Helpers\CreditCard  $creditCard
+     * @return $this
+     */
+    public function addCreditCard(CreditCard $creditCard)
+    {
+        $creditCard->setContext(Moip::PAYMENT);
+        $this->data->fundingInstruments[] = $creditCard->getData();
+
+        return $this;
+    }
+
+    public function addNewCreditCard(CreditCard $creditCard, $id = null)
+    {
+        if (! $id) {
+            $id = $this->data->id;
+        }
+
+        $creditCard->setContext(Moip::PAYMENT);
+
+        $this->data = new stdClass;
+        $this->data->method = 'CREDIT_CARD';
+        $this->data->creditCard = $creditCard->getData();
+
+        $response = $this->client->post('{id}/fundinginstruments', [$id], $this->data);
+
+        $this->populate($response);
+
+        return $this;
     }
 
 }

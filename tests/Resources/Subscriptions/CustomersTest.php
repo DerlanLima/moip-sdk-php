@@ -3,6 +3,8 @@
 namespace Softpampa\Moip\Tests\Resources\Subscriptions;
 
 use Illuminate\Support\Collection;
+use Softpampa\Moip\Helpers\Address;
+use Softpampa\Moip\Helpers\Phone;
 use Softpampa\Moip\Moip;
 use Softpampa\Moip\Tests\MoipTestCase;
 use Softpampa\Moip\Subscriptions\Resources\Customers;
@@ -89,8 +91,8 @@ class CustomersTest extends MoipTestCase {
                  ->setCpf(12345679891)
                  ->setBirthdate('1980-04-26')
                  ->setEmail('nome2@exemplo.com.br')
-                 ->setPhone(26, 934343434)
-                 ->setAddress('RuaNomedaRua2', 1002, 'Casa2', 'NomedoBairro2', 'SãoPaulo', 'SP', 05015010)
+                 ->setPhone(new Phone(26, 934343434))
+                 ->setAddress(new Address('RuaNomedaRua2', 1002, 'Casa2', 'NomedoBairro2', 'SãoPaulo', 'SP', 05015010))
                  ->setBillingInfo('Nomedocliente', 5267691661858194, 4, 20)
                  ->create();
 

@@ -10,19 +10,15 @@
 
 namespace Softpampa\Moip\Subscriptions\Resources;
 
+use Softpampa\Moip\Helpers\Address;
+use Softpampa\Moip\Helpers\Phone;
+use Softpampa\Moip\Moip;
 use stdClass;
 use DateTime;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Subscriptions\Events\CustomersEvent;
 
 class Customers extends MoipResource {
-
-    /**
-     * Default country
-     *
-     * @const string
-     */
-    const ADDRESS_COUNTRY = 'BRA';
 
     /**
      * Resource name
@@ -186,14 +182,13 @@ class Customers extends MoipResource {
     /**
      * Set customer phone
      *
-     * @param  int  $ddd
-     * @param  int  $number
+     * @param  \Softpampa\Moip\Helpers\Phone  $phone
      * @return $this
      */
-    public function setPhone($ddd, $number)
+    public function setPhone(Phone $phone)
     {
-        $this->data->phone_area_code = $ddd;
-        $this->data->phone_number = $number;
+        $phone->setContext(Moip::SUBSCRIPTION);
+        $this->data = (object) array_merge((array) $this->data, (array) $phone->getData());
 
         return $this;
     }
@@ -218,27 +213,13 @@ class Customers extends MoipResource {
     /**
      * Set customer address
      *
-     * @param  string  $street
-     * @param  string  $number
-     * @param  string  $complement
-     * @param  string  $district
-     * @param  string  $city
-     * @param  string  $state
-     * @param  string  $zipcode
-     * @param  string  $country
+     * @param  \Softpampa\Moip\Helpers\Address  $address
      * @return $this
      */
-    public function setAddress($street, $number, $complement, $district, $city, $state, $zipcode, $country = self::ADDRESS_COUNTRY)
+    public function setAddress(Address $address)
     {
-        $this->data->address = new stdClass;
-        $this->data->address->street = $street;
-        $this->data->address->number = $number;
-        $this->data->address->complement = $complement;
-        $this->data->address->district = $district;
-        $this->data->address->city = $city;
-        $this->data->address->state = $state;
-        $this->data->address->country = $country;
-        $this->data->address->zipcode = $zipcode;
+        $address->setContext(Moip::SUBSCRIPTION);
+        $this->data->address = $address->getData();
 
         return $this;
     }

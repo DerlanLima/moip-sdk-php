@@ -8,7 +8,7 @@ Content-Type: application/json
    "ownId":"meu_id_sandbox_1231234",
    "fullname":"Jose Silva",
    "createdAt":"2015-01-14T11:28:22-0200",
-   "birthDate":"1988-12-30",
+   "birthDate":"1988-12-30T00:00:00-0200",
    "email":"jose_silva0@email.com",
    "phone":{
       "countryCode":"55",
