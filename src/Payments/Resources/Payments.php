@@ -159,4 +159,17 @@ class Payments extends MoipResource {
         return $this;
     }
 
+    /**
+     * Set number of installments
+     *
+     * @param  int  $number
+     * @return $this
+     */
+    public function setInstallmentCount($number)
+    {
+        $this->data->installmentCount = $number;
+
+        return $this;
+    }
+
 }
