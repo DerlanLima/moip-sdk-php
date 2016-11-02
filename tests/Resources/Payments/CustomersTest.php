@@ -79,7 +79,7 @@ class CustomersTest extends MoipTestCase {
         $this->client->addMockResponse('./tests/Mocks/fundinginstruments.created');
 
         $customer = $this->customer->find('CUS-Y6L4AGQN8HKQ');
-        $customer->addNewCreditCard(new CreditCard(4, 20, '4532449030426413', '644', $customer));
+        $customer->createNewCreditCard(new CreditCard(4, 20, '4532449030426413', '644', $customer));
 
         $this->assertEquals('POST', $this->client->getMethod());
         $this->assertEquals(201, $this->client->getResponse()->getStatusCode());

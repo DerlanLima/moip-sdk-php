@@ -213,6 +213,27 @@ class Customers extends MoipResource implements Holder {
     }
 
     /**
+     * Set customer credit card
+     *
+     * @param  \Softpampa\Moip\Helpers\CreditCard  $creditCard
+     * @return $this
+     */
+    public function setCreditCard(CreditCard $creditCard)
+    {
+        $creditCard->setContext(Moip::PAYMENT);
+
+        $fundingInstrument = new stdClass;
+        $fundingInstrument->method = 'CREDIT_CARD';
+        $fundingInstrument->creditCard = $creditCard->getData();
+
+        $this->data->fundingInstrument = $fundingInstrument;
+
+        unset($this->data->fundingInstruments);
+
+        return $this;
+    }
+
+    /**
      * Add a credit card
      *
      * @param  \Softpampa\Moip\Helpers\CreditCard  $creditCard
@@ -221,12 +242,26 @@ class Customers extends MoipResource implements Holder {
     public function addCreditCard(CreditCard $creditCard)
     {
         $creditCard->setContext(Moip::PAYMENT);
-        $this->data->fundingInstruments[] = $creditCard->getData();
+
+        $fundingInstrument = new stdClass;
+        $fundingInstrument->method = 'CREDIT_CARD';
+        $fundingInstrument->creditCard = $creditCard->getData();
+
+        $this->data->fundingInstruments[] = $fundingInstrument;
+
+        unset($this->data->fundingInstrument);
 
         return $this;
     }
 
-    public function addNewCreditCard(CreditCard $creditCard, $id = null)
+    /**
+     * Create a new credit card for customer
+     *
+     * @param  \Softpampa\Moip\Helpers\CreditCard  $creditCard
+     * @param  int  $id
+     * @return $this
+     */
+    public function createNewCreditCard(CreditCard $creditCard, $id = null)
     {
         if (! $id) {
             $id = $this->data->id;
