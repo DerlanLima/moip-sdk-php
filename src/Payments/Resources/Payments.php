@@ -93,7 +93,6 @@ class Payments extends MoipResource {
      */
     public function setOrder(Orders $order)
     {
-        var_dump($order);
         $this->order = $order;
 
         return $this;

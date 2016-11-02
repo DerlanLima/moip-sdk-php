@@ -40,10 +40,12 @@ class OrdersTest extends MoipTestCase {
 
         $order = $this->orders->setOwnId(uniqid());
         $order->setCustomer($customer)
-              ->addItem('Plano SMS', 1, 'Plano de 300 SMS', 8990)
+              ->addItem('Descrição do pedido', 1, 'Mais info...', 89.90)
+              ->setShippingAmount(27.5)
               ->create();
 
         $this->assertInstanceOf(Orders::class, $order);
+        $this->assertEquals(11640, $order->amount->total);
         $this->assertEquals('POST', $this->client->getMethod());
         $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
         $this->assertEquals(Moip::SANDBOX . '/v2/orders', $this->client->getUrl());

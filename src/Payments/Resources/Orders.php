@@ -99,12 +99,28 @@ class Orders extends MoipResource {
         return $this;
     }
 
+    /**
+     * Pay a order
+     *
+     * @return \Softpampa\Moip\Payments\Resources\Payments
+     */
     public function payments()
     {
         $payment = new Payments($this->api);
         $payment->setOrder($this);
 
         return $payment;
+    }
+
+    /**
+     * Convert float amount to integer (centers)
+     *
+     * @param  float  $amount
+     * @return int
+     */
+    private function convertAmount($amount)
+    {
+        return 100 * number_format($amount, 2);
     }
 
     /**
@@ -122,7 +138,7 @@ class Orders extends MoipResource {
         $item->product = $product;
         $item->quantity = $quantity;
         $item->detail = $detail;
-        $item->price = (float) $price;
+        $item->price = $this->convertAmount($price);
 
         $this->data->items[] = $item;
 
@@ -172,12 +188,12 @@ class Orders extends MoipResource {
     /**
      * Set a value addition
      *
-     * @param  int  $value
+     * @param  float  $value
      * @return $this
      */
     public function setAddition($value)
     {
-        $this->data->amount->subtotals->addition = (float) $value;
+        $this->data->amount->subtotals->addition = $this->convertAmount($value);
 
         return $this;
     }
@@ -185,12 +201,12 @@ class Orders extends MoipResource {
     /**
      * Add a value addition
      *
-     * @param  int  $value
+     * @param  float  $value
      * @return $this
      */
     public function addAddition($value)
     {
-        $this->data->amount->subtotals->addition += (float) $value;
+        $this->data->amount->subtotals->addition += $this->convertAmount($value);
 
         return $this;
     }
@@ -198,12 +214,12 @@ class Orders extends MoipResource {
     /**
      * Set a value discount
      *
-     * @param  int  $value
+     * @param  float  $value
      * @return $this
      */
     public function setDiscount($value)
     {
-        $this->data->amount->subtotals->discount = (float) $value;
+        $this->data->amount->subtotals->discount = $this->convertAmount($value);
 
         return $this;
     }
@@ -211,12 +227,12 @@ class Orders extends MoipResource {
     /**
      * Add a value discount
      *
-     * @param  int  $value
+     * @param  float  $value
      * @return $this
      */
     public function addDiscount($value)
     {
-        $this->data->amount->subtotals->discount -= (float) $value;
+        $this->data->amount->subtotals->discount -= $this->convertAmount($value);
 
         return $this;
     }
@@ -224,12 +240,12 @@ class Orders extends MoipResource {
     /**
      * Set a value for shipping
      *
-     * @param  int  $value
+     * @param  float  $value
      * @return $this
      */
     public function setShippingAmount($value)
     {
-        $this->data->amount->subtotals->shipping = (float) $value;
+        $this->data->amount->subtotals->shipping = $this->convertAmount($value);
 
         return $this;
     }

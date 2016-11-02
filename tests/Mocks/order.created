@@ -4,44 +4,131 @@ Server: Apache/2.4.6 (CentOS)
 Content-Type: application/json
 
 {
+   "id":"ORD-NY92W6N4S220",
    "ownId":"seu_identificador_proprio",
+   "status":"CREATED",
+   "createdAt":"2015-01-14T11:25:10-0200",
    "amount":{
+      "total":11640,
+      "fees":0,
+      "refunds":0,
+      "liquid":0,
+      "otherReceivers":0,
       "currency":"BRL",
       "subtotals":{
-         "shipping":1000
+         "shipping":2750,
+         "addition":0,
+         "discount":0,
+         "items":8990
       }
    },
    "items":[
       {
-         "product":"Descrição do pedido",
-         "quantity":1,
          "detail":"Mais info...",
-         "price":1000
+         "quantity":1,
+         "price":1000,
+         "product":"Descrição do pedido"
       }
    ],
    "customer":{
+      "id":"CUS-73HWY5J45TLO",
       "ownId":"seu_identificador_proprio_de_cliente",
       "fullname":"Jose Silva",
+      "createdAt":"2015-01-14T11:25:10-0200",
+      "birthDate":"1988-12-30T00:00:00-0200",
       "email":"nome@email.com",
-      "birthDate":"1988-12-30",
-      "taxDocument":{
-         "type":"CPF",
-         "number":"22222222222"
-      },
       "phone":{
          "countryCode":"55",
          "areaCode":"11",
          "number":"66778899"
       },
+      "taxDocument":{
+         "type":"CPF",
+         "number":"22222222222"
+      },
       "shippingAddress":{
+         "zipCode":"01234000",
          "street":"Avenida Faria Lima",
-         "streetNumber":2927,
-         "complement":8,
-         "district":"Itaim",
+         "streetNumber":"2927",
+         "complement":"8",
          "city":"Sao Paulo",
+         "district":"Itaim",
          "state":"SP",
-         "country":"BRA",
-         "zipCode":"01234000"
+         "country":"BRA"
+      },
+      "moipAccount":{
+         "id":"MPA-M1M01PACC0NT"
+      },
+      "_links":{
+         "self":{
+            "href":"https://sandbox.moip.com.br/v2/customers/CUS-73HWY5J45TLO"
+         }
+      }
+   },
+   "payments":[
+
+   ],
+   "refunds":[
+
+   ],
+   "entries":[
+
+   ],
+   "events":[
+      {
+         "createdAt":"2015-01-14T11:25:10-0200",
+         "description":"",
+         "type":"ORDER.CREATED"
+      }
+   ],
+   "receivers":[
+      {
+         "amount":{
+            "fees":0,
+            "refunds":0,
+            "total":2000
+         },
+         "moipAccount":{
+            "fullname":"Moip SandBox",
+            "login":"integracao@labs.moip.com.br",
+            "id":"MPA-CULBBYHD11"
+         },
+         "type":"PRIMARY"
+      }
+   ],
+   "shippingAddress":{
+      "zipCode":"01234000",
+      "street":"Avenida Faria Lima",
+      "streetNumber":"2927",
+      "complement":"8",
+      "city":"Sao Paulo",
+      "district":"Itaim",
+      "state":"SP",
+      "country":"BRA"
+   },
+   "_links":{
+      "self":{
+         "href":"https://sandbox.moip.com.br/v2/orders/ORD-NY92W6N4S220"
+      },
+      "checkout":{
+         "payOnlineBankDebitItau":{
+            "redirectHref":"https://checkout-sandbox.moip.com.br/debit/itau/ORD-NY92W6N4S220"
+         },
+         "payOnlineBankDebitBB":{
+            "redirectHref":"https://checkout-sandbox.moip.com.br/debit/bancobrasil/ORD-NY92W6N4S220"
+         },
+         "payCreditCard":{
+            "redirectHref":"https://checkout-sandbox.moip.com.br/creditcard/ORD-NY92W6N4S220"
+         },
+         "payOnlineBankDebitBradesco":{
+            "redirectHref":"https://checkout-sandbox.moip.com.br/debit/bradesco/ORD-NY92W6N4S220"
+         },
+         "payBoleto":{
+            "redirectHref":"https://checkout-sandbox.moip.com.br/boleto/ORD-NY92W6N4S220"
+         },
+         "payOnlineBankDebitBanrisul":{
+            "redirectHref":"https://checkout-sandbox.moip.com.br/debit/banrisul/ORD-NY92W6N4S220"
+         }
       }
    }
 }
