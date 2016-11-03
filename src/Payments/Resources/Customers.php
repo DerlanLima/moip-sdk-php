@@ -133,7 +133,7 @@ class Customers extends MoipResource implements Holder {
     /**
      * Set customer birth date
      *
-     * @param  string  $date
+     * @param  string|DateTime  $date
      * @return $this
      */
     public function setBirthdate($date)

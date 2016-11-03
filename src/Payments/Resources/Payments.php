@@ -11,9 +11,10 @@
 namespace Softpampa\Moip\Payments\Resources;
 
 use DateTime;
-use Softpampa\Moip\Moip;
 use stdClass;
+use Softpampa\Moip\Moip;
 use Softpampa\Moip\MoipResource;
+use Softpampa\Moip\Helpers\Boleto;
 use Softpampa\Moip\Helpers\CreditCard;
 
 class Payments extends MoipResource {
@@ -80,9 +81,7 @@ class Payments extends MoipResource {
     {
         $this->client->setResource($this->order->getResource());
 
-        $this->client->post('/{order_id}/payments', [$this->order->id], $this->data);
-
-        return $this;
+        return $this->client->post('/{order_id}/payments', [$this->order->id], $this->data)->getResults();
     }
 
     /**
@@ -155,6 +154,21 @@ class Payments extends MoipResource {
         $this->data->fundingInstrument->creditCard = new stdClass();
         $this->data->fundingInstrument->creditCard->hash = $hash;
         $this->setCreditCardHolder($holder);
+
+        return $this;
+    }
+
+    /**
+     * Set boleto payment method
+     *
+     * @param  \Softpampa\Moip\Helpers\Boleto  $boleto
+     * @return $this
+     */
+    public function setBoleto(Boleto $boleto)
+    {
+        $boleto->setContext(Moip::PAYMENT);
+        $this->data->fundingInstrument->method = self::METHOD_BOLETO;
+        $this->data->fundingInstrument->boleto = $boleto->getData();
 
         return $this;
     }
