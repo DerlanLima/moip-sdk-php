@@ -14,14 +14,14 @@ class Moip {
      *
      * @const string
      */
-    const PRODUCTION = 'https://api.moip.com.br';
+    const PRODUCTION = 'PRODUCTION';
 
     /**
      * Moip Sandbox base URI
      *
      * @const string
      */
-    const SANDBOX = 'https://sandbox.moip.com.br';
+    const SANDBOX = 'SANDBOX';
 
     /**
      * Moip Payment

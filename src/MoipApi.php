@@ -25,9 +25,18 @@ abstract class MoipApi {
     public function __construct(Moip $moip)
     {
         $this->moip = $moip;
-        $this->client = new MoipClient($moip->getAuth(), $moip->getEnv());
+        $this->client = new MoipClient($moip->getAuth(), $this->setEnv());
 
         $this->prepareClient();
+    }
+
+    protected function setEnv()
+    {
+        if ($this->moip->getEnv() == 'SANDBOX') {
+            return 'https://sandbox.moip.com.br';
+        }
+
+        return 'https://api.moip.com.br';
     }
 
     /**
