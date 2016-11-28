@@ -56,7 +56,9 @@ class Preferences extends MoipResource {
      */
     public function setWebHook($url)
     {
-        $this->data->notification->url = $url;
+        $this->data->notification = new stdClass;
+        $this->data->notification->webhook = new stdClass;
+        $this->data->notification->webhook->url = $url;
 
         return $this;
     }
