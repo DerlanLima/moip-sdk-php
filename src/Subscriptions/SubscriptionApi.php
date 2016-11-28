@@ -15,6 +15,7 @@ use Softpampa\Moip\Subscriptions\Resources\Plans;
 use Softpampa\Moip\Subscriptions\Resources\Invoices;
 use Softpampa\Moip\Subscriptions\Resources\Payments;
 use Softpampa\Moip\Subscriptions\Resources\Customers;
+use Softpampa\Moip\Subscriptions\Resources\Preferences;
 use Softpampa\Moip\Subscriptions\Resources\Subscriptions;
 
 class SubscriptionApi extends MoipApi {
@@ -81,6 +82,16 @@ class SubscriptionApi extends MoipApi {
     public function payments()
     {
         return new Payments($this);
+    }
+
+    /**
+     * Preferences API
+     *
+     * @return \Softpampa\Moip\Subscriptions\Resources\Preferences
+     */
+    public function preferences()
+    {
+        return new Preferences($this);
     }
 
 }

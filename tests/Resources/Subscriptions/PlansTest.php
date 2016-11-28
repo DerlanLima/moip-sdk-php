@@ -41,7 +41,7 @@ class PlansTest extends MoipTestCase {
         $this->assertInstanceOf(Collection::class, $plans);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/plans', $this->client->getUrl());
     }
 
     /**
@@ -59,7 +59,7 @@ class PlansTest extends MoipTestCase {
         $this->assertInstanceOf(Plans::class, $plan);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/plans/plan101', $this->client->getUrl());
 
         $this->assertEquals('plan101', $plan->code);
         $this->assertEquals(990, $plan->amount);
@@ -109,7 +109,7 @@ class PlansTest extends MoipTestCase {
         $this->assertInstanceOf(Plans::class, $plan);
         $this->assertEquals('POST', $this->client->getMethod());
         $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/plans', $this->client->getUrl());
     }
 
     /**
@@ -132,7 +132,7 @@ class PlansTest extends MoipTestCase {
         $this->assertInstanceOf(Plans::class, $plan);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/plans/plan101', $this->client->getUrl());
     }
 
     /**
@@ -152,7 +152,7 @@ class PlansTest extends MoipTestCase {
         $this->assertInstanceOf(Plans::class, $plan);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/activate', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/plans/plan101/activate', $this->client->getUrl());
     }
 
     /**
@@ -170,7 +170,7 @@ class PlansTest extends MoipTestCase {
         $this->assertInstanceOf(Plans::class, $plan);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/activate', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/plans/plan101/activate', $this->client->getUrl());
     }
 
     /**
@@ -190,7 +190,7 @@ class PlansTest extends MoipTestCase {
         $this->assertInstanceOf(Plans::class, $plan);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/inactivate', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/plans/plan101/inactivate', $this->client->getUrl());
     }
 
     /**
@@ -208,7 +208,7 @@ class PlansTest extends MoipTestCase {
         $this->assertInstanceOf(Plans::class, $plan);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/plans/plan101/inactivate', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/plans/plan101/inactivate', $this->client->getUrl());
     }
 
 }

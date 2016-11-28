@@ -41,7 +41,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Collection::class, $customers);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/customers', $this->client->getUrl());
     }
 
     /**
@@ -58,7 +58,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Customers::class, $customers);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/customers/cliente02', $this->client->getUrl());
     }
 
     /**
@@ -116,7 +116,7 @@ class CustomersTest extends MoipTestCase {
 
         $this->assertEquals('POST', $this->client->getMethod());
         $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/customers', $this->client->getUrl());
     }
 
     /**
@@ -137,7 +137,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Customers::class, $customer);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/customers/cliente02', $this->client->getUrl());
     }
 
     /**
@@ -158,7 +158,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Customers::class, $customer);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02/billing_infos', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/customers/cliente02/billing_infos', $this->client->getUrl());
     }
 
     /**
@@ -181,7 +181,7 @@ class CustomersTest extends MoipTestCase {
         $this->assertInstanceOf(Customers::class, $customer);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/customers/cliente02/billing_infos', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/customers/cliente02/billing_infos', $this->client->getUrl());
     }
 
 }

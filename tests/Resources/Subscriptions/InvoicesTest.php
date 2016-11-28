@@ -41,7 +41,7 @@ class InvoicesTest extends MoipTestCase {
         $this->assertInstanceOf(Invoices::class, $invoice);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/invoices/1729934', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/invoices/1729934', $this->client->getUrl());
     }
 
     /**
@@ -60,7 +60,7 @@ class InvoicesTest extends MoipTestCase {
         $this->assertInstanceOf(Collection::class, $payments);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/invoices/1729934/payments', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/invoices/1729934/payments', $this->client->getUrl());
     }
 
 }

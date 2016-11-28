@@ -40,7 +40,7 @@ class PaymentsTest extends MoipTestCase {
         $this->assertInstanceOf(Payments::class, $payment);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/payments/6', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/payments/6', $this->client->getUrl());
     }
 
 }

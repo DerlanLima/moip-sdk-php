@@ -48,7 +48,7 @@ class OrdersTest extends MoipTestCase {
         $this->assertEquals(11640, $order->amount->total);
         $this->assertEquals('POST', $this->client->getMethod());
         $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/orders', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/v2/orders', $this->client->getUrl());
     }
 
     /**
@@ -63,7 +63,7 @@ class OrdersTest extends MoipTestCase {
         $this->assertInstanceOf(Orders::class, $order);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/orders/ORD-4HY0KOA9Q73F', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/v2/orders/ORD-4HY0KOA9Q73F', $this->client->getUrl());
     }
 
     /**
@@ -78,7 +78,7 @@ class OrdersTest extends MoipTestCase {
         $this->assertInstanceOf(Collection::class, $orders);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/orders', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/v2/orders', $this->client->getUrl());
     }
 
     /**
@@ -101,7 +101,7 @@ class OrdersTest extends MoipTestCase {
 //
 //        $this->assertEquals('POST', $this->client->getMethod());
 //        $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
-//        $this->assertEquals(Moip::SANDBOX . '/v2/orders/ORD-4HY0KOA9Q73F/payments', $this->client->getUrl());
+//        $this->assertEquals('https://sandbox.moip.com.br/v2/orders/ORD-4HY0KOA9Q73F/payments', $this->client->getUrl());
 //
 //    }
 

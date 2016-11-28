@@ -51,7 +51,7 @@ class NotificationsTest extends MoipTestCase {
         $this->assertContains('PAYMENT.AUTHORIZED', $notification->events);
         $this->assertEquals('POST', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/v2/preferences/notifications', $this->client->getUrl());
     }
 
     /**
@@ -69,7 +69,7 @@ class NotificationsTest extends MoipTestCase {
         $this->assertEquals('NPR-9XSBSCS09RZ2', $notifications->last()->id);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/v2/preferences/notifications', $this->client->getUrl());
     }
 
     /**
@@ -86,7 +86,7 @@ class NotificationsTest extends MoipTestCase {
         $this->assertEquals('NPR-DV61EEGGUFCQ', $notification->id);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
     }
 
     /**
@@ -103,7 +103,7 @@ class NotificationsTest extends MoipTestCase {
 
         $this->assertEquals('DELETE', $this->client->getMethod());
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
     }
 
     public function testDeleteANotificationById()
@@ -115,7 +115,7 @@ class NotificationsTest extends MoipTestCase {
 
         $this->assertEquals('DELETE', $this->client->getMethod());
         $this->assertEquals(204, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/v2/preferences/notifications/NPR-DV61EEGGUFCQ', $this->client->getUrl());
     }
 
 }

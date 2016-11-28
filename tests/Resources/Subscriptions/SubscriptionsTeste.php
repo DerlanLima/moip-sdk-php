@@ -43,7 +43,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertEquals('assinatura21', $subscriptions->last()->code);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions', $this->client->getUrl());
     }
 
     /**
@@ -62,7 +62,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertEquals('assinatura21', $subscription->code);
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21', $this->client->getUrl());
     }
 
     /**
@@ -93,7 +93,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertEquals('assinatura21', $subscription->code);
         $this->assertEquals('POST', $this->client->getMethod());
         $this->assertEquals(201, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions?new_customer=false', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions?new_customer=false', $this->client->getUrl());
     }
 
     /**
@@ -119,7 +119,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertEquals('assinatura21', $subscription->code);
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21', $this->client->getUrl());
     }
 
     /**
@@ -140,7 +140,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertInstanceOf(stdClass::class, $invoices->last());
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/invoices', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21/invoices', $this->client->getUrl());
     }
 
     /**
@@ -159,7 +159,7 @@ class SubscriptionsTeste extends MoipTestCase {
         $this->assertInstanceOf(stdClass::class, $subscription->last());
         $this->assertEquals('GET', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/invoices', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21/invoices', $this->client->getUrl());
     }
 
     /**
@@ -178,7 +178,7 @@ class SubscriptionsTeste extends MoipTestCase {
 
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/suspend', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21/suspend', $this->client->getUrl());
     }
 
     /**
@@ -195,7 +195,7 @@ class SubscriptionsTeste extends MoipTestCase {
 
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/suspend', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21/suspend', $this->client->getUrl());
     }
 
     /**
@@ -214,7 +214,7 @@ class SubscriptionsTeste extends MoipTestCase {
 
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/cancel', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21/cancel', $this->client->getUrl());
     }
 
     /**
@@ -231,7 +231,7 @@ class SubscriptionsTeste extends MoipTestCase {
 
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/cancel', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21/cancel', $this->client->getUrl());
     }
 
     /**
@@ -250,7 +250,7 @@ class SubscriptionsTeste extends MoipTestCase {
 
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/activate', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21/activate', $this->client->getUrl());
     }
 
     /**
@@ -267,7 +267,7 @@ class SubscriptionsTeste extends MoipTestCase {
 
         $this->assertEquals('PUT', $this->client->getMethod());
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(Moip::SANDBOX . '/assinaturas/v1/subscriptions/assinatura21/activate', $this->client->getUrl());
+        $this->assertEquals('https://sandbox.moip.com.br/assinaturas/v1/subscriptions/assinatura21/activate', $this->client->getUrl());
     }
 
 }
