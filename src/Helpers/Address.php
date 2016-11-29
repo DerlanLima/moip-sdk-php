@@ -24,6 +24,18 @@ class Address extends SharedObjects {
 
     protected $country;
 
+    /**
+     * Constructor
+     *
+     * @param [type] $street
+     * @param [type] $number
+     * @param [type] $complement
+     * @param [type] $district
+     * @param [type] $city
+     * @param [type] $state
+     * @param [type] $zipCode
+     * @param [type] $country
+     */
     public function __construct($street, $number, $complement, $district, $city, $state, $zipCode, $country = self::ADDRESS_COUNTRY)
     {
         $this->street = $street;
