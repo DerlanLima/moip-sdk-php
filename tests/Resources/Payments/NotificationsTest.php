@@ -1,12 +1,11 @@
 <?php
 
-namespace Softpampa\Moip\Tests\Resources\Preferences;
+namespace Softpampa\Moip\Tests\Resources\Payments;
 
 use stdClass;
-use Softpampa\Moip\Moip;
-use Softpampa\Moip\Tests\MoipTestCase;
-use Softpampa\Moip\Preferences\Resources\Notifications;
 use Illuminate\Support\Collection;
+use Softpampa\Moip\Tests\MoipTestCase;
+use Softpampa\Moip\Payments\Resources\Notifications;
 
 class NotificationsTest extends MoipTestCase {
 
@@ -22,7 +21,7 @@ class NotificationsTest extends MoipTestCase {
     {
         parent::setUp();
 
-        $this->notifications = $this->moip->preferences()->notifications();
+        $this->notifications = $this->moip->payments()->notifications();
         $this->client = $this->notifications->getClient();
     }
 
@@ -41,10 +40,9 @@ class NotificationsTest extends MoipTestCase {
 
         $notification = $this->notifications;
 
-        $notification->setTarget('http://requestb.in/1dhjesw1')
+        $notification->setWebHook('http://requestb.in/1dhjesw1')
                      ->addEvent('PAYMENT.AUTHORIZED')
-                     ->setMedia()
-                     ->create();
+                     ->save();
 
         $this->assertInstanceOf(Notifications::class, $notification);
         $this->assertEquals('http://requestb.in/1dhjesw1', $notification->target);

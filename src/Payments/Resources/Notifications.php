@@ -1,11 +1,24 @@
 <?php
 
-namespace Softpampa\Moip\Preferences\Resources;
+/**
+ * Moip Subscription Customers API
+ *
+ * @since 0.0.3
+ * @see http://dev.moip.com.br/referencia-api/#criar-preferncia-de-notificao-post Official Documentation
+ * @author Nícolas Luís Huber <nicolasluishuber@gmail.com>
+ */
+
+namespace Softpampa\Moip\Payments\Resources;
 
 use Softpampa\Moip\MoipResource;
 
 class Notifications extends MoipResource {
 
+    /**
+     * Default Media
+     *
+     * @var string
+     */
     const DEFAULT_MEDIA = 'WEBHOOK';
 
     /**
@@ -14,11 +27,11 @@ class Notifications extends MoipResource {
     protected $resource = 'preferences/notifications';
 
     /**
-     * Create a notification
+     * Save a notification preferences
      *
      * @return $this
      */
-    public function create()
+    public function save()
     {
         $this->populate($this->client->post('', [], $this->data));
 
@@ -26,7 +39,7 @@ class Notifications extends MoipResource {
     }
 
     /**
-     * Delete a notification
+     * Delete a notification preference
      *
      * @param  int  $id
      * @return $this
@@ -41,6 +54,16 @@ class Notifications extends MoipResource {
     }
 
     /**
+     * Get all notifications
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function all()
+    {
+        return $this->client->get()->getResults();
+    }
+
+    /**
      * Find a notification by id
      *
      * @param  string  $id
@@ -52,24 +75,15 @@ class Notifications extends MoipResource {
     }
 
     /**
-     * Get all notifications
-     *
-     * @return Illuminate\Support\Collection
-     */
-    public function all()
-    {
-        return $this->client->get()->getResults();
-    }
-
-    /**
-     * Set a target
+     * Set WebHook URL
      *
      * @param  string  $url
      * @return $this
      */
-    public function setTarget($url)
+    public function setWebHook($url)
     {
         $this->data->target = $url;
+        $this->data->media = self::DEFAULT_MEDIA;
 
         return $this;
     }
@@ -96,19 +110,6 @@ class Notifications extends MoipResource {
     public function setEventsList(array $events)
     {
         $this->data->events = array_merge($this->data->events, $events);
-
-        return $this;
-    }
-
-    /**
-     * Set a media type
-     *
-     * @param  string  $media
-     * @return $this
-     */
-    public function setMedia($media = self::DEFAULT_MEDIA)
-    {
-        $this->data->media = $media;
 
         return $this;
     }

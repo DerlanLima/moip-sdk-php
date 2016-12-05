@@ -130,14 +130,4 @@ class Moip {
         return new PaymentApi($this);
     }
 
-    /**
-     * Moip Preferences
-     *
-     * @return \Softpampa\Moip\Preferences\PreferencesApi
-     */
-    public function preferences()
-    {
-        return new PreferencesApi($this);
-    }
-
 }

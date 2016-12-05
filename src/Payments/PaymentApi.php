@@ -14,6 +14,7 @@ use Softpampa\Moip\MoipApi;
 use Softpampa\Moip\Payments\Resources\Orders;
 use Softpampa\Moip\Payments\Resources\Customers;
 use Softpampa\Moip\Payments\Resources\Payments;
+use Softpampa\Moip\Payments\Resources\Notifications;
 
 class PaymentApi extends MoipApi {
 
@@ -59,6 +60,16 @@ class PaymentApi extends MoipApi {
     public function payments()
     {
         return new Payments($this);
+    }
+
+    /**
+     * Preferences API
+     *
+     * @return \Softpampa\Moip\Payments\Resources\Notifications
+     */
+    public function notifications()
+    {
+        return new Notifications($this);
     }
 
 }
