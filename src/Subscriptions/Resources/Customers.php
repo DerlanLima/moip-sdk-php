@@ -235,6 +235,8 @@ class Customers extends MoipResource {
      */
     public function setBillingInfo($holderName, $number, $expirationMonth, $expirationYear)
     {
+        $this->client->addQueryString('new_vault', true);
+
         $this->data->billing_info = new stdClass;
 
         $creditCard = $this->data->billing_info->credit_card = new stdClass;
