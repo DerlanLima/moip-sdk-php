@@ -216,7 +216,7 @@ class Plans extends MoipResource {
      */
     public function setAmount($amount)
     {
-        $this->data->amount = $amount;
+        $this->data->amount = str_replace([','], [''], $amount) * 100;
 
         return $this;
     }
@@ -277,7 +277,7 @@ class Plans extends MoipResource {
     }
 
     /**
-     * Set plan interval
+     * Set plan billing cycles
      *
      * @param  int  $billingCycles
      * @return $this
