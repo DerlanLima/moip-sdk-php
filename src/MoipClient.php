@@ -8,7 +8,8 @@ use GuzzleHttp\Subscriber\Mock;
 use Softpampa\Moip\Contracts\Client;
 use Softpampa\Moip\Contracts\Authenticatable;
 
-class MoipClient implements Client {
+class MoipClient implements Client
+{
 
     /**
      * Moip API authentication
@@ -314,7 +315,7 @@ class MoipClient implements Client {
      */
     public function setParam($param, array $binds = [])
     {
-        $this->param = preg_replace_callback('/\{\w+\}/', function() use (&$binds) {
+        $this->param = preg_replace_callback('/\{\w+\}/', function () use (&$binds) {
             return array_shift($binds);
         }, trim($param, '/'));
 
@@ -410,5 +411,4 @@ class MoipClient implements Client {
     {
         return $this->request ? $this->request->getUrl() : null;
     }
-
 }

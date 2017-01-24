@@ -5,7 +5,8 @@ namespace Softpampa\Moip\Payments\Events;
 use stdClass;
 use Symfony\Component\EventDispatcher\Event;
 
-class OrdersEvent extends Event {
+class OrdersEvent extends Event
+{
 
     /**
      * @var  stdClass  $order
@@ -21,5 +22,4 @@ class OrdersEvent extends Event {
     {
         $this->order = $order;
     }
-
 }

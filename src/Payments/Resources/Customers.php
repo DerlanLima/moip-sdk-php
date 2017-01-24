@@ -22,7 +22,8 @@ use Softpampa\Moip\Helpers\CreditCard;
 use Softpampa\Moip\Helpers\TaxDocument;
 use Softpampa\Moip\Payments\Events\CustomersEvent;
 
-class Customers extends MoipResource implements Holder {
+class Customers extends MoipResource implements Holder
+{
 
     /**
      * Address type billing
@@ -279,5 +280,4 @@ class Customers extends MoipResource implements Holder {
 
         return $this;
     }
-
 }

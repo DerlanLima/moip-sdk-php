@@ -5,7 +5,8 @@ namespace Softpampa\Moip\Exceptions;
 use Exception;
 use Softpampa\Moip\MoipResponse;
 
-abstract class RequestException extends Exception {
+abstract class RequestException extends Exception
+{
 
     /**
      * Moip response
@@ -76,5 +77,4 @@ abstract class RequestException extends Exception {
     {
         return $this->response->getEffectiveUrl();
     }
-
 }

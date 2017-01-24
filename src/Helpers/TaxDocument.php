@@ -4,7 +4,8 @@ namespace Softpampa\Moip\Helpers;
 
 use stdClass;
 
-class TaxDocument extends SharedObjects {
+class TaxDocument extends SharedObjects
+{
 
     const TYPE = 'CPF';
 
@@ -39,5 +40,4 @@ class TaxDocument extends SharedObjects {
     {
         $this->data = $this->number;
     }
-
 }

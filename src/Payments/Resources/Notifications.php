@@ -12,7 +12,8 @@ namespace Softpampa\Moip\Payments\Resources;
 
 use Softpampa\Moip\MoipResource;
 
-class Notifications extends MoipResource {
+class Notifications extends MoipResource
+{
 
     /**
      * Default Media
@@ -113,5 +114,4 @@ class Notifications extends MoipResource {
 
         return $this;
     }
-
 }

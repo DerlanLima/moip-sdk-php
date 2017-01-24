@@ -6,7 +6,8 @@ use Exception;
 use Softpampa\Moip\MoipResponse;
 use Softpampa\Moip\Exceptions\RequestException;
 
-class ClientRequestException extends RequestException  {
+class ClientRequestException extends RequestException
+{
 
      /**
      * Constructor

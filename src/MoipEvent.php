@@ -4,7 +4,8 @@ namespace Softpampa\Moip;
 
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-class MoipEvent {
+class MoipEvent
+{
 
     /**
      * Event dispatcher
@@ -81,5 +82,4 @@ class MoipEvent {
     {
         return $this->dispatcher;
     }
-
 }

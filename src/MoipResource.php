@@ -6,7 +6,8 @@ use stdClass;
 use JsonSerializable;
 use Softpampa\Moip\Contracts\Resource;
 
-abstract class MoipResource implements JsonSerializable, Resource {
+abstract class MoipResource implements JsonSerializable, Resource
+{
 
     /**
      * Moip client
@@ -159,5 +160,4 @@ abstract class MoipResource implements JsonSerializable, Resource {
     {
         return $this->data;
     }
-
 }

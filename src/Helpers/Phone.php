@@ -4,7 +4,8 @@ namespace Softpampa\Moip\Helpers;
 
 use stdClass;
 
-class Phone extends SharedObjects {
+class Phone extends SharedObjects
+{
 
     const COUNTRY_CODE = 55;
 
@@ -50,5 +51,4 @@ class Phone extends SharedObjects {
         $this->data->areaCode = $this->areaCode;
         $this->data->number = $this->number;
     }
-
 }

@@ -13,6 +13,10 @@
         {
             "name": "Nícolas Luís Huber",
             "email": "nicolasluishuber@gmail.com"
+        },
+        {
+            "name": "Madson Verdi Junior",
+            "email": "madson.verdi@softpampa.com"
         }
     ],
     "autoload": {

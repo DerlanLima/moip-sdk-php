@@ -5,7 +5,8 @@ namespace Softpampa\Moip\Exceptions\Server;
 use Softpampa\Moip\MoipResponse;
 use Softpampa\Moip\Exceptions\RequestException;
 
-class ServerRequestException extends RequestException  {
+class ServerRequestException extends RequestException
+{
 
     /**
      * Constructor.
@@ -16,5 +17,4 @@ class ServerRequestException extends RequestException  {
     {
         parent::__construct($response, 'Whoops looks like something went wrong, please contact Moip [https://moip.com.br]');
     }
-
 }

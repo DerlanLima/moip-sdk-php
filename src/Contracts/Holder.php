@@ -2,8 +2,8 @@
 
 namespace Softpampa\Moip\Contracts;
 
-interface Holder {
+interface Holder
+{
 
     public function getData();
-
 }

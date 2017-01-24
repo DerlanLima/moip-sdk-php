@@ -4,7 +4,8 @@ namespace Softpampa\Moip\Helpers;
 
 use Softpampa\Moip\Moip;
 
-abstract class SharedObjects {
+abstract class SharedObjects
+{
 
     protected $data;
 
@@ -34,5 +35,4 @@ abstract class SharedObjects {
 
         return $this->data;
     }
-
 }

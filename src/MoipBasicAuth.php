@@ -4,7 +4,8 @@ namespace Softpampa\Moip;
 
 use Softpampa\Moip\Contracts\Authenticatable;
 
-class MoipBasicAuth implements Authenticatable {
+class MoipBasicAuth implements Authenticatable
+{
 
     /**
      * Moip token
@@ -41,5 +42,4 @@ class MoipBasicAuth implements Authenticatable {
     {
         return 'Basic ' . base64_encode($this->token . ':' . $this->key);
     }
-
 }
