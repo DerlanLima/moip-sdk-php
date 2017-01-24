@@ -4,7 +4,8 @@ namespace Softpampa\Moip\Helpers;
 
 use stdClass;
 
-class Holder extends SharedObjects implements \Softpampa\Moip\Contracts\Holder {
+class Holder extends SharedObjects implements \Softpampa\Moip\Contracts\Holder
+{
 
     protected $fullName;
 
@@ -63,5 +64,4 @@ class Holder extends SharedObjects implements \Softpampa\Moip\Contracts\Holder {
     {
         $this->data = $this->fullName;
     }
-
 }

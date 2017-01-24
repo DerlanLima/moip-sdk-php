@@ -2,7 +2,8 @@
 
 namespace Softpampa\Moip\Contracts;
 
-interface Response {
+interface Response
+{
 
     /**
      * Set response resource data key

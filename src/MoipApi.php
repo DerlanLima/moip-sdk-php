@@ -2,16 +2,17 @@
 
 namespace Softpampa\Moip;
 
-abstract class MoipApi {
-
+abstract class MoipApi
+{
     /**
-     * Moip API
+     * Moip API.
+     *
      * @var \Softpampa\Moip\Moip
      */
     protected $moip;
 
     /**
-     * Moip client
+     * Moip client.
      *
      * @var \Softpampa\Moip\MoipClient
      */
@@ -20,7 +21,7 @@ abstract class MoipApi {
     /**
      * Constructor.
      *
-     * @param  \Softpampa\Moip\Moip  $moip
+     * @param \Softpampa\Moip\Moip $moip
      */
     public function __construct(Moip $moip)
     {
@@ -40,7 +41,7 @@ abstract class MoipApi {
     }
 
     /**
-     * Get Moip
+     * Get Moip.
      *
      * @return \Softpampa\Moip\Moip
      */
@@ -50,7 +51,7 @@ abstract class MoipApi {
     }
 
     /**
-     * Get Moip client
+     * Get Moip client.
      *
      * @return \Softpampa\Moip\MoipClient
      */
@@ -60,14 +61,11 @@ abstract class MoipApi {
     }
 
     /**
-     * Prepare client for requests
-     *
-     * @return void
+     * Prepare client for requests.
      */
     protected function prepareClient()
     {
         $this->client->setPath($this->path)
                      ->setVersion($this->version);
     }
-
 }

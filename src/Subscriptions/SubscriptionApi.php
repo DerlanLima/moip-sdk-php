@@ -18,7 +18,8 @@ use Softpampa\Moip\Subscriptions\Resources\Customers;
 use Softpampa\Moip\Subscriptions\Resources\Preferences;
 use Softpampa\Moip\Subscriptions\Resources\Subscriptions;
 
-class SubscriptionApi extends MoipApi {
+class SubscriptionApi extends MoipApi
+{
 
     /**
      * Moip API Version
@@ -93,5 +94,4 @@ class SubscriptionApi extends MoipApi {
     {
         return new Preferences($this);
     }
-
 }

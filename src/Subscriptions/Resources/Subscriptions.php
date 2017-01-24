@@ -15,7 +15,8 @@ use stdClass;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Subscriptions\Events\SubscriptionsEvent;
 
-class Subscriptions extends MoipResource {
+class Subscriptions extends MoipResource
+{
 
     /**
      * Credit card payment method
@@ -296,5 +297,4 @@ class Subscriptions extends MoipResource {
 
         return $this;
     }
-
 }

@@ -14,7 +14,8 @@ use stdClass;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Payments\Events\OrdersEvent;
 
-class Orders extends MoipResource {
+class Orders extends MoipResource
+{
 
     /**
      * Resource name
@@ -249,5 +250,4 @@ class Orders extends MoipResource {
 
         return $this;
     }
-
 }

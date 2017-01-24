@@ -12,7 +12,8 @@ namespace Softpampa\Moip\Subscriptions\Resources;
 
 use Softpampa\Moip\MoipResource;
 
-class Payments extends MoipResource {
+class Payments extends MoipResource
+{
 
     /**
      * Resource name
@@ -33,5 +34,4 @@ class Payments extends MoipResource {
 
         return $this;
     }
-
 }

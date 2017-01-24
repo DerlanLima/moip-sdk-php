@@ -12,7 +12,8 @@ namespace Softpampa\Moip\Subscriptions\Resources;
 
 use Softpampa\Moip\MoipResource;
 
-class Invoices extends MoipResource {
+class Invoices extends MoipResource
+{
 
     /**
      * Resource name
@@ -45,5 +46,4 @@ class Invoices extends MoipResource {
                             ->setDataKey('payments')
                             ->getResults();
     }
-
 }
