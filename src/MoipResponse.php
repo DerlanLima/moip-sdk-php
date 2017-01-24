@@ -12,7 +12,8 @@ use Softpampa\Moip\Exceptions\Client\UnauthorizedException;
 use Softpampa\Moip\Exceptions\Client\ClientRequestException;
 use Softpampa\Moip\Exceptions\Client\ResourceNotFoundException;
 
-class MoipResponse implements Response {
+class MoipResponse implements Response
+{
 
     /**
      * Guzzle Http Response
@@ -111,7 +112,7 @@ class MoipResponse implements Response {
 
         if ($content && property_exists($content, 'errors')) {
             $this->setErrors($content, 'errors');
-        } else if ($content && property_exists($content, 'ERROR')) {
+        } elseif ($content && property_exists($content, 'ERROR')) {
             $this->setError('Unknown', $content->ERROR);
         }
 
@@ -220,11 +221,10 @@ class MoipResponse implements Response {
 
         if (is_object($content) && property_exists($content, $key)) {
             return new Collection($content->{$key});
-        } else if (is_array($content)) {
+        } elseif (is_array($content)) {
             return new Collection($content);
         }
 
         return $content;
     }
-
 }

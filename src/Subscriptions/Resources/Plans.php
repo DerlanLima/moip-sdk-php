@@ -14,7 +14,8 @@ use stdClass;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Subscriptions\Events\PlansEvent;
 
-class Plans extends MoipResource {
+class Plans extends MoipResource
+{
 
     /**
      * Interval in months
@@ -345,5 +346,4 @@ class Plans extends MoipResource {
 
         return $this;
     }
-
 }

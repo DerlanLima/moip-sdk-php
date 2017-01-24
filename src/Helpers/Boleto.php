@@ -4,7 +4,8 @@ namespace Softpampa\Moip\Helpers;
 
 use stdClass;
 
-class Boleto extends SharedObjects {
+class Boleto extends SharedObjects
+{
 
     protected $expirationDate;
 
@@ -36,5 +37,4 @@ class Boleto extends SharedObjects {
 
         $this->data = $boleto;
     }
-
 }

@@ -18,7 +18,8 @@ use DateTime;
 use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Subscriptions\Events\CustomersEvent;
 
-class Customers extends MoipResource {
+class Customers extends MoipResource
+{
 
     /**
      * Resource name
@@ -247,5 +248,4 @@ class Customers extends MoipResource {
 
         return $this;
     }
-
 }

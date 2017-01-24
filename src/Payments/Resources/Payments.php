@@ -17,7 +17,8 @@ use Softpampa\Moip\MoipResource;
 use Softpampa\Moip\Helpers\Boleto;
 use Softpampa\Moip\Helpers\CreditCard;
 
-class Payments extends MoipResource {
+class Payments extends MoipResource
+{
 
     /**
      * Credit card payment method
@@ -185,5 +186,4 @@ class Payments extends MoipResource {
 
         return $this;
     }
-
 }

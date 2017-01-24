@@ -5,7 +5,8 @@ namespace Softpampa\Moip\Helpers;
 use stdClass;
 use Softpampa\Moip\Contracts\Holder;
 
-class CreditCard extends SharedObjects {
+class CreditCard extends SharedObjects
+{
 
     protected $expirationMonth;
 
@@ -79,5 +80,4 @@ class CreditCard extends SharedObjects {
         $this->data->number = $this->number;
         $this->data->holder_name = $this->holder->getData()->fullname;
     }
-
 }

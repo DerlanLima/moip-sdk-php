@@ -13,7 +13,8 @@ namespace Softpampa\Moip\Subscriptions\Resources;
 use stdClass;
 use Softpampa\Moip\MoipResource;
 
-class Preferences extends MoipResource {
+class Preferences extends MoipResource
+{
 
     /**
      * Resource name

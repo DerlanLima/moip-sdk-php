@@ -2,7 +2,8 @@
 
 namespace Softpampa\Moip\Contracts;
 
-interface Client {
+interface Client
+{
 
     /**
      * Constructor
@@ -119,5 +120,4 @@ interface Client {
      * @return \Softpampa\Moip\MoipResponse
      */
     public function delete($route, array $binds = []);
-
 }

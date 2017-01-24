@@ -7,7 +7,8 @@ use Softpampa\Moip\Contracts\Authenticatable;
 use Softpampa\Moip\Subscriptions\SubscriptionApi;
 use Softpampa\Moip\Preferences\PreferencesApi;
 
-class Moip {
+class Moip
+{
 
     /**
      * Moip Production base URI
@@ -129,5 +130,4 @@ class Moip {
     {
         return new PaymentApi($this);
     }
-
 }

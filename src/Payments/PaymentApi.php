@@ -16,7 +16,8 @@ use Softpampa\Moip\Payments\Resources\Customers;
 use Softpampa\Moip\Payments\Resources\Payments;
 use Softpampa\Moip\Payments\Resources\Notifications;
 
-class PaymentApi extends MoipApi {
+class PaymentApi extends MoipApi
+{
 
     /**
      * Moip API Version
@@ -71,5 +72,4 @@ class PaymentApi extends MoipApi {
     {
         return new Notifications($this);
     }
-
 }

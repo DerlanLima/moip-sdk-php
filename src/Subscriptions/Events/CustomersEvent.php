@@ -5,7 +5,8 @@ namespace Softpampa\Moip\Subscriptions\Events;
 use stdClass;
 use Symfony\Component\EventDispatcher\Event;
 
-class CustomersEvent extends Event {
+class CustomersEvent extends Event
+{
 
     /**
      * @var \stdClass
@@ -21,5 +22,4 @@ class CustomersEvent extends Event {
     {
         $this->customer = $customer;
     }
-
 }

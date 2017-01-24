@@ -4,7 +4,8 @@ namespace Softpampa\Moip\Exceptions\Client;
 
 use Softpampa\Moip\MoipResponse;
 
-class ResourceNotFoundException extends ClientRequestException  {
+class ResourceNotFoundException extends ClientRequestException
+{
 
     /**
      * Constructor.
@@ -15,5 +16,4 @@ class ResourceNotFoundException extends ClientRequestException  {
     {
         parent::__construct($response, "Resource {$response->getEffectiveUrl()} not found");
     }
-
 }
