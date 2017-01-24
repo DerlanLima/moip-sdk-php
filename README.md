@@ -1,4 +1,4 @@
-#MoIP PHP client SDK (alpha)
+# MoIP PHP client SDK v1.0.4
 
 Biblioteca para integrar sua aplicação PHP com a API do Moip.
 
