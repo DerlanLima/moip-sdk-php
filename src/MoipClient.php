@@ -93,7 +93,7 @@ class MoipClient implements Client
      * @var array
      */
     protected $options = [
-        'timeout' => 10,
+        'timeout' => 60,
         'connect_timeout' => 10
     ];
 
