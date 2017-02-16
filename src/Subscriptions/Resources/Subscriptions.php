@@ -26,21 +26,18 @@ class Subscriptions extends MoipResource
     const METHOD_CREDIT_CARD = 'CREDIT_CARD';
 
     /**
+     * Bank slip payment method
+     *
+     * @const string
+     */
+    const METHOD_BANK_SLIP = 'BOLETO';
+
+    /**
      * Resource name
      *
      * @var string
      */
     protected $resource = 'subscriptions';
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function initialize()
-    {
-        parent::initialize();
-
-        $this->data->payment_method = self::METHOD_CREDIT_CARD;
-    }
 
     /**
      * Get all subscriptions
@@ -294,6 +291,30 @@ class Subscriptions extends MoipResource
 
         $this->data->customer = new stdClass;
         $this->data->customer->code = $code;
+
+        return $this;
+    }
+
+    /**
+     * Set payment method to bank slip
+     *
+     * @return $this
+     */
+    public function setPaymentBankSlip()
+    {
+        $this->data->payment_method = self::METHOD_BANK_SLIP;
+
+        return $this;
+    }
+
+    /**
+     * Set payment method to credit card
+     *
+     * @return $this
+     */
+    public function setPaymentCreditCard()
+    {
+        $this->data->payment_method = self::METHOD_CREDIT_CARD;
 
         return $this;
     }
